@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:micro_pharma/homepage.dart';
+import 'main.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF3FB1BB),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1FB7CC),
+        backgroundColor: Color(0xFF1FB7CC),
         title: const Center(
           child: Text(
             'Login',
@@ -21,12 +28,15 @@ class LoginPage extends StatelessWidget {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.all(20.0),
-        margin: const EdgeInsets.fromLTRB(40.0, 100.0, 40.0, 100.0),
         decoration: BoxDecoration(
-          color: Color(0xFFF2F2F2),
-          borderRadius: BorderRadius.circular(20.0),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage(
+              'assets/images/login.png',
+            ),
+          ),
         ),
+        padding: EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.end,
@@ -67,7 +77,9 @@ class LoginPage extends StatelessWidget {
               height: 40.0,
               width: 150.0,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, HomePage.id);
+                },
                 child: Text(
                   'Login',
                   style: TextStyle(fontFamily: 'Poppins'),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart';
+import 'homepage.dart';
 
 void main() {
   runApp(MicroPharma());
@@ -13,7 +14,7 @@ class MicroPharma extends StatelessWidget {
     return MaterialApp(
       routes: {
         'login': (context) => LoginPage(),
-        
+        'home':(context) => HomePage(),
       },
       home: LoginPage(),
     );
