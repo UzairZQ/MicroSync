@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "290764760328",
+    "project_id": "pharma-sfa",
+    "storage_bucket": "pharma-sfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290764760328:android:6b9eb469a36250e44978bd",
+        "android_client_info": {
+          "package_name": "com.micro_pharma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "290764760328-uh1recvjhv7qmoqbi8rh22ijc277buna.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7etCLQXKON9Dnymn5cG_4p79ae_kGalg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "290764760328-uh1recvjhv7qmoqbi8rh22ijc277buna.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
