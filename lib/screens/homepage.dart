@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:micro_pharma/components/containerRow.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/screens/dashboard.dart';
+import 'package:micro_pharma/screens/login_page.dart';
 
 class HomePage extends StatelessWidget {
   static String id = 'home';
@@ -162,7 +163,10 @@ class HomePage extends StatelessWidget {
               kbuttonstyle(
                   color: kappbarColor,
                   text: 'Logout',
-                  onPressed: () => FirebaseAuth.instance.signOut()),
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.pushNamed(context, LoginPage.id);
+                  }),
             ],
           ),
         ),
