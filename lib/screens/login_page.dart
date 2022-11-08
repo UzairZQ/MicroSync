@@ -128,7 +128,8 @@ class _LoginPageState extends State<LoginPage> {
   String? validateEmail(String? email) {
     if (email!.isEmpty) {
       return 'Please Enter Email Adress';
-    } else if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+    } else if (!RegExp(
+            r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
         .hasMatch(email)) {
       return ("Please enter a valid email");
     } else {
@@ -137,8 +138,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String? validatePassword(String? password) {
+    RegExp regex = RegExp(r'^.{6,}$');
     if (password!.isEmpty) {
-      return 'Please Enter Password';
+      return 'Password Enter Password';
+    } else if (!regex.hasMatch(password)) {
+      return 'Enter Password with min. 6 Characters';
     } else {
       return null;
     }

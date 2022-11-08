@@ -46,15 +46,6 @@ class myAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: kappbarColor,
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
       title: Text(
         '$appBartxt',
         style: TextStyle(
