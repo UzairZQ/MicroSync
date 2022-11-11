@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:micro_pharma/screens/admin_page.dart';
-import 'package:micro_pharma/screens/homepage.dart';
+import 'package:micro_pharma/adminScreens/admin_page.dart';
+import 'package:micro_pharma/userScreens/homepage.dart';
 import '../main.dart';
 import 'package:micro_pharma/components/constants.dart';
 
@@ -18,7 +18,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   @override
@@ -99,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 15.0),
               kbuttonstyle(
                   color: const Color(0xFFFFB800),
-                  text: 'Login',
+                  text: 'LOGIN',
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
@@ -178,6 +177,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future signIn(String email, String password) async {
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return Builder(builder: (context) {
+            return Center(child: CircularProgressIndicator());
+          });
+        }));
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -204,5 +210,6 @@ class _LoginPageState extends State<LoginPage> {
       //         Text('Incorrect Email or Password or It can be a network issue'),
 
     }
+    Navigator.of(context).pop();
   }
 }

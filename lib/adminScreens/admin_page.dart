@@ -2,9 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:micro_pharma/adminScreens/adminSettings.dart';
 import 'package:micro_pharma/components/containerRow.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/screens/login_page.dart';
+import 'package:micro_pharma/userScreens/login_page.dart';
 
 class AdminPage extends StatelessWidget {
   static String id = 'admin';
@@ -15,6 +16,12 @@ class AdminPage extends StatelessWidget {
     final currentUser = FirebaseAuth.instance.currentUser;
     print(currentUser!.email);
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+            Navigator.pushNamed(context, LoginPage.id);
+          },
+          child: Icon(Icons.logout_outlined)),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -109,10 +116,9 @@ class AdminPage extends StatelessWidget {
               ),
               kbuttonstyle(
                   color: kappbarColor,
-                  text: 'Logout',
+                  text: 'Settings',
                   onPressed: () {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.pushNamed(context, LoginPage.id);
+                    Navigator.pushNamed(context, AdminSettings.id);
                   }),
             ],
           ),

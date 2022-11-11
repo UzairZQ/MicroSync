@@ -5,8 +5,13 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:micro_pharma/components/containerRow.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/screens/dashboard.dart';
-import 'package:micro_pharma/screens/login_page.dart';
+import 'package:micro_pharma/userScreens/daily_call_report.dart';
+import 'package:micro_pharma/userScreens/dashboard.dart';
+import 'package:micro_pharma/userScreens/day_plan.dart';
+import 'package:micro_pharma/userScreens/login_page.dart';
+import 'package:micro_pharma/userScreens/master_screen.dart';
+import 'package:micro_pharma/userScreens/product_order.dart';
+import 'package:micro_pharma/userScreens/userSettings.dart';
 
 class HomePage extends StatelessWidget {
   static String id = 'home';
@@ -17,6 +22,13 @@ class HomePage extends StatelessWidget {
     final currentUser = FirebaseAuth.instance.currentUser;
     print(currentUser!.email);
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          FirebaseAuth.instance.signOut();
+          Navigator.pushNamed(context, LoginPage.id);
+        },
+        child: Icon(Icons.logout_outlined),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -138,11 +150,12 @@ class HomePage extends StatelessWidget {
                 container1Clr: Color.fromARGB(255, 133, 254, 226),
                 container1Icon: Icons.assignment_outlined,
                 container1Text: 'Day Plan',
-                container1Tap: () => null,
+                container1Tap: () => Navigator.pushNamed(context, DayPlan.id),
                 container2Clr: Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Daily Call Report',
-                container2Tap: () => null,
+                container2Tap: () =>
+                    Navigator.pushNamed(context, DailyCallReport.id),
               ),
               SizedBox(
                 height: 30.0,
@@ -152,20 +165,20 @@ class HomePage extends StatelessWidget {
                 container1Icon: Icons.medical_services_outlined,
                 container1Text: 'Doctors, Areas & Chemists',
                 container2Clr: Colors.orange.shade200,
-                container2Icon: Icons.settings_outlined,
-                container2Text: 'Settings',
-                container1Tap: () => null,
-                container2Tap: () => null,
+                container2Icon: Icons.add_shopping_cart_outlined,
+                container2Text: 'Orders',
+                container1Tap: () => Navigator.pushNamed(context, Master.id),
+                container2Tap: () =>
+                    Navigator.pushNamed(context, ProductOrder.id),
               ),
               SizedBox(
                 height: 15.0,
               ),
               kbuttonstyle(
                   color: kappbarColor,
-                  text: 'Logout',
+                  text: 'Settings',
                   onPressed: () {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.pushNamed(context, LoginPage.id);
+                    Navigator.pushNamed(context, UserSettings.id);
                   }),
             ],
           ),
