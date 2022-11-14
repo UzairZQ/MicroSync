@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:micro_pharma/adminScreens/GoogleMapPage.dart';
 import 'package:micro_pharma/adminScreens/adminSettings.dart';
+import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/components/containerRow.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
@@ -79,7 +81,8 @@ class AdminPage extends StatelessWidget {
                 container1Clr: Color(0xFFF0DCFF),
                 container1Icon: Icons.place_outlined,
                 container1Text: 'Live Tracking',
-                container1Tap: () => {},
+                container1Tap: () =>
+                    {Navigator.pushNamed(context, LocationScreen.id)},
                 container2Clr: Color(0xFFFFC8C8),
                 container2Icon: Icons.calendar_month_outlined,
                 container2Text: 'Daily Call Reports',

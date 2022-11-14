@@ -3,11 +3,11 @@ import 'package:micro_pharma/components/constants.dart';
 
 class AdminSettings extends StatelessWidget {
   const AdminSettings({Key? key}) : super(key: key);
-static String id = 'adminsettings';
+  static String id = 'adminsettings';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(appBartxt: 'Call Planner'),
+      appBar: myAppBar(appBartxt: 'Admin Settings'),
     );
   }
 }
