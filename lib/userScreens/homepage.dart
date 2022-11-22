@@ -6,7 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:micro_pharma/components/containerRow.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
-import 'package:micro_pharma/userScreens/dashboard.dart';
+import 'package:micro_pharma/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:micro_pharma/userScreens/master_screen.dart';

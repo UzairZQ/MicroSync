@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 Color kappbarColor = Color(0xff1FB7CC);
@@ -54,3 +56,6 @@ class myAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
+
+TextStyle ktextstyle = TextStyle(
+    fontFamily: 'Poppins', fontSize: 17.5, fontWeight: FontWeight.w400);
