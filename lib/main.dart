@@ -6,7 +6,7 @@ import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
-import 'package:micro_pharma/userScreens/dashboard.dart';
+import 'package:micro_pharma/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/master_screen.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
@@ -23,7 +23,7 @@ Future<void> main() async {
 }
 
 class MicroPharma extends StatelessWidget {
-  User? user = FirebaseAuth.instance.currentUser;
+  final User? user = FirebaseAuth.instance.currentUser;
   late var myDocument = FirebaseFirestore.instance
       .collection("users")
       .doc(user!.uid)
@@ -33,6 +33,8 @@ class MicroPharma extends StatelessWidget {
       documentSnapshot.get('role');
     }
   });
+
+  MicroPharma({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
