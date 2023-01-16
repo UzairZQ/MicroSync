@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/GoogleMapPage.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
+
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
@@ -11,6 +11,7 @@ import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/master_screen.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/userScreens/userSettings.dart';
+import 'package:provider/provider.dart';
 import 'userScreens/login_page.dart';
 import 'userScreens/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,17 +24,6 @@ Future<void> main() async {
 }
 
 class MicroPharma extends StatelessWidget {
-  final User? user = FirebaseAuth.instance.currentUser;
-  late var myDocument = FirebaseFirestore.instance
-      .collection("users")
-      .doc(user!.uid)
-      .get()
-      .then((DocumentSnapshot documentSnapshot) {
-    if (documentSnapshot.exists) {
-      documentSnapshot.get('role');
-    }
-  });
-
   MicroPharma({Key? key}) : super(key: key);
 
   @override
@@ -41,18 +31,18 @@ class MicroPharma extends StatelessWidget {
     return MaterialApp(
       routes: {
         'login': (context) => LoginPage(),
-        'home': (context) => HomePage(),
-        'user_dashboard': (context) => Dashboard(),
-        'admin': (context) => AdminPage(),
-        'dayplan': (context) => DayPlan(),
-        'productorder': (context) => ProductOrder(),
-        'callplanner': (context) => CallPlanner(),
-        'master': (context) => Master(),
-        'dailycallreport': (context) => DailyCallReport(),
-        'usersettings': (context) => UserSettings(),
-        'adminsettings': (context) => AdminSettings(),
+        'home': (context) => const HomePage(),
+        'user_dashboard': (context) => const Dashboard(),
+        'admin': (context) => const AdminPage(),
+        'dayplan': (context) => const DayPlan(),
+        'productorder': (context) => const ProductOrder(),
+        'callplanner': (context) => const CallPlanner(),
+        'master': (context) => const Master(),
+        'dailycallreport': (context) => const DailyCallReport(),
+        'usersettings': (context) => const UserSettings(),
+        'adminsettings': (context) => const AdminSettings(),
         'map_page': (context) => GoogleMapPage(),
-        'location_screen': (context) => LocationScreen(),
+        'location_screen': (context) => const LocationScreen(),
       },
       home: LoginPage(),
     );
@@ -60,6 +50,7 @@ class MicroPharma extends StatelessWidget {
 }
 
 
+// TODO: LOgic for user and admin keep logged in (may have to use shared prefrences)
 
 //       StreamBuilder<User?>(
 //         stream: FirebaseAuth.instance.authStateChanges(),

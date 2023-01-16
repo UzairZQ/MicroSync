@@ -36,7 +36,7 @@ class kbuttonstyle extends StatelessWidget {
 
 class myAppBar extends StatelessWidget implements PreferredSizeWidget {
   myAppBar({required this.appBartxt});
-  String appBartxt;
+  final String appBartxt;
 
   @override
   // TODO: implement preferredSize

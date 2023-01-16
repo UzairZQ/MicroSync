@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/userScreens/homepage.dart';
+import 'package:provider/provider.dart';
 import '../main.dart';
 import 'package:micro_pharma/components/constants.dart';
 
@@ -16,16 +16,25 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    print('textediting controllers are disposed');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.cover,
               image: AssetImage(
@@ -33,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.end,
@@ -51,7 +60,6 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     TextFormField(
                       keyboardType: TextInputType.emailAddress,
-                      controller: null,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
                           Icons.email_outlined,
@@ -76,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     TextFormField(
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.lock_outline, size: 35.0),
+                        prefixIcon: const Icon(Icons.lock_outline, size: 35.0),
                         filled: true,
                         fillColor: Colors.blue[100]!.withOpacity(0.5),
                         hintText: 'Enter Password',
@@ -95,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 15.0),
+              const SizedBox(height: 15.0),
               kbuttonstyle(
                   color: const Color(0xFFFFB800),
                   text: 'LOGIN',
@@ -103,11 +111,11 @@ class _LoginPageState extends State<LoginPage> {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                     }
-                    signIn(emailController.text, passwordController.text);
-                  }
-
-                  //Navigator.pushNamed(context, HomePage.id),
-                  ),
+                    signIn(
+                      emailController.text,
+                      passwordController.text,
+                    );
+                  }),
               const SizedBox(height: 10.0),
               TextButton(
                 onPressed: () {},
@@ -128,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
     if (email!.isEmpty) {
       return 'Please Enter Email Adress';
     } else if (!RegExp(
-            r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+            r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$')
         .hasMatch(email)) {
       return ("Please enter a valid email");
     } else {
@@ -159,14 +167,14 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomePage(),
+              builder: (context) => const HomePage(),
             ),
           );
         } else if (documentSnapshot.get('role') == "admin") {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => AdminPage(),
+              builder: (context) => const AdminPage(),
             ),
           );
         }
@@ -181,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         builder: ((context) {
           return Builder(builder: (context) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           });
         }));
     try {
@@ -191,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('No user found for this Email'),
           ),
         );
@@ -210,6 +218,6 @@ class _LoginPageState extends State<LoginPage> {
       //         Text('Incorrect Email or Password or It can be a network issue'),
 
     }
-    Navigator.of(context).pop();
+    Navigator.pop(context);
   }
 }

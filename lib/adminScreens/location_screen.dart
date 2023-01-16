@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -13,18 +12,35 @@ class LocationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: myAppBar(appBartxt: 'Location'),
-      body: Material(
-        elevation: 5.0,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
+      body: ListView(
+        shrinkWrap: true,
+        children: [
+          Card(
+            elevation: 5.0,
+            child: ListTile(
+              tileColor: Colors.grey[300],
+              title: Text(
+                'Uzair Zia Qureshi',
+                style: TextStyle(
+                    fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+              ),
+              leading: Icon(
+                Icons.person_outline,
+                size: 30.0,
+              ),
+              trailing: IconButton(
+                icon: Icon(
+                  size: 30.0,
+                  Icons.location_pin,
+                  color: Colors.blueGrey,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, GoogleMapPage.id);
+                },
+              ),
+            ),
           ),
-          child: kbuttonstyle(
-            color: Colors.blue,
-            text: 'Get Location',
-            onPressed: () => Navigator.pushNamed(context, GoogleMapPage.id),
-          ),
-        ),
+        ],
       ),
     );
   }
