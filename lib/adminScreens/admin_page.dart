@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:micro_pharma/adminScreens/GoogleMapPage.dart';
+
 import 'package:micro_pharma/adminScreens/adminSettings.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/components/containerRow.dart';
@@ -23,7 +21,7 @@ class AdminPage extends StatelessWidget {
             FirebaseAuth.instance.signOut();
             Navigator.pushNamed(context, LoginPage.id);
           },
-          child: Icon(Icons.logout_outlined)),
+          child: const Icon(Icons.logout_outlined)),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -42,7 +40,7 @@ class AdminPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(
+                    const Text(
                       'Welcome Admin !',
                       style: TextStyle(
                         fontFamily: 'Poppins',
@@ -51,10 +49,10 @@ class AdminPage extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: 17.0),
+                    const SizedBox(height: 17.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Icon(
                           Icons.calendar_month,
                           color: Colors.white,
@@ -70,38 +68,38 @@ class AdminPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15.0,
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               containerRow(
-                container1Clr: Color(0xFFF0DCFF),
+                container1Clr: const Color(0xFFF0DCFF),
                 container1Icon: Icons.place_outlined,
                 container1Text: 'Live Tracking',
                 container1Tap: () =>
                     {Navigator.pushNamed(context, LocationScreen.id)},
-                container2Clr: Color(0xFFFFC8C8),
+                container2Clr: const Color(0xFFFFC8C8),
                 container2Icon: Icons.calendar_month_outlined,
                 container2Text: 'Daily Call Reports',
-                container2Tap: () => null,
+                container2Tap: () {},
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
               containerRow(
-                container1Clr: Color.fromARGB(255, 133, 254, 226),
+                container1Clr: const Color.fromARGB(255, 133, 254, 226),
                 container1Icon: Icons.assignment_outlined,
                 container1Text: 'Orders',
-                container1Tap: () => null,
-                container2Clr: Color(0xffFFE974),
+                container1Tap: () {},
+                container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Call Plans',
-                container2Tap: () => null,
+                container2Tap: () {},
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
               containerRow(
@@ -111,10 +109,10 @@ class AdminPage extends StatelessWidget {
                 container2Clr: Colors.orange.shade200,
                 container2Icon: Icons.settings_outlined,
                 container2Text: 'Employees',
-                container1Tap: () => null,
-                container2Tap: () => null,
+                container1Tap: () {},
+                container2Tap: () {},
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
               kbuttonstyle(

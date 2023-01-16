@@ -3,10 +3,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:micro_pharma/components/constants.dart';
 
 class GoogleMapPage extends StatefulWidget {
   static const String id = 'map_page';
@@ -21,7 +21,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
       CameraPosition(target: LatLng(34.1688, 73.2215), zoom: 14.4746);
   final Completer<GoogleMapController> _controller = Completer();
   final List<Marker> _markers = <Marker>[
-    Marker(
+    const Marker(
       markerId: MarkerId('1'),
       position: LatLng(34.1688, 73.2215),
       infoWindow: InfoWindow(title: 'Initial Location'),
@@ -39,8 +39,23 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print('disposed google maps');
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: myAppBar(appBartxt: 'Map Screen'),
+
+      // title: Text(
+      //   'Map Screen',
+      //   style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+      // ),
+      // leading:
+
       body: GoogleMap(
         initialCameraPosition: _atdPosition,
         markers: Set<Marker>.of(_markers),
@@ -60,9 +75,9 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
               _markers.add(
                 Marker(
-                  markerId: MarkerId('2'),
+                  markerId: const MarkerId('2'),
                   position: LatLng(value.latitude, value.longitude),
-                  infoWindow: InfoWindow(title: 'Current User Location'),
+                  infoWindow: const InfoWindow(title: 'Current User Location'),
                 ),
               );
 
