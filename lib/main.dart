@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/GoogleMapPage.dart';
@@ -12,6 +14,7 @@ import 'package:micro_pharma/userScreens/master_screen.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/userScreens/userSettings.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'userScreens/login_page.dart';
 import 'userScreens/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,10 +47,74 @@ class MicroPharma extends StatelessWidget {
         'map_page': (context) => GoogleMapPage(),
         'location_screen': (context) => const LocationScreen(),
       },
-      home: LoginPage(),
+      home: SplashPage(),
     );
   }
 }
+
+class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
+
+  @override
+  State<SplashPage> createState() => SplashPageState();
+}
+
+class SplashPageState extends State<SplashPage> {
+  static const String KEYLOGIN = 'Login';
+  static const String KEYUSER = 'User';
+
+  @override
+  void initState() {
+    super.initState();
+    whereToGo();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Image.asset('assets/images/micro_trans.png'),
+      ),
+    );
+  }
+
+  void whereToGo() async {
+    var sharedLogin = await SharedPreferences.getInstance();
+    var sharedUser = await SharedPreferences.getInstance();
+
+    var isLoggedIn = sharedLogin.getBool(KEYLOGIN);
+    var isUser = sharedUser.getBool(KEYUSER);
+
+    Timer(const Duration(seconds: 2), () {
+      if (isLoggedIn != null && isUser != null) {
+        if (isLoggedIn && isUser) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(),
+              ));
+        } else if (isLoggedIn && isUser == false) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminPage(),
+              ));
+        }
+      } else if (isLoggedIn == null && isUser == null) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginPage(),
+            ));
+      }
+    });
+  }
+}
+
+
+
+
+
 
 
 // TODO: LOgic for user and admin keep logged in (may have to use shared prefrences)

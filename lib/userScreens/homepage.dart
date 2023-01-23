@@ -10,6 +10,9 @@ import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:micro_pharma/userScreens/master_screen.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/userScreens/userSettings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../main.dart';
 
 class HomePage extends StatelessWidget {
   static String id = 'home';
@@ -22,9 +25,13 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.logout_outlined),
-        onPressed: () {
+        onPressed: () async {
           FirebaseAuth.instance.signOut();
           Navigator.pushNamed(context, LoginPage.id);
+          var sharedLogin = await SharedPreferences.getInstance();
+          sharedLogin.setBool(SplashPageState.KEYLOGIN, false);
+          var sharedUser = await SharedPreferences.getInstance();
+          sharedUser.setBool(SplashPageState.KEYUSER, false);
         },
       ),
       body: SafeArea(
