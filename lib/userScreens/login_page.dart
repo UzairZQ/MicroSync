@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/userScreens/homepage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 import 'package:micro_pharma/components/constants.dart';
 
@@ -161,9 +162,16 @@ class _LoginPageState extends State<LoginPage> {
         .collection("users")
         .doc(user!.uid)
         .get()
-        .then((DocumentSnapshot documentSnapshot) {
+        .then((DocumentSnapshot documentSnapshot) async {
       if (documentSnapshot.exists) {
         if (documentSnapshot.get('role') == "user") {
+          //if successfully loggedIn (Creds are correct)
+
+          var sharedLogin = await SharedPreferences.getInstance();
+          var sharedUser = await SharedPreferences.getInstance();
+          sharedLogin.setBool(SplashPageState.KEYLOGIN, true);
+          sharedUser.setBool(SplashPageState.KEYUSER, true);
+
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -171,6 +179,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         } else if (documentSnapshot.get('role') == "admin") {
+          var sharedLogin = await SharedPreferences.getInstance();
+          var sharedUser = await SharedPreferences.getInstance();
+           sharedLogin.setBool(SplashPageState.KEYLOGIN, true);
+          sharedUser.setBool(SplashPageState.KEYUSER, false);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(

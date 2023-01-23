@@ -5,7 +5,9 @@ import 'package:micro_pharma/adminScreens/adminSettings.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/components/containerRow.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:micro_pharma/main.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminPage extends StatelessWidget {
   static String id = 'admin';
@@ -17,9 +19,13 @@ class AdminPage extends StatelessWidget {
     print(currentUser!.email);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
             FirebaseAuth.instance.signOut();
             Navigator.pushNamed(context, LoginPage.id);
+            var sharedLogin = await SharedPreferences.getInstance();
+            sharedLogin.setBool(SplashPageState.KEYLOGIN, false);
+            var sharedUser = await SharedPreferences.getInstance();
+            sharedUser.setBool(SplashPageState.KEYUSER, false);
           },
           child: const Icon(Icons.logout_outlined)),
       body: SafeArea(
