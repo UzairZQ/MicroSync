@@ -1,11 +1,10 @@
 import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/GoogleMapPage.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
-
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
@@ -13,7 +12,7 @@ import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/master_screen.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/userScreens/userSettings.dart';
-import 'package:provider/provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'userScreens/login_page.dart';
 import 'userScreens/homepage.dart';
@@ -28,6 +27,17 @@ Future<void> main() async {
 
 class MicroPharma extends StatelessWidget {
   MicroPharma({Key? key}) : super(key: key);
+  // String user = FirebaseAuth.instance.currentUser!.uid;
+  // late var kk = FirebaseFirestore.instance
+  //     .collection("users")
+  //     .doc(user!.uid)
+  //     .get()
+  //     .then((DocumentSnapshot snapshot) {
+  //   if (snapshot.exists) {
+  //     snapshot.get('role') == "user";
+  //     return snapshot;
+  //   }
+  // });
 
   @override
   Widget build(BuildContext context) {
@@ -106,57 +116,13 @@ class SplashPageState extends State<SplashPage> {
             MaterialPageRoute(
               builder: (context) => LoginPage(),
             ));
+      } else {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginPage(),
+            ));
       }
     });
   }
 }
-
-
-
-
-
-
-
-// TODO: LOgic for user and admin keep logged in (may have to use shared prefrences)
-
-//       StreamBuilder<User?>(
-//         stream: FirebaseAuth.instance.authStateChanges(),
-//         builder: (context, snapshot) {
-//           if (snapshot.connectionState == ConnectionState.waiting) {
-//             return Container(
-//               alignment: Alignment.center,
-//               child: const CircularProgressIndicator(
-//                   backgroundColor: Colors.white, color: Colors.blue),
-//             );
-//           } else if (snapshot.hasError) {
-//             return Text('Something went wrong');
-//           } else if (snapshot.hasData && snapshot.data != null) {
-//             return StreamBuilder(
-//               stream: FirebaseFirestore.instance
-//                   .collection("users")
-//                   .doc(user!.uid)
-//                   .snapshots(),
-//               builder: ((BuildContext context,
-//                   AsyncSnapshot<DocumentSnapshot> snapshot) {
-//                 if (snapshot.hasData && snapshot.data != null) {
-//                   if (myDocument == 'admin') {
-//                     return AdminPage();
-//                   } else if (myDocument == 'user') {
-//                     return HomePage();
-//                   }
-//                 }
-//                 return Material(
-//                   child: Center(
-//                     child: CircularProgressIndicator(),
-//                   ),
-//                 );
-//               }),
-//             );
-//           } else {
-//             return LoginPage();
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }
