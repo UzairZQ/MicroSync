@@ -83,7 +83,10 @@ class SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset('assets/images/micro_trans.png'),
+        child: Hero(
+          child: Image.asset('assets/images/micro_trans.png'),
+          tag: 'micro-logo',
+        ),
       ),
     );
   }
@@ -99,15 +102,22 @@ class SplashPageState extends State<SplashPage> {
       if (isLoggedIn != null && isUser != null) {
         if (isLoggedIn && isUser) {
           Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(),
-              ));
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(),
+            ),
+          );
         } else if (isLoggedIn && isUser == false) {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => AdminPage(),
+              ));
+        } else {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LoginPage(),
               ));
         }
       } else if (isLoggedIn == null && isUser == null) {
