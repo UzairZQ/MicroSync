@@ -49,10 +49,13 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               const Flexible(
-                child: Image(
-                  alignment: Alignment.center,
-                  height: 170.0,
-                  image: AssetImage('assets/images/micro_trans.png'),
+                child: Hero(
+                  tag: 'micro-logo',
+                  child: Image(
+                    alignment: Alignment.center,
+                    height: 170.0,
+                    image: AssetImage('assets/images/micro_trans.png'),
+                  ),
                 ),
               ),
               Form(
@@ -169,6 +172,7 @@ class _LoginPageState extends State<LoginPage> {
 
           var sharedLogin = await SharedPreferences.getInstance();
           var sharedUser = await SharedPreferences.getInstance();
+
           sharedLogin.setBool(SplashPageState.KEYLOGIN, true);
           sharedUser.setBool(SplashPageState.KEYUSER, true);
 
