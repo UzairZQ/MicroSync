@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/userScreens/homepage.dart';
-import 'package:provider/provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 import 'package:micro_pharma/components/constants.dart';
@@ -49,10 +49,13 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               const Flexible(
-                child: Image(
-                  alignment: Alignment.center,
-                  height: 170.0,
-                  image: AssetImage('assets/images/micro_trans.png'),
+                child: Hero(
+                  tag: 'micro-logo',
+                  child: Image(
+                    alignment: Alignment.center,
+                    height: 170.0,
+                    image: AssetImage('assets/images/micro_trans.png'),
+                  ),
                 ),
               ),
               Form(
@@ -169,6 +172,7 @@ class _LoginPageState extends State<LoginPage> {
 
           var sharedLogin = await SharedPreferences.getInstance();
           var sharedUser = await SharedPreferences.getInstance();
+
           sharedLogin.setBool(SplashPageState.KEYLOGIN, true);
           sharedUser.setBool(SplashPageState.KEYUSER, true);
 
@@ -181,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
         } else if (documentSnapshot.get('role') == "admin") {
           var sharedLogin = await SharedPreferences.getInstance();
           var sharedUser = await SharedPreferences.getInstance();
-           sharedLogin.setBool(SplashPageState.KEYLOGIN, true);
+          sharedLogin.setBool(SplashPageState.KEYLOGIN, true);
           sharedUser.setBool(SplashPageState.KEYUSER, false);
           Navigator.pushReplacement(
             context,
