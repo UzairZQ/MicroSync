@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/GoogleMapPage.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
+import 'package:micro_pharma/services/database.dart';
+import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
@@ -12,6 +14,7 @@ import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/master_screen.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/userScreens/userSettings.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'userScreens/login_page.dart';
@@ -22,7 +25,20 @@ import 'package:micro_pharma/adminScreens/adminSettings.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MicroPharma());
+  runApp(
+    MicroPharma()
+    // MultiProvider(
+    //   providers: [
+    //     StreamProvider<QuerySnapshot>(initialData:,
+    //       create: (_) => DataBaseService().streamUser()),
+    //     FutureProvider<LocationServices>(initialData: ,
+    //       create: (_) async=> LocationServices(),),
+    //   ],
+    //   child: MicroPharma(),
+    
+  );
+
+  
 }
 
 class MicroPharma extends StatelessWidget {
@@ -54,7 +70,7 @@ class MicroPharma extends StatelessWidget {
         'dailycallreport': (context) => const DailyCallReport(),
         'usersettings': (context) => const UserSettings(),
         'adminsettings': (context) => const AdminSettings(),
-        'map_page': (context) => GoogleMapPage(),
+       // 'map_page': (context) => GoogleMapPage(),
         'location_screen': (context) => const LocationScreen(),
       },
       home: SplashPage(),
