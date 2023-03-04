@@ -10,15 +10,18 @@ class LocationServices extends ChangeNotifier {
   StreamSubscription<loc.LocationData>? locationSubscription;
 
   Future<void> listenLocation(String uid) async {
+    location.changeSettings(
+        interval: 5000, accuracy: loc.LocationAccuracy.balanced);
     locationSubscription = location.onLocationChanged.handleError((onError) {
       print(onError);
       locationSubscription?.cancel();
       locationSubscription = null;
-      // setState(){
-      //   _locationSubscription = null;
-      // }
+      notifyListeners();
     }).listen((loc.LocationData currentlocation) async {
-      await FirebaseFirestore.instance.collection('location').doc(uid).set({
+      location.changeSettings(
+          interval: 5000, accuracy: loc.LocationAccuracy.balanced);
+      location.enableBackgroundMode(enable: true);
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'latitude': currentlocation.latitude,
         'longitude': currentlocation.longitude,
       }, SetOptions(merge: true));
@@ -26,7 +29,7 @@ class LocationServices extends ChangeNotifier {
     });
   }
 
-  void requestPermission() async {
+  Future requestPermission() async {
     var status = await Permission.location.request();
     if (status.isGranted) {
       print('done');
@@ -40,10 +43,10 @@ class LocationServices extends ChangeNotifier {
 
   getLocation(String uid) async {
     try {
-      final loc.LocationData _locationResult = await location.getLocation();
+      final loc.LocationData locationResult = await location.getLocation();
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
-        'latitude': _locationResult.latitude,
-        'longitude': _locationResult.longitude,
+        'latitude': locationResult.latitude,
+        'longitude': locationResult.longitude,
       }, SetOptions(merge: true));
     } catch (e) {
       print(e);
@@ -54,9 +57,7 @@ class LocationServices extends ChangeNotifier {
   stopListening() {
     locationSubscription?.cancel();
     locationSubscription = null;
+    location.enableBackgroundMode(enable: false);
     notifyListeners();
-    // setState(() {
-    //   _locationSubscription = null;
-    // });
   }
 }

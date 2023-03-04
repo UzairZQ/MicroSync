@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
   String? validatePassword(String? password) {
     RegExp regex = RegExp(r'^.{6,}$');
     if (password!.isEmpty) {
-      return 'Password Enter Password';
+      return 'Please Enter Password';
     } else if (!regex.hasMatch(password)) {
       return 'Enter Password with min. 6 Characters';
     } else {
@@ -232,7 +232,6 @@ class _LoginPageState extends State<LoginPage> {
       //   SnackBar(
       //     content:
       //         Text('Incorrect Email or Password or It can be a network issue'),
-
     }
     Navigator.pop(context);
   }

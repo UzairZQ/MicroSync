@@ -9,6 +9,7 @@ class Master extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: myAppBar(appBartxt: 'Master'),
+      
     );
   }
 }
