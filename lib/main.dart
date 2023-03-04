@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/adminScreens/GoogleMapPage.dart';
+import 'package:micro_pharma/adminScreens/add_employees.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
-import 'package:micro_pharma/services/database.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
@@ -15,34 +13,37 @@ import 'package:micro_pharma/userScreens/master_screen.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/userScreens/userSettings.dart';
 import 'package:provider/provider.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'userScreens/login_page.dart';
 import 'userScreens/homepage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:micro_pharma/adminScreens/adminSettings.dart';
+import 'package:workmanager/workmanager.dart';
+
+@pragma('vm:entry-point')
+void callBackDispatcher() async {
+  Workmanager().executeTask((taskName, inputData) async {
+    await LocationServices().getLocation(inputData!['uid']);
+    print('Called the getLoc function from dispatcher');
+    print(DateTime.now().toString());
+    return Future.value(true);
+  });
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(
-    MicroPharma()
-    // MultiProvider(
-    //   providers: [
-    //     StreamProvider<QuerySnapshot>(initialData:,
-    //       create: (_) => DataBaseService().streamUser()),
-    //     FutureProvider<LocationServices>(initialData: ,
-    //       create: (_) async=> LocationServices(),),
-    //   ],
-    //   child: MicroPharma(),
-    
-  );
-
-  
+  await Workmanager().initialize(callBackDispatcher);
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<LocationServices>(
+          create: (_) => LocationServices())
+    ],
+    child: MicroPharma(),
+  ));
 }
 
 class MicroPharma extends StatelessWidget {
-  MicroPharma({Key? key}) : super(key: key);
+  const MicroPharma({Key? key}) : super(key: key);
   // String user = FirebaseAuth.instance.currentUser!.uid;
   // late var kk = FirebaseFirestore.instance
   //     .collection("users")
@@ -70,10 +71,11 @@ class MicroPharma extends StatelessWidget {
         'dailycallreport': (context) => const DailyCallReport(),
         'usersettings': (context) => const UserSettings(),
         'adminsettings': (context) => const AdminSettings(),
-       // 'map_page': (context) => GoogleMapPage(),
+        // 'map_page': (context) => GoogleMapPage(),
         'location_screen': (context) => const LocationScreen(),
+        'add_employees': (context) => const AddEmployees(),
       },
-      home: SplashPage(),
+      home: const SplashPage(),
     );
   }
 }
@@ -100,8 +102,8 @@ class SplashPageState extends State<SplashPage> {
     return Scaffold(
       body: Center(
         child: Hero(
-          child: Image.asset('assets/images/micro_trans.png'),
           tag: 'micro-logo',
+          child: Image.asset('assets/images/micro_trans.png'),
         ),
       ),
     );
@@ -120,14 +122,14 @@ class SplashPageState extends State<SplashPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomePage(),
+              builder: (context) => const HomePage(),
             ),
           );
         } else if (isLoggedIn && isUser == false) {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => AdminPage(),
+                builder: (context) => const AdminPage(),
               ));
         } else {
           Navigator.pushReplacement(
