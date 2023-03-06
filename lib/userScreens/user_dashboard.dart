@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:pie_chart/pie_chart.dart';
 
 List<String> month = <String>[
   'January',
@@ -26,7 +27,14 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  Map<String, double> dataMap = {
+    "Flutter": 5,
+    "React": 3,
+    "Xamarin": 2,
+    "Ionic": 2,
+  };
   String monthValue = month.first;
+
   String yearValue = year.first;
   @override
   Widget build(BuildContext context) {
@@ -94,13 +102,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-              Text(
-                'Visit/Missed Details',
-                style: TextStyle(
-                    fontSize: 17.5,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins'),
-              ),
+              myTextwidget(fontSize: 17.5, text: 'Visit/Missed Details'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -111,14 +113,11 @@ class _DashboardState extends State<Dashboard> {
                     height: 72.0,
                     width: 144.0,
                     child: Center(
-                      child: Text(
-                        '14 Visited Doctors',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17.5),
-                      ),
-                    ),
+                        child: myTextwidget(
+                      fontSize: 17.5,
+                      text: '14 Visited Doctors',
+                      fontWeight: FontWeight.bold,
+                    )),
                     decoration: BoxDecoration(
                       color: Color(0xff89B7FD),
                       borderRadius: BorderRadius.circular(15.0),
@@ -131,12 +130,10 @@ class _DashboardState extends State<Dashboard> {
                     height: 72.0,
                     width: 144.0,
                     child: Center(
-                      child: Text(
-                        '7 Missed Doctors',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17.5),
+                      child: myTextwidget(
+                        text: '20 missed doctors',
+                        fontSize: 17.5,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     decoration: BoxDecoration(
@@ -153,7 +150,12 @@ class _DashboardState extends State<Dashboard> {
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Poppins'),
               ),
-              Container(),
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: PieChart(
+                    dataMap: dataMap,
+                    chartType: ChartType.ring,
+                  )),
             ],
           ),
         ),
