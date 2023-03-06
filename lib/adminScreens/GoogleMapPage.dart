@@ -2,82 +2,108 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:geolocator/geolocator.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import 'package:micro_pharma/components/constants.dart';
+import 'package:micro_pharma/services/database.dart';
+import 'package:micro_pharma/services/location_services.dart';
+import 'package:provider/provider.dart';
+
+import 'package:location/location.dart' as loc;
 
 class GoogleMapPage extends StatefulWidget {
   static const String id = 'map_page';
-  GoogleMapPage({Key? key}) : super(key: key);
+
+  final String userId;
+
+  GoogleMapPage({required this.userId});
 
   @override
   State<GoogleMapPage> createState() => _GoogleMapPageState();
 }
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
-  static const CameraPosition _atdPosition =
-      CameraPosition(target: LatLng(34.1688, 73.2215), zoom: 14.4746);
-  final Completer<GoogleMapController> _controller = Completer();
-  final List<Marker> _markers = <Marker>[
-    Marker(
-      markerId: MarkerId('1'),
-      position: LatLng(34.1688, 73.2215),
-      infoWindow: InfoWindow(title: 'Initial Location'),
-    ),
-  ];
+  @override
+  void initState() {
+    // TODO: implement initState
 
-  Future<Position> getUserCurrentLocation() async {
-    await Geolocator.requestPermission()
-        .then((value) {})
-        .onError((error, stackTrace) {
-      print('error' + error.toString());
-    });
+    super.initState();
+  }
 
-    return await Geolocator.getCurrentPosition();
+  final loc.Location location = loc.Location();
+
+  final db = DataBaseService();
+  late GoogleMapController _controller;
+  bool _added = false;
+  bool isSatellite = false;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print('disposed google maps');
+    // Provider.of<LocationServices>(context).stopListening();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        initialCameraPosition: _atdPosition,
-        markers: Set<Marker>.of(_markers),
-        zoomControlsEnabled: false,
-        mapType: MapType.normal,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
+      appBar: myAppBar(appBartxt: 'Map Screen'),
+      body: StreamBuilder(
+        stream: db.streamUser(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (_added) {
+            mymap(snapshot);
+          }
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return GoogleMap(
+            mapType: isSatellite ? MapType.satellite : MapType.normal,
+            markers: {
+              Marker(
+                markerId: MarkerId('Current User Location'),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueRed),
+                position: LatLng(
+                  snapshot.data!.docs.singleWhere(
+                      (element) => element.id == widget.userId)['latitude'],
+                  snapshot.data!.docs.singleWhere(
+                      (element) => element.id == widget.userId)['longitude'],
+                ),
+              ),
+            },
+            initialCameraPosition: CameraPosition(
+              target: LatLng(
+                snapshot.data!.docs.singleWhere(
+                    (element) => element.id == widget.userId)['latitude'],
+                snapshot.data!.docs.singleWhere(
+                    (element) => element.id == widget.userId)['longitude'],
+              ),
+              zoom: 15.00,
+            ),
+            onMapCreated: (GoogleMapController controller) async {
+              setState(() {
+                _controller = controller;
+                _added = true;
+              });
+            },
+          );
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          getUserCurrentLocation().then(
-            (value) async {
-              print('my current locaton');
-              print(
-                  value.latitude.toString() + " " + value.longitude.toString());
-
-              _markers.add(
-                Marker(
-                  markerId: MarkerId('2'),
-                  position: LatLng(value.latitude, value.longitude),
-                  infoWindow: InfoWindow(title: 'Current User Location'),
-                ),
-              );
-
-              CameraPosition cameraPosition = CameraPosition(
-                  target: LatLng(value.latitude, value.longitude), zoom: 18);
-
-              final GoogleMapController controller = await _controller.future;
-              controller.animateCamera(
-                  CameraUpdate.newCameraPosition(cameraPosition));
-              setState(() {});
-            },
-          );
+          setState(() {
+            isSatellite = !isSatellite;
+          });
         },
         label: const Text(
-          'Get User Location',
+          'Change Map Type',
           style: TextStyle(
             fontFamily: 'Poppins',
           ),
@@ -85,5 +111,17 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
         icon: const Icon(Icons.location_on_outlined),
       ),
     );
+  }
+
+  Future<void> mymap(AsyncSnapshot<QuerySnapshot> snapshot) async {
+    await _controller
+        .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+            target: LatLng(
+              snapshot.data!.docs.singleWhere(
+                  (element) => element.id == widget.userId)['latitude'],
+              snapshot.data!.docs.singleWhere(
+                  (element) => element.id == widget.userId)['longitude'],
+            ),
+            zoom: 15.00)));
   }
 }

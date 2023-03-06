@@ -66,7 +66,7 @@ class _DashboardState extends State<Dashboard> {
                     borderRadius: BorderRadius.circular(10.0),
                     dropdownColor: Colors.white70,
                   ),
-                  SizedBox(width: 5.0),
+                  const SizedBox(width: 5.0),
                   DropdownButton<String>(
                     items: year.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
@@ -86,7 +86,7 @@ class _DashboardState extends State<Dashboard> {
                     borderRadius: BorderRadius.circular(10.0),
                     dropdownColor: Colors.white70,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5.0,
                   ),
                   const TextButton(
@@ -107,9 +107,9 @@ class _DashboardState extends State<Dashboard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(left: 30.0, right: 15.0),
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+                    padding: const EdgeInsets.only(left: 30.0, right: 15.0),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 10.0),
                     height: 72.0,
                     width: 144.0,
                     child: Center(
@@ -124,9 +124,9 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(left: 30.0, right: 15.0),
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+                    padding: const EdgeInsets.only(left: 30.0, right: 15.0),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 10.0),
                     height: 72.0,
                     width: 144.0,
                     child: Center(
@@ -137,7 +137,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: Color(0xffFF9292),
+                      color: const Color(0xffFF9292),
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                   ),
