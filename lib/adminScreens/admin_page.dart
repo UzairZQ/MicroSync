@@ -1,17 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:micro_pharma/adminScreens/GoogleMapPage.dart';
+import 'package:location/location.dart';
+
 import 'package:micro_pharma/adminScreens/adminSettings.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/components/containerRow.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:micro_pharma/main.dart';
+import 'package:micro_pharma/services/location_services.dart';
+import 'package:micro_pharma/userScreens/daily_call_report.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
+import 'package:micro_pharma/userScreens/product_order.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AdminPage extends StatelessWidget {
+class AdminPage extends StatefulWidget {
   static String id = 'admin';
   const AdminPage({Key? key}) : super(key: key);
+
+  @override
+  State<AdminPage> createState() => _AdminPageState();
+}
+
+class _AdminPageState extends State<AdminPage> {
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +35,24 @@ class AdminPage extends StatelessWidget {
     print(currentUser!.email);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            FirebaseAuth.instance.signOut();
-            Navigator.pushNamed(context, LoginPage.id);
+          onPressed: () async {
+            // setState(() {
+            //   Provider.of<LocationServices>(context, listen: false)
+            //       .stopListening();
+            // });
+
+            await Location().enableBackgroundMode(enable: false);
+
+            await FirebaseAuth.instance.signOut();
+            var sharedLogin = await SharedPreferences.getInstance();
+            sharedLogin.setBool(SplashPageState.KEYLOGIN, false);
+            var sharedUser = await SharedPreferences.getInstance();
+            sharedUser.setBool(SplashPageState.KEYUSER, false);
+
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => LoginPage()));
           },
-          child: Icon(Icons.logout_outlined)),
+          child: const Icon(Icons.logout_outlined)),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -42,7 +71,7 @@ class AdminPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(
+                    const Text(
                       'Welcome Admin !',
                       style: TextStyle(
                         fontFamily: 'Poppins',
@@ -51,10 +80,10 @@ class AdminPage extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: 17.0),
+                    const SizedBox(height: 17.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Icon(
                           Icons.calendar_month,
                           color: Colors.white,
@@ -70,38 +99,38 @@ class AdminPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15.0,
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               containerRow(
-                container1Clr: Color(0xFFF0DCFF),
+                container1Clr: const Color(0xFFF0DCFF),
                 container1Icon: Icons.place_outlined,
                 container1Text: 'Live Tracking',
                 container1Tap: () =>
                     {Navigator.pushNamed(context, LocationScreen.id)},
-                container2Clr: Color(0xFFFFC8C8),
+                container2Clr: const Color(0xFFFFC8C8),
                 container2Icon: Icons.calendar_month_outlined,
                 container2Text: 'Daily Call Reports',
-                container2Tap: () => null,
+                container2Tap: () {},
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
               containerRow(
-                container1Clr: Color.fromARGB(255, 133, 254, 226),
+                container1Clr: const Color.fromARGB(255, 133, 254, 226),
                 container1Icon: Icons.assignment_outlined,
                 container1Text: 'Orders',
-                container1Tap: () => null,
-                container2Clr: Color(0xffFFE974),
+                container1Tap: () {},
+                container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Call Plans',
-                container2Tap: () => null,
+                container2Tap: () {},
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
               containerRow(
@@ -110,19 +139,22 @@ class AdminPage extends StatelessWidget {
                 container1Text: 'Doctors, Areas & Chemists',
                 container2Clr: Colors.orange.shade200,
                 container2Icon: Icons.settings_outlined,
-                container2Text: 'Employees',
-                container1Tap: () => null,
-                container2Tap: () => null,
+                container2Text: 'Add Users',
+                container1Tap: () {},
+                container2Tap: () {
+                  Navigator.pushNamed(context, 'add_employees');
+                },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
               kbuttonstyle(
-                  color: kappbarColor,
-                  text: 'Settings',
-                  onPressed: () {
-                    Navigator.pushNamed(context, AdminSettings.id);
-                  }),
+                color: kappbarColor,
+                text: 'Settings',
+                onPressed: () {
+                  Navigator.pushNamed(context, AdminSettings.id);
+                },
+              ),
             ],
           ),
         ),
