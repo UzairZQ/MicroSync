@@ -47,11 +47,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    DocumentReference userName =
-        FirebaseFirestore.instance.collection('users').doc(currentUser!.uid);
+    var userName = FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser!.uid)
+        .get();
     const task = 'provideBGLoc';
     Map<String, dynamic> uid = {'uid': currentUser!.uid};
     Workmanager().registerPeriodicTask('locationTask', task,
+        tag: 'location',
         inputData: uid,
         constraints: Constraints(networkType: NetworkType.connected));
     const duration = Duration(minutes: 1);
@@ -65,20 +68,46 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.logout_outlined),
-        onPressed: () async {
-          await Location().enableBackgroundMode(enable: false);
-          // setState(() {
-          //   Provider.of<LocationServices>(context, listen: false)
-          //       .stopListening();
-          // });
-          FirebaseAuth.instance.signOut();
-          var sharedLogin = await SharedPreferences.getInstance();
-          sharedLogin.setBool(SplashPageState.KEYLOGIN, false);
-          var sharedUser = await SharedPreferences.getInstance();
-          sharedUser.setBool(SplashPageState.KEYUSER, false);
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return Center(
+                  child: AlertDialog(
+                    title: const Text('Logout'),
+                    content: const Text('Do you really want to Logout?'),
+                    actions: [
+                      TextButton(
+                          onPressed: () async {
+                            await Location()
+                                .enableBackgroundMode(enable: false);
+                            FirebaseAuth.instance.signOut();
+                            Workmanager().cancelByTag('location');
+                            var sharedLogin =
+                                await SharedPreferences.getInstance();
+                            sharedLogin.setBool(
+                                SplashPageState.KEYLOGIN, false);
+                            var sharedUser =
+                                await SharedPreferences.getInstance();
+                            sharedUser.setBool(SplashPageState.KEYUSER, false);
 
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => LoginPage()));
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          },
+                          child: const Text('Logout')),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancel'))
+                    ],
+                  ),
+                );
+              });
         },
       ),
       body: SafeArea(

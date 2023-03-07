@@ -6,7 +6,7 @@ import 'package:micro_pharma/services/database.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'GoogleMapPage.dart';
+import 'google_map_page.dart';
 
 class LocationScreen extends StatefulWidget {
   const LocationScreen({Key? key}) : super(key: key);

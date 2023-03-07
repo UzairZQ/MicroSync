@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
-import 'package:micro_pharma/adminScreens/adminSettings.dart';
+import 'package:micro_pharma/adminScreens/admin_settings.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/components/containerRow.dart';
 import 'package:micro_pharma/components/constants.dart';

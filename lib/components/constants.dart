@@ -59,3 +59,26 @@ class myAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 TextStyle ktextstyle = TextStyle(
     fontFamily: 'Poppins', fontSize: 17.5, fontWeight: FontWeight.w400);
+
+    String? validateEmail(String? email) {
+    if (email!.isEmpty) {
+      return 'Please Enter Email Adress';
+    } else if (!RegExp(
+            r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$')
+        .hasMatch(email)) {
+      return ("Please enter a valid email");
+    } else {
+      return null;
+    }
+  }
+
+  String? validatePassword(String? password) {
+    RegExp regex = RegExp(r'^.{6,}$');
+    if (password!.isEmpty) {
+      return 'Please Enter Password';
+    } else if (!regex.hasMatch(password)) {
+      return 'Enter Password with min. 6 Characters';
+    } else {
+      return null;
+    }
+  }
