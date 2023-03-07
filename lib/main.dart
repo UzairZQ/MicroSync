@@ -15,12 +15,12 @@ import 'package:micro_pharma/userScreens/userSettings.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'userScreens/login_page.dart';
-import 'userScreens/homepage.dart';
-import 'package:micro_pharma/adminScreens/adminSettings.dart';
+import 'userScreens/home_page.dart';
+import 'package:micro_pharma/adminScreens/admin_settings.dart';
 import 'package:workmanager/workmanager.dart';
 
 @pragma('vm:entry-point')
-void callBackDispatcher() async {
+void callBackDispatcher() async { //This function is for getting the user location in the background
   Workmanager().executeTask((taskName, inputData) async {
     await LocationServices().getLocation(inputData!['uid']);
     print('Called the getLoc function from dispatcher');
@@ -44,18 +44,6 @@ Future<void> main() async {
 
 class MicroPharma extends StatelessWidget {
   const MicroPharma({Key? key}) : super(key: key);
-  // String user = FirebaseAuth.instance.currentUser!.uid;
-  // late var kk = FirebaseFirestore.instance
-  //     .collection("users")
-  //     .doc(user!.uid)
-  //     .get()
-  //     .then((DocumentSnapshot snapshot) {
-  //   if (snapshot.exists) {
-  //     snapshot.get('role') == "user";
-  //     return snapshot;
-  //   }
-  // });
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -109,7 +97,7 @@ class SplashPageState extends State<SplashPage> {
     );
   }
 
-  void whereToGo() async {
+  void whereToGo() async {//this function is for navigating either the user or admin without have to login again when the app starts up.
     var sharedLogin = await SharedPreferences.getInstance();
     var sharedUser = await SharedPreferences.getInstance();
 
