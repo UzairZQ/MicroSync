@@ -6,11 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/services/database.dart';
-import 'package:micro_pharma/services/location_services.dart';
-import 'package:provider/provider.dart';
 
 import 'package:location/location.dart' as loc;
 
@@ -19,7 +17,7 @@ class GoogleMapPage extends StatefulWidget {
 
   final String userId;
 
-  GoogleMapPage({required this.userId});
+  const GoogleMapPage({super.key, required this.userId});
 
   @override
   State<GoogleMapPage> createState() => _GoogleMapPageState();
@@ -51,7 +49,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(appBartxt: 'Map Screen'),
+      appBar: MyAppBar(appBartxt: 'Map Screen'),
       body: StreamBuilder(
         stream: db.streamUser(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {

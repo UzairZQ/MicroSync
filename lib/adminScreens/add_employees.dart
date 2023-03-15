@@ -1,12 +1,7 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:micro_pharma/services/user_model.dart';
 
 import '../services/database.dart';
 
@@ -123,7 +118,7 @@ class _AddEmployeesState extends State<AddEmployees> {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     //TextEditingController nameController = TextEditingController();
     return Scaffold(
-      appBar: myAppBar(appBartxt: 'Add Users'),
+      appBar: MyAppBar(appBartxt: 'Add Users'),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
@@ -132,7 +127,7 @@ class _AddEmployeesState extends State<AddEmployees> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  myTextFormField(
+                  MyTextFormField(
                     hintext: 'Please Enter Name',
                     onSaved: (value) {
                       nameController.text = value!;
@@ -147,7 +142,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                   const SizedBox(
                     height: 20.0,
                   ),
-                  myTextFormField(
+                  MyTextFormField(
                     hintext: 'Please Enter Email',
                     onSaved: (value) {
                       emailController.text = value!;
@@ -164,10 +159,10 @@ class _AddEmployeesState extends State<AddEmployees> {
                       }
                     },
                   ),
-                 const SizedBox(
+                  const SizedBox(
                     height: 20.0,
                   ),
-                  myTextFormField(
+                  MyTextFormField(
                     controller: roleController,
                     hintext: 'Please Enter Role(user or admin)',
                     onSaved: (value) {
@@ -185,7 +180,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                   const SizedBox(
                     height: 20,
                   ),
-                  myTextFormField(
+                  MyTextFormField(
                     controller: phoneController,
                     hintext: 'Enter Phone Number',
                     onSaved: (phone) {
@@ -201,7 +196,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                   const SizedBox(
                     height: 20.0,
                   ),
-                  myTextFormField(
+                  MyTextFormField(
                     controller: passwordController,
                     hintext: 'Please Enter Password',
                     onSaved: (value) {
@@ -218,10 +213,10 @@ class _AddEmployeesState extends State<AddEmployees> {
                       }
                     },
                   ),
-                 const  SizedBox(
+                  const SizedBox(
                     height: 20.0,
                   ),
-                  myTextFormField(
+                  MyTextFormField(
                     controller: confpasController,
                     hintext: 'Enter Confirm Password',
                     validator: (value) {
@@ -249,9 +244,9 @@ class _AddEmployeesState extends State<AddEmployees> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      kbuttonstyle(
+                      MyButton(
                           color: kappbarColor,
-                          text: 'Create New User',
+                          text: 'Create User',
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
@@ -259,7 +254,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                             createUser(
                                 emailController.text, passwordController.text);
                           }),
-                      kbuttonstyle(
+                      MyButton(
                           color: const Color.fromARGB(255, 224, 57, 90),
                           text: 'Delete User',
                           onPressed: () {
@@ -352,9 +347,13 @@ class _AddEmployeesState extends State<AddEmployees> {
   }
 }
 
-class myTextFormField extends StatelessWidget {
-  myTextFormField(
-      {required this.hintext, this.onSaved, this.validator, this.controller});
+class MyTextFormField extends StatelessWidget {
+  MyTextFormField(
+      {super.key,
+      required this.hintext,
+      this.onSaved,
+      this.validator,
+      this.controller});
 
   String? hintext;
   Function(String?)? onSaved;

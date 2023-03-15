@@ -1,13 +1,10 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-Color kappbarColor = Color(0xff1FB7CC);
+Color kappbarColor = const Color(0xff1FB7CC);
 
-class kbuttonstyle extends StatelessWidget {
-  kbuttonstyle(
-      {required this.color, required this.text, required this.onPressed});
-  Color color = Color(0xFFFFB800);
+class MyButton extends StatelessWidget {
+  MyButton({required this.color, required this.text, required this.onPressed});
+  Color color = const Color(0xFFFFB800);
   late String text;
   Function() onPressed;
 
@@ -23,7 +20,7 @@ class kbuttonstyle extends StatelessWidget {
           style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.bold),
         ),
         style: ElevatedButton.styleFrom(
-          primary: color,
+          backgroundColor: color,
           elevation: 6.0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -34,13 +31,12 @@ class kbuttonstyle extends StatelessWidget {
   }
 }
 
-class myAppBar extends StatelessWidget implements PreferredSizeWidget {
-  myAppBar({required this.appBartxt});
+class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const MyAppBar({super.key,required this.appBartxt});
   final String appBartxt;
 
   @override
-  // TODO: implement preferredSize
-  Size get preferredSize => Size.fromHeight(60.0);
+  Size get preferredSize => const Size.fromHeight(60.0);
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -57,28 +53,28 @@ class myAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-TextStyle ktextstyle = TextStyle(
+TextStyle ktextstyle = const TextStyle(
     fontFamily: 'Poppins', fontSize: 17.5, fontWeight: FontWeight.w400);
 
-    String? validateEmail(String? email) {
-    if (email!.isEmpty) {
-      return 'Please Enter Email Adress';
-    } else if (!RegExp(
-            r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$')
-        .hasMatch(email)) {
-      return ("Please enter a valid email");
-    } else {
-      return null;
-    }
+String? validateEmail(String? email) {
+  if (email!.isEmpty) {
+    return 'Please Enter Email Adress';
+  } else if (!RegExp(
+          r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$')
+      .hasMatch(email)) {
+    return ("Please enter a valid email");
+  } else {
+    return null;
   }
+}
 
-  String? validatePassword(String? password) {
-    RegExp regex = RegExp(r'^.{6,}$');
-    if (password!.isEmpty) {
-      return 'Please Enter Password';
-    } else if (!regex.hasMatch(password)) {
-      return 'Enter Password with min. 6 Characters';
-    } else {
-      return null;
-    }
+String? validatePassword(String? password) {
+  RegExp regex = RegExp(r'^.{6,}$');
+  if (password!.isEmpty) {
+    return 'Please Enter Password';
+  } else if (!regex.hasMatch(password)) {
+    return 'Enter Password with min. 6 Characters';
+  } else {
+    return null;
   }
+}

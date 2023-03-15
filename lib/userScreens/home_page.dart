@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/components/containerRow.dart';
+import 'package:micro_pharma/components/container_Row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/services/database.dart';
 import 'package:micro_pharma/services/location_services.dart';
@@ -12,12 +14,12 @@ import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:micro_pharma/userScreens/master_screen.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
-import 'package:micro_pharma/userScreens/userSettings.dart';
-import 'package:provider/provider.dart';
+import 'package:micro_pharma/userScreens/user_settings.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:location/location.dart';
 import '../main.dart';
-import 'dart:async';
+
 import 'package:workmanager/workmanager.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,34 +38,42 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     userLocation();
+    getBackgroundLocation();
   }
 
   void userLocation() async {
     await LocationServices().requestPermission();
     await LocationServices().getLocation(currentUser!.uid);
+    Location.instance.enableBackgroundMode(enable: true);
     SharedPreferences userId = await SharedPreferences.getInstance();
-    userId.setString('userId', currentUser!.uid);
+    userId.setString('userId', currentUser!.uid.toString());
+  }
+
+  void getBackgroundLocation() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final String? userId = preferences.getString('userId');
+    const task = 'provideBGLoc';
+    Map<String, dynamic> uid = {'uid': userId};
+    Workmanager().registerPeriodicTask('locationTask', task,
+    
+        frequency: const Duration(minutes: 15),
+        initialDelay: const Duration(minutes: 5),
+        tag: 'location',
+        inputData: uid,
+        constraints: Constraints(
+          networkType: NetworkType.connected,
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
-    var userName = FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser!.uid)
-        .get();
-    const task = 'provideBGLoc';
-    Map<String, dynamic> uid = {'uid': currentUser!.uid};
-    Workmanager().registerPeriodicTask('locationTask', task,
-        tag: 'location',
-        inputData: uid,
-        constraints: Constraints(networkType: NetworkType.connected));
     const duration = Duration(minutes: 1);
-    // Timer.periodic(duration, (timer) async {
-    //   await LocationServices().getLocation(
-    //       currentUser!.uid); //calls the location funtion every 10 minutes
-    //   print('recalled the getlocation ftn');
-    //   print(DateTime.now());
-    // });
+    Timer.periodic(duration, (timer) async {
+      await LocationServices().getLocation(
+          currentUser!.uid); //calls the location funtion every 10 minutes
+      print('recalled the getlocation ftn from timer');
+      print(DateTime.now());
+    });
     print(currentUser!.email);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -200,14 +210,14 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        kbuttonstyle(
+                        MyButton(
                             onPressed: () {},
                             color: const Color(0xFF009AAF),
                             text: 'Start Your Day'),
                         const SizedBox(
                           width: 15.0,
                         ),
-                        kbuttonstyle(
+                        MyButton(
                             onPressed: () {},
                             color: const Color.fromARGB(255, 171, 75, 95),
                             text: 'Change Plan'),
@@ -259,7 +269,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 15.0,
               ),
-              kbuttonstyle(
+              MyButton(
                   color: kappbarColor,
                   text: 'Settings',
                   onPressed: () {

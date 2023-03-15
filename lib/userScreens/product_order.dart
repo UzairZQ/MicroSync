@@ -8,7 +8,7 @@ class ProductOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(appBartxt: 'Product Orders'),
+      appBar: MyAppBar(appBartxt: 'Product Orders'),
     );
   }
 }
