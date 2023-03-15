@@ -8,8 +8,7 @@ class Master extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(appBartxt: 'Master'),
-      
+      appBar: MyAppBar(appBartxt: 'Master'),
     );
   }
 }

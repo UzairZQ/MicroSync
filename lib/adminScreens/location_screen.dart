@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:micro_pharma/components/constants.dart';
+
 import 'package:micro_pharma/services/database.dart';
-import 'package:micro_pharma/services/location_services.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'google_map_page.dart';
 
 class LocationScreen extends StatefulWidget {
@@ -26,12 +24,12 @@ class _LocationScreenState extends State<LocationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(appBartxt: 'Location'),
+      appBar: MyAppBar(appBartxt: 'Location'),
       body: StreamBuilder(
           stream: DataBaseService().streamUser(),
           builder: (context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
             return ListView.builder(
                 itemCount: snapshot.data?.docs.length,
@@ -44,9 +42,10 @@ class _LocationScreenState extends State<LocationScreen> {
                           snapshot.data!.docs[index]['displayName'].toString()),
                       subtitle: Row(
                         children: [
+                          // Text('Location Updated at: $time'),
                           Text(snapshot.data!.docs[index]['latitude']
                               .toString()),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Text(snapshot.data!.docs[index]['longitude']
@@ -62,7 +61,7 @@ class _LocationScreenState extends State<LocationScreen> {
                         ],
                       ),
                       trailing: IconButton(
-                        icon: Icon(Icons.directions),
+                        icon: const Icon(Icons.directions),
                         onPressed: () {
                           setState(() {});
                           Navigator.of(context).push(
@@ -82,35 +81,3 @@ class _LocationScreenState extends State<LocationScreen> {
     );
   }
 }
-
-
-//ListView(
-      //   shrinkWrap: true,
-      //   children: [
-      //     Card(
-      //       elevation: 5.0,
-      //       child: ListTile(
-      //         tileColor: Colors.grey[300],
-      //         title: Text(
-      //           'Uzair Zia Qureshi',
-      //           style: TextStyle(
-      //               fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-      //         ),
-      //         leading: Icon(
-      //           Icons.person_outline,
-      //           size: 30.0,
-      //         ),
-      //         trailing: IconButton(
-      //           icon: Icon(
-      //             size: 30.0,
-      //             Icons.location_pin,
-      //             color: Colors.blueGrey,
-      //           ),
-      //           onPressed: () {
-      //             Navigator.pushNamed(context, GoogleMapPage.id);
-      //           },
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),

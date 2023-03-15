@@ -7,8 +7,8 @@ class UserSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: myAppBar(appBartxt: 'Settings'),
+    return const Scaffold(
+      appBar: MyAppBar(appBartxt: 'Settings'),
     );
   }
 }

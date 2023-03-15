@@ -11,7 +11,7 @@ class LocationServices extends ChangeNotifier {
 
   Future<void> listenLocation(String uid) async {
     location.changeSettings(
-        interval: 5000, accuracy: loc.LocationAccuracy.balanced);
+        interval: 5000, accuracy: loc.LocationAccuracy.high);
     locationSubscription = location.onLocationChanged.handleError((onError) {
       print(onError);
       locationSubscription?.cancel();

@@ -10,7 +10,7 @@ import '../main.dart';
 import 'package:micro_pharma/components/constants.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
   static String id = 'login';
 
   @override
@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 15.0),
-              kbuttonstyle(
+              MyButton(
                   color: const Color(0xFFFFB800),
                   text: 'LOGIN',
                   onPressed: () {
@@ -145,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                                 const SizedBox(
                                   height: 10.0,
                                 ),
-                                myTextFormField(
+                                MyTextFormField(
                                     hintext: 'Please Enter you Email',
                                     controller: changePassController,
                                     validator: validateEmail,
@@ -155,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                                 const SizedBox(
                                   height: 10.0,
                                 ),
-                                kbuttonstyle(
+                                MyButton(
                                     color: Colors.amber,
                                     text: 'Send Email',
                                     onPressed: () {
