@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
+
 import 'package:micro_pharma/adminScreens/add_employees.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
@@ -22,10 +25,18 @@ import 'package:workmanager/workmanager.dart';
 @pragma('vm:entry-point')
 void callBackDispatcher() async {
   //This function is for getting the user location in the background
+  WidgetsFlutterBinding.ensureInitialized();
+  DartPluginRegistrant.ensureInitialized;
+
   Workmanager().executeTask((taskName, inputData) async {
-    await LocationServices().getLocation(inputData!['uid']);
-    print('Called the getLoc function from dispatcher');
+    await Firebase.initializeApp();
+    print(' called the firebase.init');
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final String? userId = preferences.getString('userId');
+    await LocationServices().getLocation(userId!);
+    print('called the geolocator function');
     print(DateTime.now().toString());
+
     return Future.value(true);
   });
 }
@@ -34,6 +45,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
   await Firebase.initializeApp();
+  runApp(const MicroPharma());
   await Workmanager().initialize(callBackDispatcher);
   // runApp(MultiProvider(
   //   providers: [
@@ -42,7 +54,6 @@ Future<void> main() async {
   //   ],
   //   child: const MicroPharma(),
   // ));
-  runApp(const MicroPharma());
 }
 
 class MicroPharma extends StatelessWidget {

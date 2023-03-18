@@ -2,32 +2,15 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart' as loc;
+import 'package:intl/intl.dart';
+import 'package:micro_pharma/main.dart';
+
 import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geolocator_android/geolocator_android.dart';
 
 class LocationServices extends ChangeNotifier {
-  final loc.Location location = loc.Location();
-  StreamSubscription<loc.LocationData>? locationSubscription;
-
-  Future<void> listenLocation(String uid) async {
-    location.changeSettings(
-        interval: 5000, accuracy: loc.LocationAccuracy.high);
-    locationSubscription = location.onLocationChanged.handleError((onError) {
-      print(onError);
-      locationSubscription?.cancel();
-      locationSubscription = null;
-      notifyListeners();
-    }).listen((loc.LocationData currentlocation) async {
-      location.changeSettings(
-          interval: 5000, accuracy: loc.LocationAccuracy.balanced);
-      location.enableBackgroundMode(enable: true);
-      await FirebaseFirestore.instance.collection('users').doc(uid).set({
-        'latitude': currentlocation.latitude,
-        'longitude': currentlocation.longitude,
-      }, SetOptions(merge: true));
-      notifyListeners();
-    });
-  }
+  Future<void> listenLocation(String uid) async {}
 
   Future requestPermission() async {
     var status = await Permission.location.request();
@@ -41,23 +24,34 @@ class LocationServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  getLocation(String uid) async {
+  String dateTime() {
+    DateFormat dateFormat =
+        DateFormat('hh:mma dd/MM/yyyy'); // create date format
+    String formattedDate =
+        dateFormat.format(DateTime.now()); // format current date
+    return formattedDate;
+  }
+
+  Future<void> getLocation(String uid) async {
     try {
-      final loc.LocationData locationResult = await location.getLocation();
-      await FirebaseFirestore.instance.collection('users').doc(uid).set({
-        'latitude': locationResult.latitude,
-        'longitude': locationResult.longitude,
-      }, SetOptions(merge: true));
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        String time = dateTime();
+        GeolocatorAndroid.registerWith();
+        await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+          forceAndroidLocationManager: true,
+        ).then((position) async {
+          await FirebaseFirestore.instance.collection('users').doc(uid).set({
+            'latitude': position.latitude,
+            'longitude': position.longitude,
+            'update': time,
+          }, SetOptions(merge: true));
+        });
+      }
     } catch (e) {
       print(e);
     }
-    notifyListeners();
   }
 
-  stopListening() {
-    locationSubscription?.cancel();
-    locationSubscription = null;
-    location.enableBackgroundMode(enable: false);
-    notifyListeners();
-  }
+  stopListening() {}
 }
