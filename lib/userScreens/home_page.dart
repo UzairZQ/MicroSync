@@ -1,11 +1,7 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/container_Row.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/services/database.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
@@ -17,7 +13,7 @@ import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/userScreens/user_settings.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:location/location.dart';
+
 import '../main.dart';
 
 import 'package:workmanager/workmanager.dart';
@@ -44,36 +40,39 @@ class _HomePageState extends State<HomePage> {
   void userLocation() async {
     await LocationServices().requestPermission();
     await LocationServices().getLocation(currentUser!.uid);
-    Location.instance.enableBackgroundMode(enable: true);
+
     SharedPreferences userId = await SharedPreferences.getInstance();
     userId.setString('userId', currentUser!.uid.toString());
   }
 
   void getBackgroundLocation() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final String? userId = preferences.getString('userId');
+ 
+
     const task = 'provideBGLoc';
-    Map<String, dynamic> uid = {'uid': userId};
+    Map<String, dynamic> uid = {'uid': currentUser!.uid};
     Workmanager().registerPeriodicTask('locationTask', task,
-    
+        backoffPolicy: BackoffPolicy.linear,
         frequency: const Duration(minutes: 15),
         initialDelay: const Duration(minutes: 5),
         tag: 'location',
         inputData: uid,
         constraints: Constraints(
           networkType: NetworkType.connected,
+          requiresBatteryNotLow: false,
+          requiresCharging: false,
+          requiresDeviceIdle: false,
+          requiresStorageNotLow: false,
         ));
   }
 
   @override
   Widget build(BuildContext context) {
-    const duration = Duration(minutes: 1);
-    Timer.periodic(duration, (timer) async {
-      await LocationServices().getLocation(
-          currentUser!.uid); //calls the location funtion every 10 minutes
-      print('recalled the getlocation ftn from timer');
-      print(DateTime.now());
-    });
+    // const duration = Duration(minutes: 5);
+    // Timer.periodic(duration, (timer) async {
+    //   await LocationServices().getLocation(currentUser!
+    //       .uid); //calls the location funtion every 5 minutes if the user is active
+    //   print('recalled the getlocation ftn from timer');
+    // });
     print(currentUser!.email);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -89,8 +88,6 @@ class _HomePageState extends State<HomePage> {
                     actions: [
                       TextButton(
                           onPressed: () async {
-                            await Location()
-                                .enableBackgroundMode(enable: false);
                             FirebaseAuth.instance.signOut();
                             Workmanager().cancelByTag('location');
                             var sharedLogin =
@@ -100,7 +97,6 @@ class _HomePageState extends State<HomePage> {
                             var sharedUser =
                                 await SharedPreferences.getInstance();
                             sharedUser.setBool(SplashPageState.KEYUSER, false);
-
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

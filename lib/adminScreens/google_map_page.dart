@@ -10,8 +10,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/services/database.dart';
 
-import 'package:location/location.dart' as loc;
-
 class GoogleMapPage extends StatefulWidget {
   static const String id = 'map_page';
 
@@ -30,8 +28,6 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
     super.initState();
   }
-
-  final loc.Location location = loc.Location();
 
   final db = DataBaseService();
   late GoogleMapController _controller;

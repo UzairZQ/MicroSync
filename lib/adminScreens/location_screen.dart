@@ -4,6 +4,7 @@ import 'package:micro_pharma/components/constants.dart';
 
 import 'package:micro_pharma/services/database.dart';
 
+import '../main.dart';
 import 'google_map_page.dart';
 
 class LocationScreen extends StatefulWidget {
@@ -42,14 +43,16 @@ class _LocationScreenState extends State<LocationScreen> {
                           snapshot.data!.docs[index]['displayName'].toString()),
                       subtitle: Row(
                         children: [
-                          // Text('Location Updated at: $time'),
-                          Text(snapshot.data!.docs[index]['latitude']
-                              .toString()),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Text(snapshot.data!.docs[index]['longitude']
-                              .toString()),
+                          Text(
+                              'Location Updated at: ${snapshot.data!.docs[index]['update']}'
+                                  ),
+                          // Text(snapshot.data!.docs[index]['latitude']
+                          //     .toString()),
+                          // const SizedBox(
+                          //   width: 20,
+                          // ),
+                          // Text(snapshot.data!.docs[index]['longitude']
+                          //     .toString()),
                           // TextButton(
                           //   onPressed: () async {
 

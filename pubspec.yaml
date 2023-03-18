@@ -25,17 +25,19 @@ dependencies:
   
   cupertino_icons: ^1.0.2
   #Firebase Dependencies
-  firebase_core: ^2.5.0
-  firebase_auth: ^4.2.6
-  cloud_firestore: ^4.3.2
+  firebase_core: 2.8.0
+  firebase_auth: 4.3.0
+  cloud_firestore: 4.4.5
   
-  google_maps_flutter: ^2.2.1
-  #geolocator: ^9.0.2
+  google_maps_flutter: 2.2.5
+  geolocator: ^9.0.2
   provider: ^6.0.4
   shared_preferences: ^2.0.17
-  location: ^4.4.0
+  # location: ^4.4.0
   permission_handler: ^10.2.0
   workmanager: ^0.5.1
+  geolocator_android: ^4.1.7
+  intl: ^0.17.0
   
 
 dev_dependencies:
