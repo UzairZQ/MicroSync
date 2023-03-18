@@ -17,6 +17,38 @@ List<String> month = <String>[
   'December'
 ];
 List<String> year = <String>['2022', '2023', '2024', '2025'];
+List<String> day = <String>[
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10',
+  '11',
+  '12',
+  '13',
+  '14',
+  '15',
+  '16',
+  '17',
+  '18',
+  '19',
+  '20',
+  '21',
+  '22',
+  '23',
+  '24',
+  '25',
+  '26',
+  '28',
+  '29',
+  '30',
+  '31'
+];
 
 class Dashboard extends StatefulWidget {
   static String id = 'user_dashboard';
@@ -33,9 +65,11 @@ class _DashboardState extends State<Dashboard> {
     "Xamarin": 2,
     "Ionic": 2,
   };
+
   String monthValue = month.first;
 
   String yearValue = year.first;
+  String dayValue = day.first;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +98,29 @@ class _DashboardState extends State<Dashboard> {
                     icon: const Icon(Icons.arrow_drop_down),
                     value: monthValue,
                     borderRadius: BorderRadius.circular(10.0),
-                    dropdownColor: Colors.white70,
+                    dropdownColor: Colors.white,
+                  ),
+                  const SizedBox(
+                    width: 5.0,
+                  ),
+                  DropdownButton<String>(
+                    items: day.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      // This is called when the user selects an item.
+                      setState(() {
+                        dayValue = value!;
+                      });
+                    },
+                    elevation: 10,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    value: dayValue,
+                    borderRadius: BorderRadius.circular(10.0),
+                    dropdownColor: Colors.white,
                   ),
                   const SizedBox(width: 5.0),
                   DropdownButton<String>(
@@ -84,7 +140,7 @@ class _DashboardState extends State<Dashboard> {
                     icon: const Icon(Icons.arrow_drop_down),
                     value: yearValue,
                     borderRadius: BorderRadius.circular(10.0),
-                    dropdownColor: Colors.white70,
+                    dropdownColor: Colors.white,
                   ),
                   const SizedBox(
                     width: 5.0,
@@ -151,11 +207,27 @@ class _DashboardState extends State<Dashboard> {
                     fontFamily: 'Poppins'),
               ),
               Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.fromLTRB(50, 20, 180, 200),
                   child: PieChart(
                     dataMap: dataMap,
                     chartType: ChartType.ring,
+                    centerText: '1.55 doctor',
+                    chartValuesOptions: ChartValuesOptions(
+                      showChartValues: false,
+                      showChartValueBackground: false,
+                    ),
+                    legendOptions: LegendOptions(showLegends: false),
                   )),
+              SizedBox(
+                height: 0.0,
+              ),
+              const Text(
+                'DCR status',
+                style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
             ],
           ),
         ),
