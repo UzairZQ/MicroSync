@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 
 import 'package:micro_pharma/adminScreens/add_employees.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
+import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
+import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
@@ -21,6 +23,7 @@ import 'userScreens/login_page.dart';
 import 'userScreens/home_page.dart';
 import 'package:micro_pharma/adminScreens/admin_settings.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:provider/provider.dart';
 
 @pragma('vm:entry-point')
 void callBackDispatcher() async {
@@ -45,15 +48,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MicroPharma());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<UserDataProvider>(
+          create: (_) => UserDataProvider())
+    ],
+    child: const MicroPharma(),
+  ));
   await Workmanager().initialize(callBackDispatcher);
-  // runApp(MultiProvider(
-  //   providers: [
-  //     ChangeNotifierProvider<LocationServices>(
-  //         create: (_) => LocationServices())
-  //   ],
-  //   child: const MicroPharma(),
-  // ));
 }
 
 class MicroPharma extends StatelessWidget {
@@ -76,6 +78,7 @@ class MicroPharma extends StatelessWidget {
         // 'map_page': (context) => GoogleMapPage(),
         'location_screen': (context) => const LocationScreen(),
         'add_employees': (context) => const AddEmployees(),
+        'doctors_areas': (context) => const DoctorsAreas(),
       },
       home: const SplashPage(),
     );

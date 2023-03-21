@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../services/database.dart';
 
 class AddEmployees extends StatefulWidget {
+  static const String id = 'add_doctor';
   const AddEmployees({super.key});
 
   @override
@@ -250,9 +251,9 @@ class _AddEmployeesState extends State<AddEmployees> {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
+                              createUser(emailController.text,
+                                  passwordController.text);
                             }
-                            createUser(
-                                emailController.text, passwordController.text);
                           }),
                       MyButton(
                           color: const Color.fromARGB(255, 224, 57, 90),
