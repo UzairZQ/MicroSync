@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/container_Row.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:micro_pharma/models/user_model.dart';
+import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
@@ -11,6 +13,7 @@ import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:micro_pharma/userScreens/master_screen.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/userScreens/user_settings.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,26 +31,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final currentUser = FirebaseAuth.instance.currentUser;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     userLocation();
     getBackgroundLocation();
+    UserDataProvider userDataProvider = Provider.of(context, listen: false);
+    userDataProvider.fetchUserData(currentUser!.uid);
   }
 
   void userLocation() async {
     await LocationServices().requestPermission();
     await LocationServices().getLocation(currentUser!.uid);
-
     SharedPreferences userId = await SharedPreferences.getInstance();
     userId.setString('userId', currentUser!.uid.toString());
   }
 
   void getBackgroundLocation() async {
- 
-
     const task = 'provideBGLoc';
     Map<String, dynamic> uid = {'uid': currentUser!.uid};
     Workmanager().registerPeriodicTask('locationTask', task,
@@ -67,13 +68,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // const duration = Duration(minutes: 5);
-    // Timer.periodic(duration, (timer) async {
-    //   await LocationServices().getLocation(currentUser!
-    //       .uid); //calls the location funtion every 5 minutes if the user is active
-    //   print('recalled the getlocation ftn from timer');
-    // });
-    print(currentUser!.email);
+    UserModel userData = Provider.of<UserDataProvider>(context).getUserData;
+    print(userData.displayName);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.logout_outlined),
@@ -135,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
-                      'Welcome ${currentUser!.displayName}!',
+                      'Welcome ${userData.displayName}!',
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.bold,

@@ -2,14 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:micro_pharma/adminScreens/admin_settings.dart';
+import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/main.dart';
+import 'package:micro_pharma/providers/user_data_provider.dart';
 
 import 'package:micro_pharma/userScreens/login_page.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/user_model.dart';
 
 class AdminPage extends StatefulWidget {
   static String id = 'admin';
@@ -20,15 +25,18 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
+  final currentUser = FirebaseAuth.instance.currentUser;
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
+  void initState() {
+   
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser;
+     Provider.of<UserDataProvider>(context, )
+        .fetchUserData(currentUser!.uid);
+    UserModel userData = Provider.of<UserDataProvider>(context).getUserData;
     print(currentUser!.email);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -91,9 +99,9 @@ class _AdminPageState extends State<AdminPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    const Text(
-                      'Welcome Admin !',
-                      style: TextStyle(
+                    Text(
+                      'Welcome ${userData.displayName} !',
+                      style: const TextStyle(
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
@@ -161,7 +169,7 @@ class _AdminPageState extends State<AdminPage> {
                 container2Icon: Icons.settings_outlined,
                 container2Text: 'Add Delete Users',
                 container1Tap: () {
-                  Navigator.pushNamed(context, 'doctors_areas');
+                  Navigator.pushNamed(context, DoctorsAreas.id);
                 },
                 container2Tap: () {
                   Navigator.pushNamed(context, 'add_employees');

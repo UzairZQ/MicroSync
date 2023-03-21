@@ -21,7 +21,9 @@ class DoctorsAreas extends StatelessWidget {
                   containerIcon: Icons.person_outlined,
                   containerText: 'Doctors',
                   txtBtn1Ontap: () {},
-                  txtBtn2Ontap: () {},
+                  txtBtn2Ontap: () {
+                   
+                  },
                   txtBtn1text: 'View Doctors',
                   txtBtn2text: 'Add Doctor'),
               myContainerwithButtons(
