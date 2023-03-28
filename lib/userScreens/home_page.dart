@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
 import 'package:micro_pharma/components/container_Row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/user_model.dart';
@@ -10,7 +11,7 @@ import 'package:micro_pharma/userScreens/daily_call_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
-import 'package:micro_pharma/userScreens/master_screen.dart';
+
 import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/userScreens/user_settings.dart';
 import 'package:provider/provider.dart';
@@ -37,8 +38,9 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     userLocation();
     getBackgroundLocation();
-    UserDataProvider userDataProvider = Provider.of(context, listen: false);
-    userDataProvider.fetchUserData(currentUser!.uid);
+    Provider.of<UserDataProvider>(context, listen: false).logIn();
+    Provider.of<UserDataProvider>(context, listen: false)
+        .fetchUserData(currentUser!.uid);
   }
 
   void userLocation() async {
@@ -68,8 +70,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    UserModel userData = Provider.of<UserDataProvider>(context).getUserData;
-    print(userData.displayName);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.logout_outlined),
@@ -84,19 +84,27 @@ class _HomePageState extends State<HomePage> {
                     actions: [
                       TextButton(
                           onPressed: () async {
+                            Provider.of<UserDataProvider>(context,
+                                    listen: false)
+                                .logOut();
+
                             FirebaseAuth.instance.signOut();
+                            // Provider.of<UserDataProvider>(
+                            //   context,
+                            //   listen: false,
+                            // ).dispose();
                             Workmanager().cancelByTag('location');
                             var sharedLogin =
                                 await SharedPreferences.getInstance();
                             sharedLogin.setBool(
-                                SplashPageState.KEYLOGIN, false);
+                                SplashPageState.loginKey, false);
                             var sharedUser =
                                 await SharedPreferences.getInstance();
-                            sharedUser.setBool(SplashPageState.KEYUSER, false);
+                            sharedUser.setBool(SplashPageState.userKey, false);
                             Navigator.pushReplacement(
-                              context,
+                              navigatorKey.currentContext!,
                               MaterialPageRoute(
-                                builder: (context) => LoginPage(),
+                                builder: (context) => const LoginPage(),
                               ),
                             );
                           },
@@ -130,15 +138,25 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(
-                      'Welcome ${userData.displayName}!',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                        //color: Colors.white,
-                        foreground: Paint()..color = Colors.white,
-                      ),
+                    Consumer<UserDataProvider>(
+                      builder: (context, dataProvider, child) {
+                        // dataProvider.fetchUserData(currentUser!.uid);
+                        UserModel? userData = dataProvider.getUserData;
+                        if (userData.displayName == null ||
+                            userData.displayName!.isEmpty) {
+                          return const CircularProgressIndicator();
+                        } else {
+                          return Text(
+                            'Welcome ${userData.displayName} !',
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: Colors.white,
+                            ),
+                          );
+                        }
+                      },
                     ),
                     const SizedBox(height: 17.0),
                     Row(
@@ -254,7 +272,8 @@ class _HomePageState extends State<HomePage> {
                 container2Clr: Colors.orange.shade200,
                 container2Icon: Icons.add_shopping_cart_outlined,
                 container2Text: 'Orders',
-                container1Tap: () => Navigator.pushNamed(context, Master.id),
+                container1Tap: () =>
+                    Navigator.pushNamed(context, DoctorsAreas.id),
                 container2Tap: () =>
                     Navigator.pushNamed(context, ProductOrder.id),
               ),

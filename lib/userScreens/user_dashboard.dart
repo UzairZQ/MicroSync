@@ -31,7 +31,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Dashboard'),
+      appBar: const MyAppBar(appBartxt: 'Dashboard'),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -130,7 +130,11 @@ class _DashboardState extends State<Dashboard> {
                         horizontal: 30.0, vertical: 10.0),
                     height: 72.0,
                     width: 144.0,
-                    child: Center(
+                    decoration: BoxDecoration(
+                      color: const Color(0xffFF9292),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: const Center(
                       child: Text(
                         '7 Missed Doctors',
                         style: TextStyle(
@@ -138,10 +142,6 @@ class _DashboardState extends State<Dashboard> {
                             fontWeight: FontWeight.bold,
                             fontSize: 17.5),
                       ),
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xffFF9292),
-                      borderRadius: BorderRadius.circular(15.0),
                     ),
                   ),
                 ],

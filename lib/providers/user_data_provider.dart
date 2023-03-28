@@ -3,19 +3,37 @@ import 'package:flutter/foundation.dart';
 import 'package:micro_pharma/models/user_model.dart';
 
 class UserDataProvider with ChangeNotifier {
-  UserModel user = UserModel();
+  bool _isLoggedIn = true;
+  UserModel _user = UserModel();
 
-  fetchUserData(String userId) async {
-    DocumentSnapshot<Map<String, dynamic>> docSnapshot =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
-    UserModel newUser = UserModel.fromMap(docSnapshot.data());
-    if (newUser != user) {
-      user = newUser;
-      notifyListeners();
+  UserModel get getUserData => _user;
+
+  Future<void> fetchUserData(String userId) async {
+    if (!_isLoggedIn) return;
+    try {
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      if (docSnapshot.exists) {
+        final newUser = UserModel.fromMap(docSnapshot.data()!);
+        if (newUser != _user) {
+          // only update if new user is different
+          _user = newUser;
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      print('error in the fetch user function $e');
     }
   }
 
-  get getUserData {
-    return user;
+  void logIn() {
+    _isLoggedIn = true;
+  }
+
+  void logOut() {
+    _isLoggedIn = false;
+    _user = UserModel();
   }
 }

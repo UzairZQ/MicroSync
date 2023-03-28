@@ -6,7 +6,7 @@ class AdminSettings extends StatelessWidget {
   static String id = 'adminsettings';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       appBar: MyAppBar(appBartxt: 'Admin Settings'),
     );
   }

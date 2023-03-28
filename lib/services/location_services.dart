@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
-import 'package:micro_pharma/main.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
@@ -15,7 +14,7 @@ class LocationServices extends ChangeNotifier {
   Future requestPermission() async {
     var status = await Permission.location.request();
     if (status.isGranted) {
-      print('done');
+     
     } else if (status.isDenied) {
       requestPermission();
     } else if (status.isPermanentlyDenied) {
@@ -49,7 +48,7 @@ class LocationServices extends ChangeNotifier {
         });
       }
     } catch (e) {
-      print(e);
+    print(e);
     }
   }
 

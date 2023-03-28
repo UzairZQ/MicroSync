@@ -15,7 +15,7 @@ import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/userScreens/day_plan.dart';
-import 'package:micro_pharma/userScreens/master_screen.dart';
+
 import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/userScreens/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,12 +33,10 @@ void callBackDispatcher() async {
 
   Workmanager().executeTask((taskName, inputData) async {
     await Firebase.initializeApp();
-    print(' called the firebase.init');
+
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final String? userId = preferences.getString('userId');
     await LocationServices().getLocation(userId!);
-    print('called the geolocator function');
-    print(DateTime.now().toString());
 
     return Future.value(true);
   });
@@ -63,6 +61,7 @@ class MicroPharma extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       routes: {
         'login': (context) => const LoginPage(),
         'home': (context) => const HomePage(),
@@ -71,7 +70,6 @@ class MicroPharma extends StatelessWidget {
         'dayplan': (context) => const DayPlan(),
         'productorder': (context) => const ProductOrder(),
         'callplanner': (context) => const CallPlanner(),
-        'master': (context) => const Master(),
         'dailycallreport': (context) => const DailyCallReport(),
         'usersettings': (context) => const UserSettings(),
         'adminsettings': (context) => const AdminSettings(),
@@ -93,8 +91,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class SplashPageState extends State<SplashPage> {
-  static const String KEYLOGIN = 'Login';
-  static const String KEYUSER = 'User';
+  static const String loginKey = 'Login';
+  static const String userKey = 'User';
 
   @override
   void initState() {
@@ -119,8 +117,8 @@ class SplashPageState extends State<SplashPage> {
     var sharedLogin = await SharedPreferences.getInstance();
     var sharedUser = await SharedPreferences.getInstance();
 
-    var isLoggedIn = sharedLogin.getBool(KEYLOGIN);
-    var isUser = sharedUser.getBool(KEYUSER);
+    var isLoggedIn = sharedLogin.getBool(loginKey);
+    var isUser = sharedUser.getBool(userKey);
 
     Timer(const Duration(seconds: 1), () {
       if (isLoggedIn != null && isUser != null) {
