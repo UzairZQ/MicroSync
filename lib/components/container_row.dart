@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'my_container.dart';
 
-class containerRow extends StatelessWidget {
-  late Color container1Clr;
-  late Color container2Clr;
-  IconData container1Icon;
-  IconData container2Icon;
-  String container1Text;
-  String container2Text;
-  Function() container1Tap;
-  Function() container2Tap;
-  containerRow(
-      {required this.container1Clr,
+class ContainerRow extends StatelessWidget {
+  final Color container1Clr;
+  final Color container2Clr;
+  final IconData container1Icon;
+  final IconData container2Icon;
+  final String container1Text;
+  final String container2Text;
+  final Function() container1Tap;
+  final Function() container2Tap;
+  const ContainerRow(
+      {super.key,
+      required this.container1Clr,
       required this.container2Clr,
       required this.container1Icon,
       required this.container2Icon,
@@ -23,18 +24,18 @@ class containerRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment:MainAxisAlignment.center,
       children: [
-        myContainer(
+        MyContainer(
           containerclr: container1Clr,
           containerIcon: container1Icon,
           containerText: container1Text,
           onTap: container1Tap,
         ),
-        SizedBox(
+        const SizedBox(
           width: 50.0,
         ),
-        myContainer(
+        MyContainer(
           containerclr: container2Clr,
           containerIcon: container2Icon,
           containerText: container2Text,

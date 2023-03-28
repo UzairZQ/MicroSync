@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:micro_pharma/components/constants.dart';
-
 import 'package:micro_pharma/services/database.dart';
-
-import '../main.dart';
 import 'google_map_page.dart';
 
 class LocationScreen extends StatefulWidget {
@@ -18,14 +14,14 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   @override
   void dispose() {
-    // TODO: implement dispose
+   
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Location'),
+      appBar: const MyAppBar(appBartxt: 'Location'),
       body: StreamBuilder(
           stream: DataBaseService().streamUser(),
           builder: (context, AsyncSnapshot snapshot) {
