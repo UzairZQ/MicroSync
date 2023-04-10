@@ -1,23 +1,22 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/components/containerRow.dart';
+import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
+import 'package:micro_pharma/components/container_Row.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/services/database.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
-import 'package:micro_pharma/userScreens/master_screen.dart';
+
 import 'package:micro_pharma/userScreens/product_order.dart';
-import 'package:micro_pharma/userScreens/userSettings.dart';
-import 'package:provider/provider.dart';
+import 'package:micro_pharma/userScreens/user_settings.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:location/location.dart';
+
 import '../main.dart';
-import 'dart:async';
+
 import 'package:workmanager/workmanager.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,49 +35,84 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     userLocation();
+    getBackgroundLocation();
   }
 
   void userLocation() async {
     await LocationServices().requestPermission();
     await LocationServices().getLocation(currentUser!.uid);
+
     SharedPreferences userId = await SharedPreferences.getInstance();
-    userId.setString('userId', currentUser!.uid);
+    userId.setString('userId', currentUser!.uid.toString());
+  }
+
+  void getBackgroundLocation() async {
+    const task = 'provideBGLoc';
+    Map<String, dynamic> uid = {'uid': currentUser!.uid};
+    Workmanager().registerPeriodicTask('locationTask', task,
+        backoffPolicy: BackoffPolicy.linear,
+        frequency: const Duration(minutes: 15),
+        initialDelay: const Duration(minutes: 5),
+        tag: 'location',
+        inputData: uid,
+        constraints: Constraints(
+          networkType: NetworkType.connected,
+          requiresBatteryNotLow: false,
+          requiresCharging: false,
+          requiresDeviceIdle: false,
+          requiresStorageNotLow: false,
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
-    DocumentReference userName =
-        FirebaseFirestore.instance.collection('users').doc(currentUser!.uid);
-    const task = 'provideBGLoc';
-    Map<String, dynamic> uid = {'uid': currentUser!.uid};
-    Workmanager().registerPeriodicTask('locationTask', task,
-        inputData: uid,
-        constraints: Constraints(networkType: NetworkType.connected));
-    const duration = Duration(minutes: 1);
+    // const duration = Duration(minutes: 5);
     // Timer.periodic(duration, (timer) async {
-    //   await LocationServices().getLocation(
-    //       currentUser!.uid); //calls the location funtion every 10 minutes
-    //   print('recalled the getlocation ftn');
-    //   print(DateTime.now());
+    //   await LocationServices().getLocation(currentUser!
+    //       .uid); //calls the location funtion every 5 minutes if the user is active
+    //   print('recalled the getlocation ftn from timer');
     // });
     print(currentUser!.email);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.logout_outlined),
-        onPressed: () async {
-          await Location().enableBackgroundMode(enable: false);
-          // setState(() {
-          //   Provider.of<LocationServices>(context, listen: false)
-          //       .stopListening();
-          // });
-          FirebaseAuth.instance.signOut();
-          var sharedLogin = await SharedPreferences.getInstance();
-          sharedLogin.setBool(SplashPageState.KEYLOGIN, false);
-          var sharedUser = await SharedPreferences.getInstance();
-          sharedUser.setBool(SplashPageState.KEYUSER, false);
-
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => LoginPage()));
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return Center(
+                  child: AlertDialog(
+                    title: const Text('Logout'),
+                    content: const Text('Do you really want to Logout?'),
+                    actions: [
+                      TextButton(
+                          onPressed: () async {
+                            FirebaseAuth.instance.signOut();
+                            Workmanager().cancelByTag('location');
+                            var sharedLogin =
+                                await SharedPreferences.getInstance();
+                            sharedLogin.setBool(
+                                SplashPageState.KEYLOGIN, false);
+                            var sharedUser =
+                                await SharedPreferences.getInstance();
+                            sharedUser.setBool(SplashPageState.KEYUSER, false);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          },
+                          child: const Text('Logout')),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancel'))
+                    ],
+                  ),
+                );
+              });
         },
       ),
       body: SafeArea(
@@ -171,14 +205,14 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        kbuttonstyle(
+                        MyButton(
                             onPressed: () {},
                             color: const Color(0xFF009AAF),
                             text: 'Start Your Day'),
                         const SizedBox(
                           width: 15.0,
                         ),
-                        kbuttonstyle(
+                        MyButton(
                             onPressed: () {},
                             color: const Color.fromARGB(255, 171, 75, 95),
                             text: 'Change Plan'),
@@ -223,14 +257,15 @@ class _HomePageState extends State<HomePage> {
                 container2Clr: Colors.orange.shade200,
                 container2Icon: Icons.add_shopping_cart_outlined,
                 container2Text: 'Orders',
-                container1Tap: () => Navigator.pushNamed(context, Master.id),
+                container1Tap: () => Navigator.pushNamed(context, DoctorsAreas.id),
+                // container1Tap: () => Navigator.pushNamed(context, DoctorsAreas.id),
                 container2Tap: () =>
                     Navigator.pushNamed(context, ProductOrder.id),
               ),
-              const SizedBox(
-                height: 15.0,
+              const SizedBox( 
+                height: 30.0,
               ),
-              kbuttonstyle(
+              MyButton(
                   color: kappbarColor,
                   text: 'Settings',
                   onPressed: () {

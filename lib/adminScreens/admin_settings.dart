@@ -7,7 +7,7 @@ class AdminSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(appBartxt: 'Admin Settings'),
+      appBar: MyAppBar(appBartxt: 'Admin Settings'),
     );
   }
 }

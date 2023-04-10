@@ -1,13 +1,10 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-Color kappbarColor = Color(0xff1FB7CC);
+Color kappbarColor = const Color(0xff1FB7CC);
 
-class kbuttonstyle extends StatelessWidget {
-  kbuttonstyle(
-      {required this.color, required this.text, required this.onPressed});
-  Color color = Color(0xFFFFB800);
+class MyButton extends StatelessWidget {
+  MyButton({required this.color, required this.text, required this.onPressed});
+  Color color = const Color(0xFFFFB800);
   late String text;
   Function() onPressed;
 
@@ -16,6 +13,7 @@ class kbuttonstyle extends StatelessWidget {
     return Container(
       height: 40.0,
       width: 150.0,
+      
       child: ElevatedButton(
         onPressed: onPressed,
         child: Text(
@@ -23,7 +21,7 @@ class kbuttonstyle extends StatelessWidget {
           style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.bold),
         ),
         style: ElevatedButton.styleFrom(
-          primary: color,
+          backgroundColor: color,
           elevation: 6.0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -34,13 +32,12 @@ class kbuttonstyle extends StatelessWidget {
   }
 }
 
-class myAppBar extends StatelessWidget implements PreferredSizeWidget {
-  myAppBar({required this.appBartxt});
+class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const MyAppBar({super.key, required this.appBartxt});
   final String appBartxt;
 
   @override
-  // TODO: implement preferredSize
-  Size get preferredSize => Size.fromHeight(60.0);
+  Size get preferredSize => const Size.fromHeight(60.0);
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -58,7 +55,7 @@ class myAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class myTextwidget extends StatelessWidget {
-  myTextwidget({ this.fontWeight,required this.fontSize,required this.text});
+  myTextwidget({this.fontWeight, required this.fontSize, required this.text});
 
   FontWeight? fontWeight;
   double fontSize;

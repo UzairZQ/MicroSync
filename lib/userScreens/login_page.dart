@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:micro_pharma/adminScreens/add_employees.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
-import 'package:micro_pharma/userScreens/homepage.dart';
+import 'package:micro_pharma/userScreens/home_page.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 import 'package:micro_pharma/components/constants.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
   static String id = 'login';
 
   @override
@@ -21,6 +22,8 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController changePassController = TextEditingController();
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -81,7 +84,13 @@ class _LoginPageState extends State<LoginPage> {
                       onSaved: (value) {
                         emailController.text = value!;
                       },
-                      validator: validateEmail,
+                      validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter Something';
+                  }
+                  return null;
+                },
+                      //validator: validateEmail,
                     ),
                     const SizedBox(
                       height: 10.0,
@@ -102,13 +111,19 @@ class _LoginPageState extends State<LoginPage> {
                       onSaved: (value) {
                         passwordController.text = value!;
                       },
-                      validator: validatePassword,
+                     validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter Something';
+                  }
+                  return null;
+                },
+                     // validator: validatePassword,
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 15.0),
-              kbuttonstyle(
+              MyButton(
                   color: const Color(0xFFFFB800),
                   text: 'LOGIN',
                   onPressed: () {
@@ -122,7 +137,66 @@ class _LoginPageState extends State<LoginPage> {
                   }),
               const SizedBox(height: 10.0),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Scaffold(
+                          body: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Change Password',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 18.0),
+                                ),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                MyTextFormField(
+                                    hintext: 'Please Enter you Email',
+                                    controller: changePassController,
+                                   validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter Something';
+                  }
+                  return null;
+                },
+                                   // validator: validateEmail,
+                                    onSaved: (value) {
+                                      changePassController.text = value!;
+                                    }),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                MyButton(
+                                    color: Colors.amber,
+                                    text: 'Send Email',
+                                    onPressed: () {
+                                      _auth
+                                          .sendPasswordResetEmail(
+                                              email: changePassController.text)
+                                          .then((value) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Please check your Email to reset the password'),
+                                          ),
+                                        );
+                                        changePassController.clear();
+                                      });
+                                    })
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                },
                 child: const Text(
                   'Forgot Password?',
                   style: TextStyle(
@@ -134,29 +208,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  String? validateEmail(String? email) {
-    if (email!.isEmpty) {
-      return 'Please Enter Email Adress';
-    } else if (!RegExp(
-            r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$')
-        .hasMatch(email)) {
-      return ("Please enter a valid email");
-    } else {
-      return null;
-    }
-  }
-
-  String? validatePassword(String? password) {
-    RegExp regex = RegExp(r'^.{6,}$');
-    if (password!.isEmpty) {
-      return 'Please Enter Password';
-    } else if (!regex.hasMatch(password)) {
-      return 'Enter Password with min. 6 Characters';
-    } else {
-      return null;
-    }
   }
 
   void route() {
