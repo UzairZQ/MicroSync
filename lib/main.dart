@@ -7,20 +7,22 @@ import 'package:flutter/material.dart';
 
 import 'package:micro_pharma/adminScreens/add_employees.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
+import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
+import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/userScreens/day_plan.dart';
-import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
-import 'package:micro_pharma/userScreens/user_settings.dart';
+import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'userScreens/login_page.dart';
 import 'userScreens/home_page.dart';
 import 'package:micro_pharma/adminScreens/admin_settings.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:provider/provider.dart';
 
 @pragma('vm:entry-point')
 void callBackDispatcher() async {
@@ -30,12 +32,10 @@ void callBackDispatcher() async {
 
   Workmanager().executeTask((taskName, inputData) async {
     await Firebase.initializeApp();
-    print(' called the firebase.init');
+
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final String? userId = preferences.getString('userId');
     await LocationServices().getLocation(userId!);
-    print('called the geolocator function');
-    print(DateTime.now().toString());
 
     return Future.value(true);
   });
@@ -45,15 +45,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MicroPharma());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<UserDataProvider>(
+          create: (_) => UserDataProvider())
+    ],
+    child: const MicroPharma(),
+  ));
   await Workmanager().initialize(callBackDispatcher);
-  // runApp(MultiProvider(
-  //   providers: [
-  //     ChangeNotifierProvider<LocationServices>(
-  //         create: (_) => LocationServices())
-  //   ],
-  //   child: const MicroPharma(),
-  // ));
 }
 
 class MicroPharma extends StatelessWidget {
@@ -61,6 +60,7 @@ class MicroPharma extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       routes: {
         'login': (context) => const LoginPage(),
         'home': (context) => const HomePage(),
@@ -71,12 +71,13 @@ class MicroPharma extends StatelessWidget {
         'callplanner': (context) => const CallPlanner(),
         'addoctor': (context) => const DoctorsAreas(),
         'dailycallreport': (context) => const DailyCallReport(),
-        'usersettings': (context) => const UserSettings(),
-        'adminsettings': (context) => const AdminSettings(),
+        'user_profile': (context) => const UserProfilePage(),
+        'admin_profile': (context) => const AdminProfilePage(),
         // 'map_page': (context) => GoogleMapPage(),
         'location_screen': (context) => const LocationScreen(),
         'add_employees': (context) => const AddEmployees(),
         // 'doctors_areas_page': (context) => const DoctorsAreas(),
+        'doctors_areas': (context) => const DoctorsAreas(),
       },
       // home: const DoctorsAreas(),
       home: const SplashPage(),
@@ -93,8 +94,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class SplashPageState extends State<SplashPage> {
-  static const String KEYLOGIN = 'Login';
-  static const String KEYUSER = 'User';
+  static const String loginKey = 'Login';
+  static const String userKey = 'User';
 
   @override
   void initState() {
@@ -119,8 +120,8 @@ class SplashPageState extends State<SplashPage> {
     var sharedLogin = await SharedPreferences.getInstance();
     var sharedUser = await SharedPreferences.getInstance();
 
-    var isLoggedIn = sharedLogin.getBool(KEYLOGIN);
-    var isUser = sharedUser.getBool(KEYUSER);
+    var isLoggedIn = sharedLogin.getBool(loginKey);
+    var isUser = sharedUser.getBool(userKey);
 
     Timer(const Duration(seconds: 1), () {
       if (isLoggedIn != null && isUser != null) {

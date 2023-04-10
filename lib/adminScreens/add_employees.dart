@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../services/database.dart';
 
 class AddEmployees extends StatefulWidget {
+  static const String id = 'add_doctor';
   const AddEmployees({super.key});
 
   @override
@@ -44,8 +45,8 @@ class _AddEmployeesState extends State<AddEmployees> {
             .set({
           'displayName': nameController.text,
           'email': emailController.text,
-          'longitude': '',
-          'latitude': '',
+          'longitude': 34,
+          'latitude': 73,
           'role': roleController.text,
           'uid': userCredential.user!.uid,
           'phone': phoneController.text
@@ -67,8 +68,8 @@ class _AddEmployeesState extends State<AddEmployees> {
               return Center(
                   child: AlertDialog(
                 title: const Text('Error'),
-                content: const Text(
-                    'User creation was unsuccessfull, Please try again'),
+                content:  Text(
+                    'User creation was unsuccessfull, Please try again:::$e'),
                 actions: [
                   TextButton(
                       onPressed: () {
@@ -80,7 +81,7 @@ class _AddEmployeesState extends State<AddEmployees> {
             });
           }));
 
-      print('the error in the createUser ftn is:::::$e }');
+      
     }
   }
 
@@ -119,7 +120,7 @@ class _AddEmployeesState extends State<AddEmployees> {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     //TextEditingController nameController = TextEditingController();
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Add Users'),
+      appBar: const MyAppBar(appBartxt: 'Add Users'),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
@@ -148,17 +149,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                     onSaved: (value) {
                       emailController.text = value!;
                     },
-                    validator: (email) {
-                      if (email!.isEmpty) {
-                        return 'Please Enter Email Adress';
-                      } else if (!RegExp(
-                              r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$')
-                          .hasMatch(email)) {
-                        return ("Please enter a valid email");
-                      } else {
-                        return null;
-                      }
-                    },
+                    validator: validateEmail
                   ),
                   const SizedBox(
                     height: 20.0,
@@ -251,9 +242,9 @@ class _AddEmployeesState extends State<AddEmployees> {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
+                              createUser(emailController.text,
+                                  passwordController.text);
                             }
-                            createUser(
-                                emailController.text, passwordController.text);
                           }),
                       MyButton(
                           color: const Color.fromARGB(255, 224, 57, 90),
@@ -322,7 +313,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                                                   .doc(snapshot.data.docs[index]
                                                       ['uid'])
                                                   .delete();
-
+                                                
                                               Navigator.pop(context);
                                             },
                                             child: const Text('Delete',
@@ -348,6 +339,7 @@ class _AddEmployeesState extends State<AddEmployees> {
   }
 }
 
+// ignore: must_be_immutable
 class MyTextFormField extends StatelessWidget {
   MyTextFormField(
       {super.key,
