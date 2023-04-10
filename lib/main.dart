@@ -17,7 +17,7 @@ import 'package:micro_pharma/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/userScreens/day_plan.dart';
 
 import 'package:micro_pharma/userScreens/product_order.dart';
-import 'package:micro_pharma/userScreens/user_settings.dart';
+import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'userScreens/login_page.dart';
 import 'userScreens/home_page.dart';
@@ -71,8 +71,8 @@ class MicroPharma extends StatelessWidget {
         'productorder': (context) => const ProductOrder(),
         'callplanner': (context) => const CallPlanner(),
         'dailycallreport': (context) => const DailyCallReport(),
-        'usersettings': (context) => const UserSettings(),
-        'adminsettings': (context) => const AdminSettings(),
+        'user_profile': (context) => const UserProfilePage(),
+        'admin_profile': (context) => const AdminProfilePage(),
         // 'map_page': (context) => GoogleMapPage(),
         'location_screen': (context) => const LocationScreen(),
         'add_employees': (context) => const AddEmployees(),

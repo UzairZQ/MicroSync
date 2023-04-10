@@ -25,6 +25,7 @@ class UserDataProvider with ChangeNotifier {
       }
     } catch (e) {
       print('error in the fetch user function $e');
+      return;
     }
   }
 

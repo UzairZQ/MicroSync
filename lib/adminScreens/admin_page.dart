@@ -202,7 +202,7 @@ class _AdminPageState extends State<AdminPage> {
                 color: kappbarColor,
                 text: 'Settings',
                 onPressed: () {
-                  Navigator.pushNamed(context, AdminSettings.id);
+                  Navigator.pushNamed(context, AdminProfilePage.id);
                 },
               ),
             ],

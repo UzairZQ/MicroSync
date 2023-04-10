@@ -6,15 +6,15 @@ import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:provider/provider.dart';
 
-class AdminProfilePage extends StatefulWidget {
-  static const String id = 'admin_profile';
-  const AdminProfilePage({Key? key}) : super(key: key);
+class UserProfilePage extends StatefulWidget {
+  static const String id = 'user_profile';
+  const UserProfilePage({Key? key}) : super(key: key);
 
   @override
-  _AdminProfilePageState createState() => _AdminProfilePageState();
+  _UserProfilePageState createState() => _UserProfilePageState();
 }
 
-class _AdminProfilePageState extends State<AdminProfilePage> {
+class _UserProfilePageState extends State<UserProfilePage> {
   final TextEditingController _nameEditingController = TextEditingController();
 
   @override
@@ -30,7 +30,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Profile'),
+        title: const Text('User Profile'),
         centerTitle: true,
         backgroundColor: kappbarColor,
         actions: [
@@ -110,7 +110,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
             const SizedBox(height: 20),
             MyButton(
               onPressed: () {
-                
+                // TODO: show change password bottom sheet
                 showModalBottomSheet(
                   context: context,
                   builder: (BuildContext context) {
@@ -148,7 +148,9 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
                                   await FirebaseAuth.instance
                                       .sendPasswordResetEmail(email: email);
                                   Navigator.pop(navigatorKey.currentContext!);
-                                  ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+                                  ScaffoldMessenger.of(
+                                          navigatorKey.currentContext!)
+                                      .showSnackBar(
                                     SnackBar(
                                       content: Text(
                                           'A password reset email has been sent to $email'),
