@@ -8,7 +8,7 @@ class CallPlanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(appBartxt: 'Call Planner'),
+      appBar: MyAppBar(appBartxt: 'Call Planner'),
     );
   }
 }

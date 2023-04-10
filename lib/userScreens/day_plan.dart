@@ -8,7 +8,7 @@ class DayPlan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(appBartxt: 'Day Plan'),
+      appBar: MyAppBar(appBartxt: 'Day Plan'),
     );
   }
 }

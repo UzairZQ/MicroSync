@@ -1,18 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
 
-import 'package:micro_pharma/adminScreens/adminSettings.dart';
+import 'package:micro_pharma/adminScreens/admin_settings.dart';
+import 'package:micro_pharma/adminScreens/call_plans.dart';
+import 'package:micro_pharma/adminScreens/dailycall_report.dart';
+import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
-import 'package:micro_pharma/components/containerRow.dart';
+import 'package:micro_pharma/adminScreens/order.dart';
+import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/main.dart';
-import 'package:micro_pharma/services/location_services.dart';
+import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
+
 import 'package:micro_pharma/userScreens/login_page.dart';
-import 'package:micro_pharma/userScreens/product_order.dart';
-import 'package:provider/provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import 'product.dart';
 
 class AdminPage extends StatefulWidget {
   static String id = 'admin';
@@ -36,21 +40,44 @@ class _AdminPageState extends State<AdminPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            // setState(() {
-            //   Provider.of<LocationServices>(context, listen: false)
-            //       .stopListening();
-            // });
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return Center(
+                    child: AlertDialog(
+                      title: const Text('Logout'),
+                      content: const Text('Do you really want to Logout?'),
+                      actions: [
+                        TextButton(
+                            onPressed: () async {
+                              FirebaseAuth.instance.signOut();
 
-            await Location().enableBackgroundMode(enable: false);
+                              var sharedLogin =
+                                  await SharedPreferences.getInstance();
+                              sharedLogin.setBool(
+                                  SplashPageState.KEYLOGIN, false);
+                              var sharedUser =
+                                  await SharedPreferences.getInstance();
+                              sharedUser.setBool(
+                                  SplashPageState.KEYUSER, false);
 
-            await FirebaseAuth.instance.signOut();
-            var sharedLogin = await SharedPreferences.getInstance();
-            sharedLogin.setBool(SplashPageState.KEYLOGIN, false);
-            var sharedUser = await SharedPreferences.getInstance();
-            sharedUser.setBool(SplashPageState.KEYUSER, false);
-
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => LoginPage()));
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginPage(),
+                                ),
+                              );
+                            },
+                            child: const Text('Logout')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Cancel'))
+                      ],
+                    ),
+                  );
+                });
           },
           child: const Icon(Icons.logout_outlined)),
       body: SafeArea(
@@ -115,7 +142,12 @@ class _AdminPageState extends State<AdminPage> {
                 container2Clr: const Color(0xFFFFC8C8),
                 container2Icon: Icons.calendar_month_outlined,
                 container2Text: 'Daily Call Reports',
-                container2Tap: () {},
+                container2Tap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => DailyCallReports())));
+                },
               ),
               const SizedBox(
                 height: 30.0,
@@ -124,11 +156,17 @@ class _AdminPageState extends State<AdminPage> {
                 container1Clr: const Color.fromARGB(255, 133, 254, 226),
                 container1Icon: Icons.assignment_outlined,
                 container1Text: 'Orders',
-                container1Tap: () {},
+                container1Tap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: ((context) => OrderPage())));
+                },
                 container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Call Plans',
-                container2Tap: () {},
+                container2Tap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: ((context) => CallPlans())));
+                },
               ),
               const SizedBox(
                 height: 30.0,
@@ -136,19 +174,25 @@ class _AdminPageState extends State<AdminPage> {
               containerRow(
                 container1Clr: Colors.blue.shade200,
                 container1Icon: Icons.medical_services_outlined,
-                container1Text: 'Doctors, Areas & Chemists',
+                container1Text: 'Doctors & Areas ',
                 container2Clr: Colors.orange.shade200,
                 container2Icon: Icons.settings_outlined,
-                container2Text: 'Add Users',
-                container1Tap: () {},
+                container2Text: 'Add Delete Users',
+                container1Tap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => const DoctorsAreas())));
+                  // Navigator.pushNamed(context, 'doctors_areas_page');
+                },
                 container2Tap: () {
                   Navigator.pushNamed(context, 'add_employees');
                 },
               ),
               const SizedBox(
-                height: 20.0,
+                height: 30.0,
               ),
-              kbuttonstyle(
+              MyButton(
                 color: kappbarColor,
                 text: 'Settings',
                 onPressed: () {

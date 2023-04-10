@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:flutter/src/rendering/box.dart';
 
 List<String> month = <String>[
   'January',
@@ -73,7 +74,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(appBartxt: 'Dashboard'),
+      appBar: MyAppBar(appBartxt: 'Dashboard'),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -206,18 +207,35 @@ class _DashboardState extends State<Dashboard> {
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Poppins'),
               ),
-              Container(
-                  padding: EdgeInsets.fromLTRB(50, 20, 180, 200),
-                  child: PieChart(
-                    dataMap: dataMap,
-                    chartType: ChartType.ring,
-                    centerText: '1.55 doctor',
-                    chartValuesOptions: ChartValuesOptions(
-                      showChartValues: false,
-                      showChartValueBackground: false,
-                    ),
-                    legendOptions: LegendOptions(showLegends: false),
-                  )),
+              // Container(
+              //     // padding: EdgeInsets.fromLTRB(50, 20, 180, 200),
+              //     padding: EdgeInsets.all(10.0),
+              //     child: Row(
+              //       children: [
+              //         PieChart(
+              //           dataMap: dataMap,
+              //           chartType: ChartType.ring,
+              //           centerText: '1.55 doctor',
+              //           chartValuesOptions: ChartValuesOptions(
+              //             showChartValues: false,
+              //             showChartValueBackground: false,
+              //           ),
+              //           legendOptions: LegendOptions(showLegends: false),
+              //         ),
+              //         Container(
+              //           child: PieChart(
+              //             dataMap: dataMap,
+              //             chartType: ChartType.ring,
+              //             centerText: '0.55 chemists',
+              //             chartValuesOptions: ChartValuesOptions(
+              //               showChartValues: false,
+              //               showChartValueBackground: false,
+              //             ),
+              //             legendOptions: LegendOptions(showLegends: false),
+              //           ),
+              //         )
+              //       ],
+              //     )),
               SizedBox(
                 height: 0.0,
               ),

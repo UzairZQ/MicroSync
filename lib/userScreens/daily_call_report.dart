@@ -8,7 +8,7 @@ class DailyCallReport extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(appBartxt: 'Daily Call Report'),
+      appBar: MyAppBar(appBartxt: 'Daily Call Report'),
     );
   }
 }
