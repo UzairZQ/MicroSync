@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
 import 'package:micro_pharma/components/container_Row.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:micro_pharma/models/user_model.dart';
+import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:micro_pharma/userScreens/daily_call_report.dart';
@@ -11,7 +13,8 @@ import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 
 import 'package:micro_pharma/userScreens/product_order.dart';
-import 'package:micro_pharma/userScreens/user_settings.dart';
+import 'package:micro_pharma/userScreens/user_profile.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,19 +32,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final currentUser = FirebaseAuth.instance.currentUser;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     userLocation();
     getBackgroundLocation();
+    Provider.of<UserDataProvider>(context, listen: false).logIn();
+    Provider.of<UserDataProvider>(context, listen: false)
+        .fetchUserData(currentUser!.uid);
   }
 
   void userLocation() async {
     await LocationServices().requestPermission();
     await LocationServices().getLocation(currentUser!.uid);
-
     SharedPreferences userId = await SharedPreferences.getInstance();
     userId.setString('userId', currentUser!.uid.toString());
   }
@@ -66,13 +70,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // const duration = Duration(minutes: 5);
-    // Timer.periodic(duration, (timer) async {
-    //   await LocationServices().getLocation(currentUser!
-    //       .uid); //calls the location funtion every 5 minutes if the user is active
-    //   print('recalled the getlocation ftn from timer');
-    // });
-    print(currentUser!.email);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.logout_outlined),
@@ -87,19 +84,27 @@ class _HomePageState extends State<HomePage> {
                     actions: [
                       TextButton(
                           onPressed: () async {
+                            Provider.of<UserDataProvider>(context,
+                                    listen: false)
+                                .logOut();
+
                             FirebaseAuth.instance.signOut();
+                            // Provider.of<UserDataProvider>(
+                            //   context,
+                            //   listen: false,
+                            // ).dispose();
                             Workmanager().cancelByTag('location');
                             var sharedLogin =
                                 await SharedPreferences.getInstance();
                             sharedLogin.setBool(
-                                SplashPageState.KEYLOGIN, false);
+                                SplashPageState.loginKey, false);
                             var sharedUser =
                                 await SharedPreferences.getInstance();
-                            sharedUser.setBool(SplashPageState.KEYUSER, false);
+                            sharedUser.setBool(SplashPageState.userKey, false);
                             Navigator.pushReplacement(
-                              context,
+                              navigatorKey.currentContext!,
                               MaterialPageRoute(
-                                builder: (context) => LoginPage(),
+                                builder: (context) => const LoginPage(),
                               ),
                             );
                           },
@@ -133,15 +138,25 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(
-                      'Welcome ${currentUser!.displayName}!',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                        //color: Colors.white,
-                        foreground: Paint()..color = Colors.white,
-                      ),
+                    Consumer<UserDataProvider>(
+                      builder: (context, dataProvider, child) {
+                        // dataProvider.fetchUserData(currentUser!.uid);
+                        UserModel? userData = dataProvider.getUserData;
+                        if (userData.displayName == null ||
+                            userData.displayName!.isEmpty) {
+                          return const CircularProgressIndicator();
+                        } else {
+                          return Text(
+                            'Welcome ${userData.displayName} !',
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: Colors.white,
+                            ),
+                          );
+                        }
+                      },
                     ),
                     const SizedBox(height: 17.0),
                     Row(
@@ -222,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              containerRow(
+              ContainerRow(
                 container1Clr: const Color(0xFFF0DCFF),
                 container1Icon: Icons.dashboard_outlined,
                 container1Text: 'Dashboard',
@@ -236,7 +251,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 30.0,
               ),
-              containerRow(
+              ContainerRow(
                 container1Clr: const Color.fromARGB(255, 133, 254, 226),
                 container1Icon: Icons.assignment_outlined,
                 container1Text: 'Day Plan',
@@ -250,15 +265,15 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 30.0,
               ),
-              containerRow(
+              ContainerRow(
                 container1Clr: Colors.blue.shade200,
                 container1Icon: Icons.medical_services_outlined,
                 container1Text: 'Doctors, Areas & Chemists',
                 container2Clr: Colors.orange.shade200,
                 container2Icon: Icons.add_shopping_cart_outlined,
                 container2Text: 'Orders',
-                container1Tap: () => Navigator.pushNamed(context, DoctorsAreas.id),
-                // container1Tap: () => Navigator.pushNamed(context, DoctorsAreas.id),
+                container1Tap: () =>
+                    Navigator.pushNamed(context, DoctorsAreas.id),
                 container2Tap: () =>
                     Navigator.pushNamed(context, ProductOrder.id),
               ),
@@ -269,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                   color: kappbarColor,
                   text: 'Settings',
                   onPressed: () {
-                    Navigator.pushNamed(context, UserSettings.id);
+                    Navigator.pushNamed(context, UserProfilePage.id);
                   }),
             ],
           ),

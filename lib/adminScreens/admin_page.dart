@@ -10,13 +10,15 @@ import 'package:micro_pharma/adminScreens/order.dart';
 import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/main.dart';
-import 'package:micro_pharma/userScreens/call_planner.dart';
-import 'package:micro_pharma/userScreens/daily_call_report.dart';
+import 'package:micro_pharma/providers/user_data_provider.dart';
 
 import 'package:micro_pharma/userScreens/login_page.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'product.dart';
+
+
+import '../models/user_model.dart';
 
 class AdminPage extends StatefulWidget {
   static String id = 'admin';
@@ -27,15 +29,19 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
+  final currentUser = FirebaseAuth.instance.currentUser;
+  // late UserModel userData;
+
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
+  void initState() {
+    super.initState();
+    Provider.of<UserDataProvider>(context, listen: false).logIn();
+    Provider.of<UserDataProvider>(context, listen: false)
+        .fetchUserData(currentUser!.uid);
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser;
     print(currentUser!.email);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -50,21 +56,29 @@ class _AdminPageState extends State<AdminPage> {
                       actions: [
                         TextButton(
                             onPressed: () async {
+                              Provider.of<UserDataProvider>(context,
+                                      listen: false)
+                                  .logOut();
+
                               FirebaseAuth.instance.signOut();
 
                               var sharedLogin =
                                   await SharedPreferences.getInstance();
                               sharedLogin.setBool(
-                                  SplashPageState.KEYLOGIN, false);
+                                  SplashPageState.loginKey, false);
                               var sharedUser =
                                   await SharedPreferences.getInstance();
                               sharedUser.setBool(
-                                  SplashPageState.KEYUSER, false);
+                                  SplashPageState.userKey, false);
+                              // Provider.of<UserDataProvider>(
+                              //   context,
+                              //   listen: false,
+                              // ).dispose();
 
                               Navigator.pushReplacement(
-                                context,
+                                navigatorKey.currentContext!,
                                 MaterialPageRoute(
-                                  builder: (context) => LoginPage(),
+                                  builder: (context) => const LoginPage(),
                                 ),
                               );
                             },
@@ -98,14 +112,25 @@ class _AdminPageState extends State<AdminPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    const Text(
-                      'Welcome Admin !',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                        color: Colors.white,
-                      ),
+                    Consumer<UserDataProvider>(
+                      builder: (context, dataProvider, child) {
+                        //dataProvider.fetchUserData(currentUser!.uid);
+                        UserModel? userData = dataProvider.getUserData;
+                        if (userData.displayName == null ||
+                            userData.displayName!.isEmpty) {
+                          return const CircularProgressIndicator();
+                        } else {
+                          return Text(
+                            'Welcome ${userData.displayName} !',
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: Colors.white,
+                            ),
+                          );
+                        }
+                      },
                     ),
                     const SizedBox(height: 17.0),
                     Row(
@@ -133,7 +158,7 @@ class _AdminPageState extends State<AdminPage> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              containerRow(
+              ContainerRow(
                 container1Clr: const Color(0xFFF0DCFF),
                 container1Icon: Icons.place_outlined,
                 container1Text: 'Live Tracking',
@@ -152,7 +177,7 @@ class _AdminPageState extends State<AdminPage> {
               const SizedBox(
                 height: 30.0,
               ),
-              containerRow(
+              ContainerRow(
                 container1Clr: const Color.fromARGB(255, 133, 254, 226),
                 container1Icon: Icons.assignment_outlined,
                 container1Text: 'Orders',
@@ -171,7 +196,7 @@ class _AdminPageState extends State<AdminPage> {
               const SizedBox(
                 height: 30.0,
               ),
-              containerRow(
+              ContainerRow(
                 container1Clr: Colors.blue.shade200,
                 container1Icon: Icons.medical_services_outlined,
                 container1Text: 'Doctors & Areas ',
@@ -196,7 +221,7 @@ class _AdminPageState extends State<AdminPage> {
                 color: kappbarColor,
                 text: 'Settings',
                 onPressed: () {
-                  Navigator.pushNamed(context, AdminSettings.id);
+                  Navigator.pushNamed(context, AdminProfilePage.id);
                 },
               ),
             ],

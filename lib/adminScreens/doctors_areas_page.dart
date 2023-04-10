@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/addproduct.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/components/container_row.dart';
-
 import 'package:micro_pharma/components/my_container.dart';
 import 'package:micro_pharma/adminScreens/addarea.dart';
 import 'package:micro_pharma/adminScreens/addoctor.dart';
@@ -16,7 +15,7 @@ class DoctorsAreas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(appBartxt: 'Doctors and Areas'),
+        appBar: const MyAppBar(appBartxt: 'Doctors and Areas'),
         body: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
@@ -26,7 +25,7 @@ class DoctorsAreas extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  myContainerwithButtons(
+                  ContainerwithButtons(
                       containerclr: Colors.teal.shade50,
                       containerIcon: Icons.person_outlined,
                       containerText: 'Doctors',
@@ -45,7 +44,7 @@ class DoctorsAreas extends StatelessWidget {
                       },
                       txtBtn1text: 'View Doctors',
                       txtBtn2text: 'Add Doctor'),
-                  myContainerwithButtons(
+                  ContainerwithButtons(
                       containerclr: Colors.teal.shade50,
                       containerIcon: Icons.place_outlined,
                       containerText: 'Areas',
@@ -72,7 +71,7 @@ class DoctorsAreas extends StatelessWidget {
               //     container2Text: 'Prouct',
               //     container1Tap: () {},
               //     container2Tap: () {})
-              myContainerwithButtons(
+              ContainerwithButtons(
                   containerclr: Colors.teal.shade50,
                   containerIcon: Icons.shopping_cart,
                   containerText: 'Prouct',

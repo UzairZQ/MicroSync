@@ -22,13 +22,6 @@ class GoogleMapPage extends StatefulWidget {
 }
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    super.initState();
-  }
-
   final db = DataBaseService();
   late GoogleMapController _controller;
   bool _added = false;
@@ -36,16 +29,14 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    print('disposed google maps');
-    // Provider.of<LocationServices>(context).stopListening();
+    
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Map Screen'),
+      appBar: const MyAppBar(appBartxt: 'Map Screen'),
       body: StreamBuilder(
         stream: db.streamUser(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -61,7 +52,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
             mapType: isSatellite ? MapType.satellite : MapType.normal,
             markers: {
               Marker(
-                markerId: MarkerId('Current User Location'),
+                markerId: const MarkerId('Current User Location'),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
                     BitmapDescriptor.hueRed),
                 position: LatLng(

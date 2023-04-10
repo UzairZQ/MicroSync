@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,9 @@ import 'package:micro_pharma/userScreens/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -26,11 +31,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
-    print('textediting controllers are disposed');
   }
 
   @override
@@ -158,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                                   height: 10.0,
                                 ),
                                 MyTextFormField(
-                                    hintext: 'Please Enter you Email',
+                                    hintext: 'Please Enter your Email',
                                     controller: changePassController,
                                    validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -212,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void route() {
     User? user = FirebaseAuth.instance.currentUser;
-    var kk = FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
         .get()
@@ -224,11 +227,11 @@ class _LoginPageState extends State<LoginPage> {
           var sharedLogin = await SharedPreferences.getInstance();
           var sharedUser = await SharedPreferences.getInstance();
 
-          sharedLogin.setBool(SplashPageState.KEYLOGIN, true);
-          sharedUser.setBool(SplashPageState.KEYUSER, true);
+          sharedLogin.setBool(SplashPageState.loginKey, true);
+          sharedUser.setBool(SplashPageState.userKey, true);
 
           Navigator.pushReplacement(
-            context,
+            navigatorKey.currentContext!,
             MaterialPageRoute(
               builder: (context) => const HomePage(),
             ),
@@ -236,54 +239,84 @@ class _LoginPageState extends State<LoginPage> {
         } else if (documentSnapshot.get('role') == "admin") {
           var sharedLogin = await SharedPreferences.getInstance();
           var sharedUser = await SharedPreferences.getInstance();
-          sharedLogin.setBool(SplashPageState.KEYLOGIN, true);
-          sharedUser.setBool(SplashPageState.KEYUSER, false);
+          sharedLogin.setBool(SplashPageState.loginKey, true);
+          sharedUser.setBool(SplashPageState.userKey, false);
           Navigator.pushReplacement(
-            context,
+            navigatorKey.currentContext!,
             MaterialPageRoute(
               builder: (context) => const AdminPage(),
             ),
           );
         }
       } else {
-        print('Document does not exist on the database');
+        return;
       }
     });
   }
 
-  Future signIn(String email, String password) async {
+  Future<void> signIn(String email, String password) async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+        const SnackBar(
+          content: Text('Please check your internet connection'),
+        ),
+      );
+      return;
+    }
+
     showDialog(
-        context: context,
-        builder: ((context) {
-          return Builder(builder: (context) {
-            return const Center(child: CircularProgressIndicator());
-          });
-        }));
+      context: navigatorKey.currentContext!,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+      barrierDismissible: true,
+    );
+
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       route();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
           const SnackBar(
             content: Text('No user found for this Email'),
           ),
         );
-        print('no user found for that email');
+       
       } else if (e.code == 'wrong-password') {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
           const SnackBar(
             content: Text('Please enter correct password'),
           ),
         );
-        print('wrong password provided for that user');
+        
+      } else {
+        ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to sign in, please try again later'),
+          ),
+        );
+       // print('failed to sign in, error: ${e.code}');
       }
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content:
-      //         Text('Incorrect Email or Password or It can be a network issue'),
+    } on SocketException catch (_) {
+      ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+        const SnackBar(
+          content: Text('Please check your internet connection'),
+        ),
+      );
+      
+    } catch (e) {
+      ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to sign in, please try again later'),
+        ),
+      );
+    
+    } finally {
+      // Dismiss the dialog if it's still showing
+      Navigator.of(navigatorKey.currentContext!).pop();
     }
-    Navigator.pop(context);
   }
 }

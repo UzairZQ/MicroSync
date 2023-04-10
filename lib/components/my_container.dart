@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-class myContainer extends StatelessWidget {
-  myContainer(
-      {required this.containerclr,
+// ignore: must_be_immutable
+class MyContainer extends StatelessWidget {
+  MyContainer(
+      {super.key, required this.containerclr,
       required this.containerIcon,
       required this.containerText,
       required this.onTap});
-  Color containerclr = Color(0xFFF0DCFF);
+  Color containerclr = const Color(0xFFF0DCFF);
   IconData containerIcon;
   String containerText;
   TextButton? button1;
@@ -39,9 +40,9 @@ class myContainer extends StatelessWidget {
               size: 40.0,
             ),
             Text(
-              '$containerText',
+              containerText,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.w300,
                 fontSize: 15.0,
@@ -54,16 +55,18 @@ class myContainer extends StatelessWidget {
   }
 }
 
-class myContainerwithButtons extends StatelessWidget {
-  myContainerwithButtons(
-      {required this.containerclr,
+// ignore: must_be_immutable
+class ContainerwithButtons extends StatelessWidget {
+  ContainerwithButtons(
+      {super.key,
+      required this.containerclr,
       required this.containerIcon,
       required this.containerText,
       required this.txtBtn1Ontap,
       required this.txtBtn2Ontap,
       required this.txtBtn1text,
       required this.txtBtn2text});
-  Color containerclr = Color(0xFFF0DCFF);
+  Color containerclr = const Color(0xFFF0DCFF);
   IconData containerIcon;
   String containerText;
 
