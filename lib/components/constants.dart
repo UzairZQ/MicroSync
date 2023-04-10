@@ -4,16 +4,17 @@ Color kappbarColor = const Color(0xff1FB7CC);
 
 // ignore: must_be_immutable
 class MyButton extends StatelessWidget {
-   MyButton({super.key,  this.color, required this.text, required this.onPressed});
-    Color? color = const Color(0xFFFFB800);
-final  String text;
+  MyButton(
+      {super.key, this.color, required this.text, required this.onPressed});
+  Color? color = const Color(0xFFFFB800);
+  final String text;
   final Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 40.0,
-      width: 150.0,
+      width: 170.0,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -25,7 +26,8 @@ final  String text;
         ),
         child: Text(
           text,
-          style:const TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+          style: const TextStyle(
+              fontFamily: 'Poppins', fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -45,7 +47,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       title: Text(
         appBartxt,
-        style:const TextStyle(
+        style: const TextStyle(
             color: Colors.white,
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold),
@@ -56,7 +58,6 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 TextStyle ktextstyle = const TextStyle(
     fontFamily: 'Poppins', fontSize: 17.5, fontWeight: FontWeight.w400);
-
 
 String? validateEmail(String? email) {
   if (email!.isEmpty) {

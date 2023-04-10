@@ -27,4 +27,15 @@ class UserModel {
   String? uid;
   String? phone;
   String? update;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'displayName': displayName,
+      'email': email,
+      'latitude': latitude,
+      'longitude': longitude,
+      'role': role,
+      'uid': uid,
+    };
+  }
 }

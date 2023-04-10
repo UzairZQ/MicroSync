@@ -13,7 +13,7 @@ import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 
 import 'package:micro_pharma/userScreens/product_order.dart';
-import 'package:micro_pharma/userScreens/user_settings.dart';
+import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -237,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              containerRow(
+              ContainerRow(
                 container1Clr: const Color(0xFFF0DCFF),
                 container1Icon: Icons.dashboard_outlined,
                 container1Text: 'Dashboard',
@@ -251,7 +251,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 30.0,
               ),
-              containerRow(
+              ContainerRow(
                 container1Clr: const Color.fromARGB(255, 133, 254, 226),
                 container1Icon: Icons.assignment_outlined,
                 container1Text: 'Day Plan',
@@ -265,7 +265,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 30.0,
               ),
-              containerRow(
+              ContainerRow(
                 container1Clr: Colors.blue.shade200,
                 container1Icon: Icons.medical_services_outlined,
                 container1Text: 'Doctors, Areas & Chemists',
@@ -284,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                   color: kappbarColor,
                   text: 'Settings',
                   onPressed: () {
-                    Navigator.pushNamed(context, UserSettings.id);
+                    Navigator.pushNamed(context, UserProfilePage.id);
                   }),
             ],
           ),
