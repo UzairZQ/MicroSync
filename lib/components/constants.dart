@@ -56,6 +56,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
+//I have added a comment
 TextStyle ktextstyle = const TextStyle(
     fontFamily: 'Poppins,', fontSize: 17.5, fontWeight: FontWeight.w400);
 
