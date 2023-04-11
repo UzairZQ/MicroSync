@@ -36,7 +36,7 @@ class _AddEmployeesState extends State<AddEmployees> {
             });
           }));
 
-      await firebaseAuth
+      await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((UserCredential userCredential) {
         FirebaseFirestore.instance
@@ -45,7 +45,7 @@ class _AddEmployeesState extends State<AddEmployees> {
             .set({
           'displayName': nameController.text,
           'email': emailController.text,
-          'longitude': 34,
+          'longitude': 43,
           'latitude': 73,
           'role': roleController.text,
           'uid': userCredential.user!.uid,
@@ -126,137 +126,135 @@ class _AddEmployeesState extends State<AddEmployees> {
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  MyTextFormField(
-                    hintext: 'Please Enter Name',
-                    onSaved: (value) {
-                      nameController.text = value!;
-                    },
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter name';
-                      }
+            child: Column(
+              children: [
+                MyTextFormField(
+                  hintext: 'Please Enter Name',
+                  onSaved: (value) {
+                    nameController.text = value!;
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                MyTextFormField(
+                  hintext: 'Please Enter Email',
+                  onSaved: (value) {
+                    emailController.text = value!;
+                  },
+                  validator: validateEmail
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                MyTextFormField(
+                  controller: roleController,
+                  hintext: 'Please Enter Role(user or admin)',
+                  onSaved: (value) {
+                    roleController.text = value!;
+                  },
+                  validator: (role) {
+                    if (role == 'user' || role == 'admin') {
                       return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  MyTextFormField(
-                    hintext: 'Please Enter Email',
-                    onSaved: (value) {
-                      emailController.text = value!;
-                    },
-                    validator: validateEmail
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  MyTextFormField(
-                    controller: roleController,
-                    hintext: 'Please Enter Role(user or admin)',
-                    onSaved: (value) {
-                      roleController.text = value!;
-                    },
-                    validator: (role) {
-                      if (role == 'user' || role == 'admin') {
-                        return null;
-                      } else if (role!.isEmpty) {
-                        return 'Please Enter role';
-                      }
+                    } else if (role!.isEmpty) {
+                      return 'Please Enter role';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                MyTextFormField(
+                  controller: phoneController,
+                  hintext: 'Enter Phone Number',
+                  onSaved: (phone) {
+                    phoneController.text = phone!;
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please Enter Phone Number';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                MyTextFormField(
+                  controller: passwordController,
+                  hintext: 'Please Enter Password',
+                  onSaved: (value) {
+                    passwordController.text = value!;
+                  },
+                  validator: (password) {
+                    RegExp regex = RegExp(r'^.{6,}$');
+                    if (password!.isEmpty) {
+                      return 'Please Enter Password';
+                    } else if (!regex.hasMatch(password)) {
+                      return 'Enter Password with min. 6 Characters';
+                    } else {
                       return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  MyTextFormField(
-                    controller: phoneController,
-                    hintext: 'Enter Phone Number',
-                    onSaved: (phone) {
-                      phoneController.text = phone!;
-                    },
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Enter Phone Number';
-                      }
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                MyTextFormField(
+                  controller: confpasController,
+                  hintext: 'Enter Confirm Password',
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please Enter Confirm Password';
+                    }
+                    if (passwordController.text == confpasController.text) {
                       return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  MyTextFormField(
-                    controller: passwordController,
-                    hintext: 'Please Enter Password',
-                    onSaved: (value) {
-                      passwordController.text = value!;
-                    },
-                    validator: (password) {
-                      RegExp regex = RegExp(r'^.{6,}$');
-                      if (password!.isEmpty) {
-                        return 'Please Enter Password';
-                      } else if (!regex.hasMatch(password)) {
-                        return 'Enter Password with min. 6 Characters';
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  MyTextFormField(
-                    controller: confpasController,
-                    hintext: 'Enter Confirm Password',
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Enter Confirm Password';
-                      }
-                      if (passwordController.text == confpasController.text) {
-                        return null;
-                      } else if (passwordController.text !=
-                          confpasController.text) {
-                        return 'Passwords do not match';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      confpasController.text = value!;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      MyButton(
-                          color: kappbarColor,
-                          text: 'Create User',
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              createUser(emailController.text,
-                                  passwordController.text);
-                            }
-                          }),
-                      MyButton(
-                          color: const Color.fromARGB(255, 224, 57, 90),
-                          text: 'Delete User',
-                          onPressed: () {
-                            deleteUserBottomSheet(
-                                context, firebaseFirestore, firebaseAuth);
-                          })
-                    ],
-                  ),
-                ],
-              ),
+                    } else if (passwordController.text !=
+                        confpasController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    confpasController.text = value!;
+                  },
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    MyButton(
+                        color: kappbarColor,
+                        text: 'Create User',
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            createUser(emailController.text,
+                                passwordController.text);
+                          }
+                        }),
+                    MyButton(
+                        color: const Color.fromARGB(255, 224, 57, 90),
+                        text: 'Delete User',
+                        onPressed: () {
+                          deleteUserBottomSheet(
+                              context, firebaseFirestore, firebaseAuth);
+                        })
+                  ],
+                ),
+              ],
             ),
           ),
         ),
