@@ -87,7 +87,13 @@ class _LoginPageState extends State<LoginPage> {
                       onSaved: (value) {
                         emailController.text = value!;
                       },
-                      validator: validateEmail,
+                      validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter Something';
+                  }
+                  return null;
+                },
+                      //validator: validateEmail,
                     ),
                     const SizedBox(
                       height: 10.0,
@@ -108,7 +114,13 @@ class _LoginPageState extends State<LoginPage> {
                       onSaved: (value) {
                         passwordController.text = value!;
                       },
-                      validator: validatePassword,
+                     validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter Something';
+                  }
+                  return null;
+                },
+                     // validator: validatePassword,
                     ),
                   ],
                 ),
@@ -151,7 +163,13 @@ class _LoginPageState extends State<LoginPage> {
                                 MyTextFormField(
                                     hintext: 'Please Enter your Email',
                                     controller: changePassController,
-                                    validator: validateEmail,
+                                   validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter Something';
+                  }
+                  return null;
+                },
+                                   // validator: validateEmail,
                                     onSaved: (value) {
                                       changePassController.text = value!;
                                     }),

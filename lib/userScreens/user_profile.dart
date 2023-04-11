@@ -5,6 +5,7 @@ import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:provider/provider.dart';
+import 'package:micro_pharma/components/constants.dart';
 
 class UserProfilePage extends StatefulWidget {
   static const String id = 'user_profile';

@@ -6,13 +6,13 @@ import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
-import 'package:micro_pharma/userScreens/call_planner.dart';
-import 'package:micro_pharma/userScreens/daily_call_report.dart';
+
+import 'dailycall_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 
-import 'package:micro_pharma/userScreens/product_order.dart';
+import 'order.dart';
 import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +21,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 
 import 'package:workmanager/workmanager.dart';
+import 'call_plans.dart';
+
 
 class HomePage extends StatefulWidget {
   static String id = 'home';
@@ -245,8 +247,11 @@ class _HomePageState extends State<HomePage> {
                 container2Clr: const Color(0xFFFFC8C8),
                 container2Icon: Icons.calendar_month_outlined,
                 container2Text: 'Call Planner',
-                container2Tap: () =>
-                    Navigator.pushNamed(context, CallPlanner.id),
+                container2Tap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: ((context) => CallPlans())));
+                }
+                    
               ),
               const SizedBox(
                 height: 30.0,
@@ -258,9 +263,9 @@ class _HomePageState extends State<HomePage> {
                 container1Tap: () => Navigator.pushNamed(context, DayPlan.id),
                 container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
-                container2Text: 'Daily Call Report',
+                container2Text: 'Daily Call Reports',
                 container2Tap: () =>
-                    Navigator.pushNamed(context, DailyCallReport.id),
+                    Navigator.push(context, MaterialPageRoute(builder: ((context)=>DailyCallReports()))),
               ),
               const SizedBox(
                 height: 30.0,
@@ -275,10 +280,11 @@ class _HomePageState extends State<HomePage> {
                 container1Tap: () =>
                     Navigator.pushNamed(context, DoctorsAreas.id),
                 container2Tap: () =>
-                    Navigator.pushNamed(context, ProductOrder.id),
+                    Navigator.push(context,
+                      MaterialPageRoute(builder: ((context) => OrderPage()))),
               ),
-              const SizedBox(
-                height: 15.0,
+              const SizedBox( 
+                height: 30.0,
               ),
               MyButton(
                   color: kappbarColor,

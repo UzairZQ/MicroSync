@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:pie_chart/pie_chart.dart';
+import 'package:flutter/src/rendering/box.dart';
 
 List<String> month = <String>[
   'January',
@@ -16,6 +18,38 @@ List<String> month = <String>[
   'December'
 ];
 List<String> year = <String>['2022', '2023', '2024', '2025'];
+List<String> day = <String>[
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10',
+  '11',
+  '12',
+  '13',
+  '14',
+  '15',
+  '16',
+  '17',
+  '18',
+  '19',
+  '20',
+  '21',
+  '22',
+  '23',
+  '24',
+  '25',
+  '26',
+  '28',
+  '29',
+  '30',
+  '31'
+];
 
 class Dashboard extends StatefulWidget {
   static String id = 'user_dashboard';
@@ -26,8 +60,17 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  Map<String, double> dataMap = {
+    "Flutter": 5,
+    "React": 3,
+    "Xamarin": 2,
+    "Ionic": 2,
+  };
+
   String monthValue = month.first;
+
   String yearValue = year.first;
+  String dayValue = day.first;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +99,29 @@ class _DashboardState extends State<Dashboard> {
                     icon: const Icon(Icons.arrow_drop_down),
                     value: monthValue,
                     borderRadius: BorderRadius.circular(10.0),
-                    dropdownColor: Colors.white70,
+                    dropdownColor: Colors.white,
+                  ),
+                  const SizedBox(
+                    width: 5.0,
+                  ),
+                  DropdownButton<String>(
+                    items: day.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      // This is called when the user selects an item.
+                      setState(() {
+                        dayValue = value!;
+                      });
+                    },
+                    elevation: 10,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    value: dayValue,
+                    borderRadius: BorderRadius.circular(10.0),
+                    dropdownColor: Colors.white,
                   ),
                   const SizedBox(width: 5.0),
                   DropdownButton<String>(
@@ -76,7 +141,7 @@ class _DashboardState extends State<Dashboard> {
                     icon: const Icon(Icons.arrow_drop_down),
                     value: yearValue,
                     borderRadius: BorderRadius.circular(10.0),
-                    dropdownColor: Colors.white70,
+                    dropdownColor: Colors.white,
                   ),
                   const SizedBox(
                     width: 5.0,
@@ -94,13 +159,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-              const Text(
-                'Visit/Missed Details',
-                style: TextStyle(
-                    fontSize: 17.5,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins'),
-              ),
+              myTextwidget(fontSize: 17.5, text: 'Visit/Missed Details'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -110,18 +169,15 @@ class _DashboardState extends State<Dashboard> {
                         horizontal: 30.0, vertical: 10.0),
                     height: 72.0,
                     width: 144.0,
+                    child: Center(
+                        child: myTextwidget(
+                      fontSize: 17.5,
+                      text: '14 Visited Doctors',
+                      fontWeight: FontWeight.bold,
+                    )),
                     decoration: BoxDecoration(
-                      color: const Color(0xff89B7FD),
+                      color: Color(0xff89B7FD),
                       borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        '14 Visited Doctors',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17.5),
-                      ),
                     ),
                   ),
                   Container(
@@ -130,17 +186,11 @@ class _DashboardState extends State<Dashboard> {
                         horizontal: 30.0, vertical: 10.0),
                     height: 72.0,
                     width: 144.0,
-                    decoration: BoxDecoration(
-                      color: const Color(0xffFF9292),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        '7 Missed Doctors',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17.5),
+                    child: Center(
+                      child: myTextwidget(
+                        text: '20 missed doctors',
+                        fontSize: 17.5,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -153,7 +203,45 @@ class _DashboardState extends State<Dashboard> {
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Poppins'),
               ),
-              Container(),
+              // Container(
+              //     // padding: EdgeInsets.fromLTRB(50, 20, 180, 200),
+              //     padding: EdgeInsets.all(10.0),
+              //     child: Row(
+              //       children: [
+              //         PieChart(
+              //           dataMap: dataMap,
+              //           chartType: ChartType.ring,
+              //           centerText: '1.55 doctor',
+              //           chartValuesOptions: ChartValuesOptions(
+              //             showChartValues: false,
+              //             showChartValueBackground: false,
+              //           ),
+              //           legendOptions: LegendOptions(showLegends: false),
+              //         ),
+              //         Container(
+              //           child: PieChart(
+              //             dataMap: dataMap,
+              //             chartType: ChartType.ring,
+              //             centerText: '0.55 chemists',
+              //             chartValuesOptions: ChartValuesOptions(
+              //               showChartValues: false,
+              //               showChartValueBackground: false,
+              //             ),
+              //             legendOptions: LegendOptions(showLegends: false),
+              //           ),
+              //         )
+              //       ],
+              //     )),
+              SizedBox(
+                height: 0.0,
+              ),
+              const Text(
+                'DCR status',
+                style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
             ],
           ),
         ),
