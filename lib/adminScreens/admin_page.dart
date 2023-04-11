@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:micro_pharma/adminScreens/admin_settings.dart';
-import 'package:micro_pharma/adminScreens/call_plans.dart';
-import 'package:micro_pharma/adminScreens/dailycall_report.dart';
+
+import 'package:micro_pharma/userScreens/dailycall_report.dart';
 import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
-import 'package:micro_pharma/adminScreens/order.dart';
+import 'package:micro_pharma/userScreens/order.dart';
 import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/main.dart';
@@ -166,12 +166,9 @@ class _AdminPageState extends State<AdminPage> {
                     {Navigator.pushNamed(context, LocationScreen.id)},
                 container2Clr: const Color(0xFFFFC8C8),
                 container2Icon: Icons.calendar_month_outlined,
-                container2Text: 'Daily Call Reports',
+                container2Text: 'Daily Call Report',
                 container2Tap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) => DailyCallReports())));
+                  
                 },
               ),
               const SizedBox(
@@ -182,15 +179,13 @@ class _AdminPageState extends State<AdminPage> {
                 container1Icon: Icons.assignment_outlined,
                 container1Text: 'Orders',
                 container1Tap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: ((context) => OrderPage())));
+                  
                 },
                 container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Call Plans',
                 container2Tap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: ((context) => CallPlans())));
+                  
                 },
               ),
               const SizedBox(
