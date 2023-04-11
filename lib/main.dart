@@ -4,19 +4,19 @@ import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
-
+import 'package:micro_pharma/userScreens/order.dart';
 import 'package:micro_pharma/adminScreens/add_employees.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
-import 'package:micro_pharma/userScreens/call_planner.dart';
-import 'package:micro_pharma/userScreens/daily_call_report.dart';
+import 'package:micro_pharma/userScreens/call_plans.dart';
+
+import 'package:micro_pharma/userScreens/dailycall_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/userScreens/day_plan.dart';
 
-import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'userScreens/login_page.dart';
@@ -68,17 +68,21 @@ class MicroPharma extends StatelessWidget {
         'user_dashboard': (context) => const Dashboard(),
         'admin': (context) => const AdminPage(),
         'dayplan': (context) => const DayPlan(),
-        'productorder': (context) => const ProductOrder(),
-        'callplanner': (context) => const CallPlanner(),
-        'dailycallreport': (context) => const DailyCallReport(),
+        'productorder': (context) => OrderPage(),
+        'callplanner': (context) => CallPlans(),
+        'addoctor': (context) => const DoctorsAreas(),
+        'dailycallreport': (context) => DailyCallReports(),
         'user_profile': (context) => const UserProfilePage(),
         'admin_profile': (context) => const AdminProfilePage(),
         // 'map_page': (context) => GoogleMapPage(),
         'location_screen': (context) => const LocationScreen(),
         'add_employees': (context) => const AddEmployees(),
+        // 'doctors_areas_page': (context) => const DoctorsAreas(),
         'doctors_areas': (context) => const DoctorsAreas(),
       },
+      // home: const DoctorsAreas(),
       home: const SplashPage(),
+      // home: const Dashboard(),
     );
   }
 }

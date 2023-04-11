@@ -18,6 +18,8 @@ class MyContainer extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        // height: 130,
+        // width: 120,
         height: 130.0,
         width: 140.0,
         decoration: BoxDecoration(
@@ -28,7 +30,7 @@ class MyContainer extends StatelessWidget {
             ),
           ],
           color: containerclr,
-          borderRadius: BorderRadius.circular(25.0),
+          borderRadius: BorderRadius.circular(15.0),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -76,7 +78,7 @@ class ContainerwithButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 120.0,
-      width: 190.0,
+      width: 187.0,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(

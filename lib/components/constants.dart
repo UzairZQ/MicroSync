@@ -57,7 +57,24 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 TextStyle ktextstyle = const TextStyle(
-    fontFamily: 'Poppins', fontSize: 17.5, fontWeight: FontWeight.w400);
+    fontFamily: 'Poppins,', fontSize: 17.5, fontWeight: FontWeight.w400);
+
+class myTextwidget extends StatelessWidget {
+  myTextwidget({this.fontWeight, required this.fontSize, required this.text});
+
+  FontWeight? fontWeight;
+  double fontSize;
+  String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+          fontFamily: 'Poppins', fontWeight: fontWeight, fontSize: fontSize),
+    );
+  }
+}
 
 String? validateEmail(String? email) {
   if (email!.isEmpty) {
