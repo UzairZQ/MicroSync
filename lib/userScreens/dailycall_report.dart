@@ -15,7 +15,7 @@ class _DailyCallReportsState extends State<DailyCallReports> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Daily Call Reports'),
+      appBar: MyAppBar(appBartxt: 'Daily Call Report'),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -69,7 +69,7 @@ class _DailyCallReportsState extends State<DailyCallReports> {
                   SizedBox(height: 30.0),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: ElevatedButton(
+                    child: MyButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
@@ -80,7 +80,7 @@ class _DailyCallReportsState extends State<DailyCallReports> {
                           );
                         }
                       },
-                      child: Text('Submit Report'),
+                      text: 'Submit Report',
                     ),
                   ),
                 ],

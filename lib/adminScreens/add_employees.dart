@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../services/database.dart';
+import '../services/database_service.dart';
 
 class AddEmployees extends StatefulWidget {
   static const String id = 'add_doctor';
@@ -68,7 +68,7 @@ class _AddEmployeesState extends State<AddEmployees> {
               return Center(
                   child: AlertDialog(
                 title: const Text('Error'),
-                content:  Text(
+                content: Text(
                     'User creation was unsuccessfull, Please try again:::$e'),
                 actions: [
                   TextButton(
@@ -80,8 +80,6 @@ class _AddEmployeesState extends State<AddEmployees> {
               ));
             });
           }));
-
-      
     }
   }
 
@@ -144,12 +142,11 @@ class _AddEmployeesState extends State<AddEmployees> {
                   height: 20.0,
                 ),
                 MyTextFormField(
-                  hintext: 'Please Enter Email',
-                  onSaved: (value) {
-                    emailController.text = value!;
-                  },
-                  validator: validateEmail
-                ),
+                    hintext: 'Please Enter Email',
+                    onSaved: (value) {
+                      emailController.text = value!;
+                    },
+                    validator: validateEmail),
                 const SizedBox(
                   height: 20.0,
                 ),
@@ -241,8 +238,8 @@ class _AddEmployeesState extends State<AddEmployees> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
-                            createUser(emailController.text,
-                                passwordController.text);
+                            createUser(
+                                emailController.text, passwordController.text);
                           }
                         }),
                     MyButton(
@@ -267,72 +264,82 @@ class _AddEmployeesState extends State<AddEmployees> {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
-          return StreamBuilder(
-              stream: DataBaseService().streamUser(),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return ListView.builder(
-                    itemCount: snapshot.data?.docs.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        elevation: 5,
-                        color: Colors.grey[290],
-                        child: ListTile(
-                          title: Text(
-                            snapshot.data!.docs[index]['displayName']
-                                .toString(),
-                            style: const TextStyle(fontFamily: 'Poppins'),
-                          ),
-                          subtitle: Row(
-                            children: [Text(snapshot.data.docs[index]['role'])],
-                          ),
-                          trailing: IconButton(
-                            icon: const Icon(
-                              Icons.delete_forever,
-                              color: Colors.red,
+          return Column(
+            children: [
+              Text(
+                'Registered Users',
+                style: ktextstyle,
+              ),
+              StreamBuilder(
+                  stream: DataBaseService().streamUser(),
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return ListView.builder(
+                        itemCount: snapshot.data?.docs.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            elevation: 5,
+                            color: Colors.grey[290],
+                            child: ListTile(
+                              title: Text(
+                                snapshot.data!.docs[index]['displayName']
+                                    .toString(),
+                                style: const TextStyle(fontFamily: 'Poppins'),
+                              ),
+                              subtitle: Row(
+                                children: [
+                                  Text(snapshot.data.docs[index]['role'])
+                                ],
+                              ),
+                              trailing: IconButton(
+                                icon: const Icon(
+                                  Icons.delete_forever,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: ((context) {
+                                        return Builder(builder: (context) {
+                                          return Center(
+                                              child: AlertDialog(
+                                            title: const Text('Delete'),
+                                            content: const Text(
+                                                'The following User will be permanently deleted!'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  firebaseFirestore
+                                                      .collection('users')
+                                                      .doc(snapshot.data
+                                                          .docs[index]['uid'])
+                                                      .delete();
+
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('Delete',
+                                                    style: TextStyle(
+                                                        color: Colors.red)),
+                                              ),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Cancel')),
+                                            ],
+                                          ));
+                                        });
+                                      }));
+                                },
+                              ),
                             ),
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: ((context) {
-                                    return Builder(builder: (context) {
-                                      return Center(
-                                          child: AlertDialog(
-                                        title: const Text('Delete'),
-                                        content: const Text(
-                                            'The following User will be permanently deleted!'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              firebaseFirestore
-                                                  .collection('users')
-                                                  .doc(snapshot.data.docs[index]
-                                                      ['uid'])
-                                                  .delete();
-                                                
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text('Delete',
-                                                style: TextStyle(
-                                                    color: Colors.red)),
-                                          ),
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('Cancel')),
-                                        ],
-                                      ));
-                                    });
-                                  }));
-                            },
-                          ),
-                        ),
-                      );
-                    });
-              });
+                          );
+                        });
+                  }),
+            ],
+          );
         });
   }
 }
