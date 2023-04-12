@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:micro_pharma/adminScreens/add_doctor.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/userScreens/home_page.dart';
 import '../userScreens/login_page.dart';
 
-class VisitedDoctors extends StatelessWidget {
-  const VisitedDoctors({super.key});
+class DoctorsPage extends StatelessWidget {
+  const DoctorsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: ((context) => AddDoctor())));
+          },
+          label: Text('Add Doctor')),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Visited Doctors',
+          'Doctors',
           textAlign: TextAlign.center,
         ),
         actions: [
