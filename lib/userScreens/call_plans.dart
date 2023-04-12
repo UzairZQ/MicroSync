@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
 
-class CallPlans extends StatefulWidget {
+class WeeklyCallPlanner extends StatefulWidget {
   @override
-  _CallPlansState createState() => _CallPlansState();
+  _WeeklyCallPlannerState createState() => _WeeklyCallPlannerState();
 }
 
-class _CallPlansState extends State<CallPlans> {
+class _WeeklyCallPlannerState extends State<WeeklyCallPlanner> {
   final _formKey = GlobalKey<FormState>();
   late String? _name;
   late String? _phoneNumber;
@@ -15,7 +15,7 @@ class _CallPlansState extends State<CallPlans> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Call Plans'),
+      appBar: MyAppBar(appBartxt: 'Weekly Call Planner'),
       body: Padding(
         padding: EdgeInsets.all(17.0),
         child: Form(
@@ -81,7 +81,7 @@ class _CallPlansState extends State<CallPlans> {
                 alignment: Alignment.bottomCenter,
                 child: MyButton(
                   color: Colors.blue,
-                  text: 'save contact',
+                  text: 'Save Plan',
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();

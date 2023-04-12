@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/services/database.dart';
+import 'package:micro_pharma/services/database_service.dart';
 
 class GoogleMapPage extends StatefulWidget {
   static const String id = 'map_page';

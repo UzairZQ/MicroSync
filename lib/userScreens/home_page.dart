@@ -6,6 +6,7 @@ import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
+import 'package:micro_pharma/userScreens/product_order.dart';
 
 import 'dailycall_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
@@ -246,10 +247,12 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pushNamed(context, Dashboard.id),
                   container2Clr: const Color(0xFFFFC8C8),
                   container2Icon: Icons.calendar_month_outlined,
-                  container2Text: 'Call Planner',
+                  container2Text: 'Weekly Call Planner',
                   container2Tap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => CallPlans())));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => WeeklyCallPlanner())));
                   }),
               const SizedBox(
                 height: 30.0,
@@ -280,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                 container1Tap: () =>
                     Navigator.pushNamed(context, AdminPanel.id),
                 container2Tap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: ((context) => AddProduct()))),
+                    MaterialPageRoute(builder: ((context) => ProductOrder()))),
               ),
               const SizedBox(
                 height: 30.0,

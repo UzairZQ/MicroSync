@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class MyContainer extends StatelessWidget {
   MyContainer(
-      {super.key, required this.containerclr,
+      {super.key,
+      required this.containerclr,
       required this.containerIcon,
       required this.containerText,
       required this.onTap});
@@ -30,7 +31,7 @@ class MyContainer extends StatelessWidget {
             ),
           ],
           color: containerclr,
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(20.0),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

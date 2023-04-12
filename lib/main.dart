@@ -69,7 +69,7 @@ class MicroPharma extends StatelessWidget {
         'admin': (context) => const AdminPage(),
         'dayplan': (context) => const DayPlan(),
         'productorder': (context) => AddProduct(),
-        'callplanner': (context) => CallPlans(),
+        'callplanner': (context) => WeeklyCallPlanner(),
         'addoctor': (context) => const AdminPanel(),
         'dailycallreport': (context) => DailyCallReports(),
         'user_profile': (context) => const UserProfilePage(),
