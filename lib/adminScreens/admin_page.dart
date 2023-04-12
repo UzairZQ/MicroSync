@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/admin_settings.dart';
 
 import 'package:micro_pharma/userScreens/dailycall_report.dart';
-import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
+import 'package:micro_pharma/adminScreens/admin_panel.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
-import 'package:micro_pharma/userScreens/order.dart';
+import 'package:micro_pharma/adminScreens/add_product.dart';
 import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/main.dart';
@@ -16,7 +16,6 @@ import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 import '../models/user_model.dart';
 
@@ -167,9 +166,7 @@ class _AdminPageState extends State<AdminPage> {
                 container2Clr: const Color(0xFFFFC8C8),
                 container2Icon: Icons.calendar_month_outlined,
                 container2Text: 'Daily Call Report',
-                container2Tap: () {
-                  
-                },
+                container2Tap: () {},
               ),
               const SizedBox(
                 height: 30.0,
@@ -178,15 +175,11 @@ class _AdminPageState extends State<AdminPage> {
                 container1Clr: const Color.fromARGB(255, 133, 254, 226),
                 container1Icon: Icons.assignment_outlined,
                 container1Text: 'Orders',
-                container1Tap: () {
-                  
-                },
+                container1Tap: () {},
                 container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Call Plans',
-                container2Tap: () {
-                  
-                },
+                container2Tap: () {},
               ),
               const SizedBox(
                 height: 30.0,
@@ -202,7 +195,7 @@ class _AdminPageState extends State<AdminPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: ((context) => const DoctorsAreas())));
+                          builder: ((context) => const AdminPanel())));
                   // Navigator.pushNamed(context, 'doctors_areas_page');
                 },
                 container2Tap: () {

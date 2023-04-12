@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
+import 'package:micro_pharma/adminScreens/admin_panel.dart';
 import 'package:micro_pharma/components/container_Row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/user_model.dart';
@@ -12,7 +12,7 @@ import 'package:micro_pharma/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 
-import 'order.dart';
+import '../adminScreens/add_product.dart';
 import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +22,6 @@ import '../main.dart';
 
 import 'package:workmanager/workmanager.dart';
 import 'call_plans.dart';
-
 
 class HomePage extends StatefulWidget {
   static String id = 'home';
@@ -240,19 +239,18 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 20.0),
               ContainerRow(
-                container1Clr: const Color(0xFFF0DCFF),
-                container1Icon: Icons.dashboard_outlined,
-                container1Text: 'Dashboard',
-                container1Tap: () => Navigator.pushNamed(context, Dashboard.id),
-                container2Clr: const Color(0xFFFFC8C8),
-                container2Icon: Icons.calendar_month_outlined,
-                container2Text: 'Call Planner',
-                container2Tap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: ((context) => CallPlans())));
-                }
-                    
-              ),
+                  container1Clr: const Color(0xFFF0DCFF),
+                  container1Icon: Icons.dashboard_outlined,
+                  container1Text: 'Dashboard',
+                  container1Tap: () =>
+                      Navigator.pushNamed(context, Dashboard.id),
+                  container2Clr: const Color(0xFFFFC8C8),
+                  container2Icon: Icons.calendar_month_outlined,
+                  container2Text: 'Call Planner',
+                  container2Tap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: ((context) => CallPlans())));
+                  }),
               const SizedBox(
                 height: 30.0,
               ),
@@ -264,8 +262,10 @@ class _HomePageState extends State<HomePage> {
                 container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Daily Call Reports',
-                container2Tap: () =>
-                    Navigator.push(context, MaterialPageRoute(builder: ((context)=>DailyCallReports()))),
+                container2Tap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: ((context) => DailyCallReports()))),
               ),
               const SizedBox(
                 height: 30.0,
@@ -278,12 +278,11 @@ class _HomePageState extends State<HomePage> {
                 container2Icon: Icons.add_shopping_cart_outlined,
                 container2Text: 'Orders',
                 container1Tap: () =>
-                    Navigator.pushNamed(context, DoctorsAreas.id),
-                container2Tap: () =>
-                    Navigator.push(context,
-                      MaterialPageRoute(builder: ((context) => OrderPage()))),
+                    Navigator.pushNamed(context, AdminPanel.id),
+                container2Tap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: ((context) => AddProduct()))),
               ),
-              const SizedBox( 
+              const SizedBox(
                 height: 30.0,
               ),
               MyButton(

@@ -9,8 +9,8 @@ import '../userScreens/login_page.dart';
 
 final _formkey = GlobalKey<FormState>();
 
-class Addoctor extends StatelessWidget {
-  const Addoctor({super.key});
+class AddDoctor extends StatelessWidget {
+  const AddDoctor({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,6 @@ class Addoctor extends StatelessWidget {
                           hintText: 'Doctor Name',
                           contentPadding: EdgeInsets.only(top: 3),
                         ),
-                        
                       ),
                     ]),
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
+import 'package:micro_pharma/adminScreens/add_product.dart';
 import 'package:micro_pharma/components/constants.dart';
 
 class ProductCatalogPage extends StatelessWidget {
@@ -31,6 +32,12 @@ class ProductCatalogPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(appBartxt: 'Product Catalog'),
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: ((context) => AddProduct())));
+          },
+          label: Text('Add New Product')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SafeArea(

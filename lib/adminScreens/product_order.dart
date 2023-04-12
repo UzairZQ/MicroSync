@@ -4,14 +4,14 @@ import '../userScreens/login_page.dart';
 import 'package:micro_pharma/main.dart';
 import 'package:micro_pharma/components/constants.dart';
 
-class AddProduct extends StatefulWidget {
-  const AddProduct({Key? key}) : super(key: key);
+class ProductOrder extends StatefulWidget {
+  const ProductOrder({Key? key}) : super(key: key);
 
   @override
-  _AddProductState createState() => _AddProductState();
+  _ProductOrderState createState() => _ProductOrderState();
 }
 
-class _AddProductState extends State<AddProduct> {
+class _ProductOrderState extends State<ProductOrder> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _productNameController = TextEditingController();
@@ -49,7 +49,7 @@ class _AddProductState extends State<AddProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Add Product'),
+      appBar: MyAppBar(appBartxt: 'Product Order'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

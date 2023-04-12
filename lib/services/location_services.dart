@@ -52,5 +52,5 @@ class LocationServices extends ChangeNotifier {
     }
   }
 
-  stopListening() {}
+  
 }

@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'login_page.dart';
+import '../userScreens/login_page.dart';
 import 'package:micro_pharma/main.dart';
 
-class OrderPage extends StatefulWidget {
+class AddProduct extends StatefulWidget {
   @override
-  _OrderPageState createState() => _OrderPageState();
+  _AddProductState createState() => _AddProductState();
 }
 
-class _OrderPageState extends State<OrderPage> {
+class _AddProductState extends State<AddProduct> {
   final _formKey = GlobalKey<FormState>();
   final _productController = TextEditingController();
   final _codeController = TextEditingController();
   final _tradePriceController = TextEditingController();
   final _retailPriceController = TextEditingController();
 
-  void _submitOrder() {
+  void _submitProduct() {
     if (_formKey.currentState!.validate()) {
       final productName = _productController.text;
-      final quantity = int.parse(_codeController.text);
+
       final retailPrice = double.parse(_retailPriceController.text);
       final tradePrice = double.parse(_tradePriceController.text);
 
       _formKey.currentState;
 
-      // TODO: Send order details to pharmacy
+      // TODO: add product to database
     }
   }
 
@@ -52,7 +52,7 @@ class _OrderPageState extends State<OrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('New Order'),
+          title: Text('New Product'),
           centerTitle: true,
         ),
         body: SafeArea(
@@ -79,7 +79,19 @@ class _OrderPageState extends State<OrderPage> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter quantity';
+                      return 'Please enter code';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: _codeController,
+                  decoration: InputDecoration(labelText: ' Packing'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter packing ';
                     }
                     return null;
                   },
@@ -91,7 +103,7 @@ class _OrderPageState extends State<OrderPage> {
                   decoration: InputDecoration(labelText: 'Retail Price'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Pleas enter trade price';
+                      return 'Pleas enter retail price';
                     }
                     return null;
                   },
@@ -100,8 +112,7 @@ class _OrderPageState extends State<OrderPage> {
                 TextFormField(
                   controller: _tradePriceController,
                   enabled: false,
-                  decoration:
-                      InputDecoration(labelText: ' Trade Price(15% less)'),
+                  decoration: InputDecoration(labelText: ' Trade Price'),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -116,7 +127,7 @@ class _OrderPageState extends State<OrderPage> {
                     child: MyButton(
                         color: Colors.blue,
                         text: 'Save',
-                        onPressed: _submitOrder)),
+                        onPressed: _submitProduct)),
               ],
             ),
           ),

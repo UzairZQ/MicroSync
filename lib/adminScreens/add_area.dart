@@ -4,8 +4,8 @@ import '../userScreens/login_page.dart';
 
 final _formkey = GlobalKey<FormState>();
 
-class Addarea extends StatelessWidget {
-  const Addarea({super.key});
+class AddArea extends StatelessWidget {
+  const AddArea({super.key});
 
   @override
   Widget build(BuildContext context) {
