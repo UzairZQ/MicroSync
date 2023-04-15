@@ -114,7 +114,7 @@ class _ProductOrderState extends State<ProductOrder> {
               // items: productProvider.products.map((product) {
               // return DropdownMenuItem(
               // value: product.name,
-              // child: Text(product.name),
+              // child: Text(produc t.name),
               // );
               // }).toList(),
               // validator: (value) {
