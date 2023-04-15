@@ -1,23 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:micro_pharma/adminScreens/add_area.dart';
+
 import 'package:micro_pharma/components/constants.dart';
 
 class Areas extends StatelessWidget {
-  const Areas({super.key});
+  Areas({super.key});
+  TextEditingController areaController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Areas'),
+      appBar: const MyAppBar(appBartxt: 'Areas'),
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: ((context) => AddArea())));
-          
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: ((context) => AddArea())));
+            showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+                    child: Form(
+                      // key: _formkey,
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: const Center(
+                              child: Text(
+                                'Area',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                            subtitle: Column(
+                              children: [
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    hintText: 'Please Enter Area Name',
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          MyButton(
+                              color: Colors.blue,
+                              text: 'Save',
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  formKey.currentState!.save();
+                                }
+                              }),
+                        ],
+                      ),
+                    ),
+                  );
+                });
           },
-          label: Text('Add Area')),
+          label: const Text('Add Area')),
     );
   }
 }

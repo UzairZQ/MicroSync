@@ -1,26 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/adminScreens/admin_panel.dart';
+
+import 'package:micro_pharma/adminScreens/doctors_page.dart';
 import 'package:micro_pharma/components/container_Row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
-
 import 'dailycall_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/userScreens/day_plan.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
-
-import '../adminScreens/add_product.dart';
 import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:provider/provider.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../main.dart';
-
 import 'package:workmanager/workmanager.dart';
 import 'call_plans.dart';
 
@@ -276,14 +271,22 @@ class _HomePageState extends State<HomePage> {
               ContainerRow(
                 container1Clr: Colors.blue.shade200,
                 container1Icon: Icons.medical_services_outlined,
-                container1Text: 'Doctors, Areas & Chemists',
+                container1Text: 'Doctors',
                 container2Clr: Colors.orange.shade200,
                 container2Icon: Icons.add_shopping_cart_outlined,
                 container2Text: 'Orders',
-                container1Tap: () =>
-                    Navigator.pushNamed(context, AdminPanel.id),
-                container2Tap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: ((context) => ProductOrder()))),
+                container1Tap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: ((context) => const DoctorsPage()),
+                  ),
+                ),
+                container2Tap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: ((context) => const ProductOrder()),
+                  ),
+                ),
               ),
               const SizedBox(
                 height: 30.0,

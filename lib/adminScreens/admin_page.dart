@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:micro_pharma/adminScreens/admin_settings.dart';
 
-import 'package:micro_pharma/userScreens/dailycall_report.dart';
 import 'package:micro_pharma/adminScreens/admin_panel.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
-import 'package:micro_pharma/adminScreens/add_product.dart';
 import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/main.dart';
@@ -186,10 +184,10 @@ class _AdminPageState extends State<AdminPage> {
               ),
               ContainerRow(
                 container1Clr: Colors.blue.shade200,
-                container1Icon: Icons.medical_services_outlined,
-                container1Text: 'Doctors & Areas ',
+                container1Icon: Icons.settings_applications_outlined,
+                container1Text: 'Admin Panel ',
                 container2Clr: Colors.orange.shade200,
-                container2Icon: Icons.settings_outlined,
+                container2Icon: Icons.add_box_outlined,
                 container2Text: 'Add Delete Users',
                 container1Tap: () {
                   Navigator.push(
