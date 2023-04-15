@@ -169,16 +169,16 @@ class _DashboardState extends State<Dashboard> {
                         horizontal: 30.0, vertical: 10.0),
                     height: 72.0,
                     width: 144.0,
+                    decoration: BoxDecoration(
+                      color: const Color(0xff89B7FD),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
                     child: Center(
                         child: myTextwidget(
                       fontSize: 17.5,
                       text: '14 Visited Doctors',
                       fontWeight: FontWeight.bold,
                     )),
-                    decoration: BoxDecoration(
-                      color: Color(0xff89B7FD),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
                   ),
                   Container(
                     padding: const EdgeInsets.only(left: 30.0, right: 15.0),
@@ -232,14 +232,14 @@ class _DashboardState extends State<Dashboard> {
               //         )
               //       ],
               //     )),
-              SizedBox(
+              const SizedBox(
                 height: 0.0,
               ),
               const Text(
                 'DCR status',
                 style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+             const  SizedBox(
                 height: 20.0,
               ),
             ],

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/providers/area_provider.dart';
-import 'package:micro_pharma/providers/product_data_provider.dart';
-import 'package:micro_pharma/providers/user_data_provider.dart';
-import 'package:provider/provider.dart';
+
 
 class ProductOrder extends StatefulWidget {
   const ProductOrder({Key? key}) : super(key: key);
@@ -54,7 +51,7 @@ class _ProductOrderState extends State<ProductOrder> {
     // final areaProvider = Provider.of<AreaProvider>(context);
 
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Product Order'),
+      appBar:const  MyAppBar(appBartxt: 'Product Order'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -64,7 +61,7 @@ class _ProductOrderState extends State<ProductOrder> {
             children: [
               TextFormField(
                 controller: _customerNameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Customer Name',
                 ),
                 validator: (value) {
@@ -74,7 +71,7 @@ class _ProductOrderState extends State<ProductOrder> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               // TODO: Implement area dropdown using areaProvider
               // DropdownButtonFormField(
               //   decoration: InputDecoration(
@@ -99,7 +96,7 @@ class _ProductOrderState extends State<ProductOrder> {
               //     return null;
               //   },
               // ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               // TODO: Implement product dropdown using productProvider
               // DropdownButtonFormField(
               //   decoration: InputDecoration(
@@ -124,10 +121,10 @@ class _ProductOrderState extends State<ProductOrder> {
               // return null;
               // },
               // ),
-              SizedBox(height: 16.0),
+             const  SizedBox(height: 16.0),
               TextFormField(
                 controller: _productQuantityController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Quantity',
                 ),
                 keyboardType: TextInputType.number,
@@ -138,10 +135,10 @@ class _ProductOrderState extends State<ProductOrder> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+             const SizedBox(height: 16.0),
               TextFormField(
                 controller: _bonusController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Bonus',
                 ),
                 keyboardType: TextInputType.number,
@@ -152,10 +149,10 @@ class _ProductOrderState extends State<ProductOrder> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _discountController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Discount',
                 ),
                 keyboardType: TextInputType.number,
@@ -166,7 +163,7 @@ class _ProductOrderState extends State<ProductOrder> {
                   return null;
                 },
               ),
-              SizedBox(height: 32.0),
+             const  SizedBox(height: 32.0),
               MyButton(text: 'Send Order', onPressed: _submitOrder)
             ],
           ),

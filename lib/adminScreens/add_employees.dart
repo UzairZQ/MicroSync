@@ -111,7 +111,6 @@ class _AddEmployeesState extends State<AddEmployees> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController confpasController = TextEditingController();
   TextEditingController areacontroller = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +122,7 @@ class _AddEmployeesState extends State<AddEmployees> {
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Form(
-            key: _formKey,
+            key: formKey,
             child: Column(
               children: [
                 MyTextFormField(
@@ -236,8 +235,8 @@ class _AddEmployeesState extends State<AddEmployees> {
                         color: kappbarColor,
                         text: 'Create User',
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
+                          if (formKey.currentState!.validate()) {
+                            formKey.currentState!.save();
                             createUser(
                                 emailController.text, passwordController.text);
                           }

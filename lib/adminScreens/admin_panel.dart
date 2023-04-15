@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/userScreens/product_order.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/components/container_row.dart';
-import 'package:micro_pharma/components/my_container.dart';
-import 'package:micro_pharma/adminScreens/add_area.dart';
-import 'package:micro_pharma/adminScreens/add_doctor.dart';
 import 'package:micro_pharma/adminScreens/doctors_page.dart';
 import 'areas_page.dart';
 import 'product.dart';
@@ -40,10 +36,10 @@ class AdminPanel extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: ((context) => const Areas())));
+                            builder: ((context) =>  Areas())));
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 ContainerRow(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/add_product.dart';
 import 'package:micro_pharma/components/constants.dart';
 
@@ -28,16 +27,19 @@ class ProductCatalogPage extends StatelessWidget {
     },
   ];
 
+   ProductCatalogPage({super.key});
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Product Catalog'),
+      appBar:const  MyAppBar(appBartxt: 'Product Catalog'),
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: ((context) => AddProduct())));
+                MaterialPageRoute(builder: ((context) =>const AddProduct())));
           },
-          label: Text('Add New Product')),
+          label: const Text('Add New Product')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SafeArea(
@@ -45,7 +47,7 @@ class ProductCatalogPage extends StatelessWidget {
             color: Colors.blueGrey[700],
             child: Table(
               // columnWidths: ,
-              columnWidths: {
+              columnWidths:const {
                 0: FixedColumnWidth(
                     150), // set width of first column to 100 pixels
                 1: FlexColumnWidth(), // set width of second column to flex
@@ -57,7 +59,7 @@ class ProductCatalogPage extends StatelessWidget {
                 style: BorderStyle.solid,
               ),
               children: [
-                TableRow(
+                const TableRow(
                   children: [
                     TableCell(
                       child: Padding(
@@ -106,23 +108,23 @@ class ProductCatalogPage extends StatelessWidget {
                       TableCell(
                         child: Padding(
                             // padding: EdgeInsets.all(5),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 16.0),
                             child: Text(product['product_name'])),
                       ),
                       TableCell(
                         child: Padding(
                             // padding: EdgeInsets.all(5),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 16.0),
-                            child: Text('\PKR  ${product['trade_price']}')),
+                            child: Text('PKR  ${product['trade_price']}')),
                       ),
                       TableCell(
                         child: Padding(
                             // padding: EdgeInsets.all(5),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 16.0),
-                            child: Text('\PKR  ${product['retail_price']}')),
+                            child: Text('PKR  ${product['retail_price']}')),
                       ),
                     ],
                   );
