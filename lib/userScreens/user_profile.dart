@@ -5,7 +5,6 @@ import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:provider/provider.dart';
-import 'package:micro_pharma/components/constants.dart';
 
 class UserProfilePage extends StatefulWidget {
   static const String id = 'user_profile';
@@ -111,7 +110,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
             const SizedBox(height: 20),
             MyButton(
               onPressed: () {
-                // TODO: show change password bottom sheet
                 showModalBottomSheet(
                   context: context,
                   builder: (BuildContext context) {

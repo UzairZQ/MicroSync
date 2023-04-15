@@ -15,17 +15,17 @@ class _DailyCallReportsState extends State<DailyCallReports> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Daily Call Report'),
+      appBar: const MyAppBar(appBartxt: 'Daily Call Report'),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(18.0),
+            padding: const EdgeInsets.all(18.0),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Doctor Name:',
                     style: TextStyle(fontSize: 16),
                   ),
@@ -40,8 +40,8 @@ class _DailyCallReportsState extends State<DailyCallReports> {
                       _doctorName = value;
                     },
                   ),
-                  SizedBox(height: 16.0),
-                  Text(
+                  const SizedBox(height: 16.0),
+                  const Text(
                     'Purpose of visit:',
                     style: TextStyle(fontSize: 16),
                   ),
@@ -56,8 +56,8 @@ class _DailyCallReportsState extends State<DailyCallReports> {
                       _purpose = value;
                     },
                   ),
-                  SizedBox(height: 16.0),
-                  Text(
+                 const  SizedBox(height: 16.0),
+                  const Text(
                     'Remarks:',
                     style: TextStyle(fontSize: 16),
                   ),
@@ -66,7 +66,7 @@ class _DailyCallReportsState extends State<DailyCallReports> {
                       _remarks = value;
                     },
                   ),
-                  SizedBox(height: 30.0),
+                  const SizedBox(height: 30.0),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: MyButton(
@@ -75,7 +75,7 @@ class _DailyCallReportsState extends State<DailyCallReports> {
                           _formKey.currentState!.save();
                           // Send data to admin here
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                                 content: Text('Report submitted successfully')),
                           );
                         }

@@ -56,12 +56,15 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
+final formKey = GlobalKey<FormState>();
+
+
 //I have added a comment
 TextStyle ktextstyle = const TextStyle(
     fontFamily: 'Poppins,', fontSize: 17.5, fontWeight: FontWeight.w400);
 
 class myTextwidget extends StatelessWidget {
-  myTextwidget({this.fontWeight, required this.fontSize, required this.text});
+  myTextwidget({super.key, this.fontWeight, required this.fontSize, required this.text});
 
   FontWeight? fontWeight;
   double fontSize;

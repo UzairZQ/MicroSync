@@ -42,6 +42,8 @@ void callBackDispatcher() async {
   });
 }
 
+final formKey = GlobalKey<FormState>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
@@ -68,7 +70,7 @@ class MicroPharma extends StatelessWidget {
         'user_dashboard': (context) => const Dashboard(),
         'admin': (context) => const AdminPage(),
         'dayplan': (context) => const DayPlan(),
-        'productorder': (context) => AddProduct(),
+        'addproduct': (context) => const AddProduct(),
         'callplanner': (context) => WeeklyCallPlanner(),
         'addoctor': (context) => const AdminPanel(),
         'dailycallreport': (context) => DailyCallReports(),

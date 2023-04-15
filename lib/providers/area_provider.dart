@@ -12,12 +12,12 @@ class AreaProvider with ChangeNotifier {
       final snapshot =
           await FirebaseFirestore.instance.collection('areas').get();
       final List<AreaModel> loadedAreas = [];
-      snapshot.docs.forEach((doc) {
+      for (var doc in snapshot.docs) {
         loadedAreas.add(AreaModel(
           areaId: doc.id,
           areaName: doc.data()['areaName'],
         ));
-      });
+      }
       _areas = loadedAreas;
       notifyListeners();
     } catch (error) {
