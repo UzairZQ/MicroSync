@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
 
 import 'package:micro_pharma/components/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Areas extends StatelessWidget {
+  // final formareaKey = GlobalKey<FormState>();
+
   Areas({super.key});
-  TextEditingController areaController = TextEditingController();
+  TextEditingController areaNameController = TextEditingController();
+  TextEditingController areaCodeController = TextEditingController();
+  void addAreatoDatabase(String areaName, String code) async {
+    int areaCode = int.parse(code);
+    try {
+      await FirebaseFirestore.instance
+          .collection('areas')
+          .add({'id': areaCode, 'name': areaName});
+      print('Added to database');
+    } catch (e) {
+      print('This is the error $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +35,7 @@ class Areas extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
                     child: Form(
-                      // key: _formkey,
+                      key: formKey,
                       child: Column(
                         children: [
                           ListTile(
@@ -36,12 +51,24 @@ class Areas extends StatelessWidget {
                             subtitle: Column(
                               children: [
                                 TextFormField(
+                                  onSaved: (name) {
+                                    areaNameController.text = name!;
+                                  },
                                   decoration: const InputDecoration(
                                     hintText: 'Please Enter Area Name',
                                   ),
                                 ),
                                 const SizedBox(
                                   height: 5,
+                                ),
+                                TextFormField(
+                                  onSaved: (newValue) {
+                                    areaCodeController.text = newValue!;
+                                  },
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Please Enter Area Code',
+                                  ),
                                 ),
                               ],
                             ),
@@ -54,10 +81,12 @@ class Areas extends StatelessWidget {
                           ),
                           MyButton(
                               color: Colors.blue,
-                              text: 'Save',
+                              text: 'Add Area',
                               onPressed: () {
                                 if (formKey.currentState!.validate()) {
                                   formKey.currentState!.save();
+                                  addAreatoDatabase(areaNameController.text,
+                                      areaCodeController.text);
                                 }
                               }),
                         ],
