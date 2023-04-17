@@ -30,7 +30,7 @@ class AdminPanel extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: ((context) => const DoctorsPage())));
+                            builder: ((context) =>  DoctorsPage())));
                   },
                   container2Tap: () {
                     Navigator.push(
