@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,7 +13,8 @@ class GoogleMapPage extends StatefulWidget {
 
   final String userId;
 
-  const GoogleMapPage({super.key, required this.userId});
+
+  const GoogleMapPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<GoogleMapPage> createState() => _GoogleMapPageState();
@@ -24,89 +23,88 @@ class GoogleMapPage extends StatefulWidget {
 class _GoogleMapPageState extends State<GoogleMapPage> {
   final db = DataBaseService();
   late GoogleMapController _controller;
-  bool _added = false;
   bool isSatellite = false;
+  late StreamSubscription<QuerySnapshot> _subscription;
+  LatLng _lastKnownLocation = const LatLng(0, 0);
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = db.streamUser().listen(_onLocationUpdate);
+  }
 
   @override
   void dispose() {
+    _subscription.cancel();
     super.dispose();
-    
+  }
+
+  void _onLocationUpdate(QuerySnapshot snapshot) {
+    final userData = snapshot.docs.singleWhere(
+      (element) => element.id == widget.userId,
+    );
+    setState(() {
+      _lastKnownLocation = LatLng(
+        userData['latitude'] as double,
+        userData['longitude'] as double,
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(appBartxt: 'Map Screen'),
-      body: StreamBuilder(
-        stream: db.streamUser(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (_added) {
-            mymap(snapshot);
-          }
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          return GoogleMap(
-            mapType: isSatellite ? MapType.satellite : MapType.normal,
-            markers: {
-              Marker(
-                markerId: const MarkerId('Current User Location'),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueRed),
-                position: LatLng(
-                  snapshot.data!.docs.singleWhere(
-                      (element) => element.id == widget.userId)['latitude'],
-                  snapshot.data!.docs.singleWhere(
-                      (element) => element.id == widget.userId)['longitude'],
+      appBar: const MyAppBar(appBartxt: 'User Location'),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: StreamBuilder(
+          stream: db.streamUser(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return GoogleMap(
+              mapType: isSatellite ? MapType.satellite : MapType.normal,
+              markers: {
+                Marker(
+                  markerId: const MarkerId('Current User Location'),
+                  icon: BitmapDescriptor.defaultMarker,
+                  position: _lastKnownLocation,
                 ),
+              },
+              initialCameraPosition: CameraPosition(
+                target: _lastKnownLocation,
+                zoom: 15.00,
               ),
-            },
-            initialCameraPosition: CameraPosition(
-              target: LatLng(
-                snapshot.data!.docs.singleWhere(
-                    (element) => element.id == widget.userId)['latitude'],
-                snapshot.data!.docs.singleWhere(
-                    (element) => element.id == widget.userId)['longitude'],
-              ),
-              zoom: 15.00,
-            ),
-            onMapCreated: (GoogleMapController controller) async {
+              onMapCreated: (GoogleMapController controller) {
+                setState(() {
+                  _controller = controller;
+                });
+              },
+            );
+          },
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 24.0, right: 24.0),
+        child: FloatingActionButton.extended(
+            onPressed: () {
               setState(() {
-                _controller = controller;
-                _added = true;
+                isSatellite = !isSatellite;
               });
             },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          setState(() {
-            isSatellite = !isSatellite;
-          });
-        },
-        label: const Text(
-          'Change Map Type',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-          ),
-        ),
-        icon: const Icon(Icons.location_on_outlined),
+            label: const Text(
+              'Change Map Type',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            icon: const Icon(Icons.map_outlined),
+            backgroundColor: Colors.deepPurple),
       ),
     );
-  }
-
-  Future<void> mymap(AsyncSnapshot<QuerySnapshot> snapshot) async {
-    await _controller
-        .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-            target: LatLng(
-              snapshot.data!.docs.singleWhere(
-                  (element) => element.id == widget.userId)['latitude'],
-              snapshot.data!.docs.singleWhere(
-                  (element) => element.id == widget.userId)['longitude'],
-            ),
-            zoom: 15.00)));
   }
 }
