@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 import 'package:workmanager/workmanager.dart';
-import 'call_plans.dart';
+import 'call_planner.dart';
 
 class HomePage extends StatefulWidget {
   static String id = 'home';
@@ -242,12 +242,12 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pushNamed(context, Dashboard.id),
                   container2Clr: const Color(0xFFFFC8C8),
                   container2Icon: Icons.calendar_month_outlined,
-                  container2Text: 'Weekly Call Planner',
+                  container2Text: 'Call Planner',
                   container2Tap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) => WeeklyCallPlanner())));
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: ((context) => CallPlanner())));
                   }),
               const SizedBox(
                 height: 30.0,
