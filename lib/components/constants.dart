@@ -102,3 +102,32 @@ String? validatePassword(String? password) {
     return null;
   }
 }
+
+Future<void> showCustomDialog({
+  required BuildContext context,
+  required Widget title,
+  required Widget content,
+  List<Widget>? actions,
+}) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: title,
+        content: SingleChildScrollView(
+          child: content,
+        ),
+        actions: actions ??
+            <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+      );
+    },
+  );
+}
