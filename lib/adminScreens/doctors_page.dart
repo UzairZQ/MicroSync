@@ -3,26 +3,51 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/userScreens/home_page.dart';
+import 'package:micro_pharma/userScreens/login_page.dart';
 
 class DoctorsPage extends StatelessWidget {
   DoctorsPage({super.key});
   TextEditingController doctorNameController = TextEditingController();
   TextEditingController areaController = TextEditingController();
   TextEditingController addressController = TextEditingController();
-  // TextEditingController specializationController = TextEditingController();
-  TextEditingController categoryController = TextEditingController();
-  void adDoctortoDatabase(String docname, String docarea, String address,
-      String special, String category) async {
+  TextEditingController specializationController = TextEditingController();
+  void adDoctortoDatabase(
+      String docname, String docarea, String address, String special) async {
     try {
       await FirebaseFirestore.instance.collection('doctors').add({
-        'address': addressController,
-        'area': areaController,
-        'name': doctorNameController,
-        // 'speciality': specializationController,
-        'category': categoryController
+        'address': address,
+        'area': docarea,
+        'name': docname,
+        'speciality': special,
       });
       print('Added to database');
+      showCustomDialog(
+          context: navigatorKey.currentContext!,
+          title: myTextwidget(fontSize: 17.5, text: 'Success'),
+          content: myTextwidget(fontSize: 14, text: 'Doctor Added to Database'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(navigatorKey.currentContext!);
+                },
+                child: const Text('Okay'))
+          ]);
+      doctorNameController.clear();
+      areaController.clear();
+      addressController.clear();
+      specializationController.clear();
     } catch (a) {
+      showCustomDialog(
+          context: navigatorKey.currentContext!,
+          title: myTextwidget(fontSize: 17.5, text: 'Failure'),
+          content: myTextwidget(fontSize: 14, text: 'An error occured'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(navigatorKey.currentContext!);
+                },
+                child: const Text('Okay'))
+          ]);
       print('This is the error $a');
     }
   }
@@ -62,6 +87,12 @@ class DoctorsPage extends StatelessWidget {
                               subtitle: Column(
                                 children: [
                                   TextFormField(
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please Enter Doctor Name';
+                                      }
+                                      return null;
+                                    },
                                     onSaved: (name) {
                                       doctorNameController.text = name!;
                                     },
@@ -71,8 +102,14 @@ class DoctorsPage extends StatelessWidget {
                                     ),
                                   ),
                                   TextFormField(
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please Select Area';
+                                      }
+                                      return null;
+                                    },
                                     onSaved: (area) {
-                                      doctorNameController.text = area!;
+                                      areaController.text = area!;
                                     },
                                     decoration: const InputDecoration(
                                       hintText: 'Select Area',
@@ -81,10 +118,16 @@ class DoctorsPage extends StatelessWidget {
                                     ),
                                   ),
                                   TextFormField(
-                                    onSaved: (address) {
-                                      doctorNameController.text = address!;
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please Enter Doctor\'s Address';
+                                      }
+                                      return null;
                                     },
-                                    //skdafsgit 
+                                    onSaved: (address) {
+                                      addressController.text = address!;
+                                    },
+                                    //skdafsgit
                                     decoration: const InputDecoration(
                                       hintText: 'Enter Address',
                                       contentPadding: EdgeInsets.only(top: 3),
@@ -107,8 +150,14 @@ class DoctorsPage extends StatelessWidget {
                               subtitle: Column(
                                 children: [
                                   TextFormField(
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please Enter Phone Number';
+                                      }
+                                      return null;
+                                    },
                                     onSaved: (category) {
-                                      doctorNameController.text = category!;
+                                      specializationController.text = category!;
                                     },
                                     decoration: const InputDecoration(
                                       hintText: 'Select Category',
@@ -127,6 +176,12 @@ class DoctorsPage extends StatelessWidget {
                               onPressed: () {
                                 if (formKey.currentState!.validate()) {
                                   formKey.currentState!.save();
+                                  adDoctortoDatabase(
+                                    doctorNameController.text,
+                                    areaController.text,
+                                    addressController.text,
+                                    specializationController.text,
+                                  );
                                 }
                               },
                             ),
