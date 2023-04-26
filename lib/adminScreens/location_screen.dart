@@ -14,7 +14,6 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   @override
   void dispose() {
-   
     super.dispose();
   }
 
@@ -23,7 +22,7 @@ class _LocationScreenState extends State<LocationScreen> {
     return Scaffold(
       appBar: const MyAppBar(appBartxt: 'Location'),
       body: StreamBuilder(
-          stream: DataBaseService().streamUser(),
+          stream: DatabaseService.streamUser(),
           builder: (context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
@@ -40,8 +39,7 @@ class _LocationScreenState extends State<LocationScreen> {
                       subtitle: Row(
                         children: [
                           Text(
-                              'Location Updated at: ${snapshot.data!.docs[index]['update']}'
-                                  ),
+                              'Location Updated at: ${snapshot.data!.docs[index]['update']}'),
                           // Text(snapshot.data!.docs[index]['latitude']
                           //     .toString()),
                           // const SizedBox(

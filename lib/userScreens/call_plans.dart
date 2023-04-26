@@ -15,15 +15,15 @@ class _WeeklyCallPlannerState extends State<WeeklyCallPlanner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(appBartxt: 'Weekly Call Planner'),
+      appBar: const MyAppBar(appBartxt: 'Weekly Call Planner'),
       body: Padding(
-        padding: EdgeInsets.all(17.0),
+        padding: const EdgeInsets.all(17.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Enter your name:',
                 style: TextStyle(fontSize: 16),
               ),
@@ -39,8 +39,8 @@ class _WeeklyCallPlannerState extends State<WeeklyCallPlanner> {
                   _name = value;
                 },
               ),
-              SizedBox(height: 16.0),
-              Text(
+             const SizedBox(height: 16.0),
+              const Text(
                 'Enter your phone number:',
                 style: TextStyle(fontSize: 16),
               ),
@@ -56,8 +56,8 @@ class _WeeklyCallPlannerState extends State<WeeklyCallPlanner> {
                   _phoneNumber = value;
                 },
               ),
-              SizedBox(height: 16.0),
-              Text(
+            const  SizedBox(height: 16.0),
+             const Text(
                 'Enter your email:',
                 style: TextStyle(fontSize: 16),
               ),
@@ -76,7 +76,7 @@ class _WeeklyCallPlannerState extends State<WeeklyCallPlanner> {
                   _email = value;
                 },
               ),
-              SizedBox(height: 30.0),
+             const SizedBox(height: 30.0),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: MyButton(

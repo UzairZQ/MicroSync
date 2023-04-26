@@ -1,25 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:micro_pharma/components/constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../services/database_service.dart';
 
 class Areas extends StatelessWidget {
   // final formareaKey = GlobalKey<FormState>();
 
   Areas({super.key});
-  TextEditingController areaNameController = TextEditingController();
-  TextEditingController areaCodeController = TextEditingController();
-  void addAreatoDatabase(String areaName, String code) async {
-    int areaCode = int.parse(code);
-    try {
-      await FirebaseFirestore.instance
-          .collection('areas')
-          .add({'id': areaCode, 'name': areaName});
-      print('Added to database');
-    } catch (e) {
-      print('This is the error $e');
-    }
-  }
+  final TextEditingController areaNameController = TextEditingController();
+  final TextEditingController areaCodeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +75,8 @@ class Areas extends StatelessWidget {
                               onPressed: () {
                                 if (formKey.currentState!.validate()) {
                                   formKey.currentState!.save();
-                                  addAreatoDatabase(areaNameController.text,
+                                  DatabaseService.addAreatoDatabase(
+                                      areaNameController.text,
                                       areaCodeController.text);
                                 }
                               }),

@@ -13,7 +13,6 @@ class GoogleMapPage extends StatefulWidget {
 
   final String userId;
 
-
   const GoogleMapPage({Key? key, required this.userId}) : super(key: key);
 
   @override
@@ -21,7 +20,6 @@ class GoogleMapPage extends StatefulWidget {
 }
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
-  final db = DataBaseService();
   late GoogleMapController _controller;
   bool isSatellite = false;
   late StreamSubscription<QuerySnapshot> _subscription;
@@ -30,7 +28,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   @override
   void initState() {
     super.initState();
-    _subscription = db.streamUser().listen(_onLocationUpdate);
+    _subscription = DatabaseService.streamUser().listen(_onLocationUpdate);
   }
 
   @override
@@ -58,7 +56,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: StreamBuilder(
-          stream: db.streamUser(),
+          stream: DatabaseService.streamUser(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
               return const Center(
