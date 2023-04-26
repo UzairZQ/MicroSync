@@ -27,19 +27,23 @@ class ProductCatalogPage extends StatelessWidget {
     },
   ];
 
-   ProductCatalogPage({super.key});
-
+  ProductCatalogPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:const  MyAppBar(appBartxt: 'Product Catalog'),
+      appBar: const MyAppBar(appBartxt: 'Product Catalog'),
       floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: ((context) =>const AddProduct())));
-          },
-          label: const Text('Add New Product')),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: ((context) => const AddProduct()),
+            ),
+          );
+        },
+        label: const Text('Add New Product'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SafeArea(
@@ -47,7 +51,7 @@ class ProductCatalogPage extends StatelessWidget {
             color: Colors.blueGrey[700],
             child: Table(
               // columnWidths: ,
-              columnWidths:const {
+              columnWidths: const {
                 0: FixedColumnWidth(
                     150), // set width of first column to 100 pixels
                 1: FlexColumnWidth(), // set width of second column to flex

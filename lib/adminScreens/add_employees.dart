@@ -26,84 +26,6 @@ class _AddEmployeesState extends State<AddEmployees> {
     confpasController.dispose();
   }
 
-  Future createUser(String email, String password) async {
-    try {
-      showDialog(
-          context: context,
-          builder: ((context) {
-            return Builder(builder: (context) {
-              return const Center(child: CircularProgressIndicator());
-            });
-          }));
-
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((UserCredential userCredential) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .set({
-          'displayName': nameController.text,
-          'email': emailController.text,
-          'longitude': 43,
-          'latitude': 73,
-          'role': roleController.text,
-          'uid': userCredential.user!.uid,
-          'phone': phoneController.text
-        });
-        Navigator.pop(context);
-        userCreatedDialog();
-      });
-      nameController.clear();
-      emailController.clear();
-      passwordController.clear();
-      roleController.clear();
-      phoneController.clear();
-      confpasController.clear();
-    } on FirebaseAuthException catch (e) {
-      showDialog(
-          context: context,
-          builder: ((context) {
-            return Builder(builder: (context) {
-              return Center(
-                  child: AlertDialog(
-                title: const Text('Error'),
-                content: Text(
-                    'User creation was unsuccessfull, Please try again:::$e'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('OK'))
-                ],
-              ));
-            });
-          }));
-    }
-  }
-
-  Future<dynamic> userCreatedDialog() {
-    return showDialog(
-        context: context,
-        builder: ((context) {
-          return Builder(builder: (context) {
-            return Center(
-                child: AlertDialog(
-              title: const Text('Success'),
-              content: const Text('New User Created Successfully!'),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('OK'))
-              ],
-            ));
-          });
-        }));
-  }
-
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -237,8 +159,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState!.save();
-                            createUser(
-                                emailController.text, passwordController.text);
+                            createUser();
                           }
                         }),
                     MyButton(
@@ -270,7 +191,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                 style: ktextstyle,
               ),
               StreamBuilder(
-                  stream: DataBaseService().streamUser(),
+                  stream: DatabaseService.streamUser(),
                   builder: (context, AsyncSnapshot snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(child: CircularProgressIndicator());
@@ -341,38 +262,19 @@ class _AddEmployeesState extends State<AddEmployees> {
           );
         });
   }
-}
 
-// ignore: must_be_immutable
-class MyTextFormField extends StatelessWidget {
-  MyTextFormField(
-      {super.key,
-      required this.hintext,
-      this.onSaved,
-      this.validator,
-      this.controller});
-
-  String? hintext;
-  Function(String?)? onSaved;
-  String? Function(String?)? validator;
-  TextEditingController? controller;
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      validator: validator,
-      onSaved: onSaved,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.blue[50],
-        hintText: '$hintext',
-        hintStyle: const TextStyle(fontFamily: 'Poppins'),
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10.0),
-          ),
-        ),
-      ),
-    );
+  void createUser() async {
+    await DatabaseService.createUser(
+        emailController.text,
+        passwordController.text,
+        nameController.text,
+        roleController.text,
+        phoneController.text);
+    nameController.clear();
+    emailController.clear();
+    passwordController.clear();
+    confpasController.clear();
+    roleController.clear();
+    phoneController.clear();
   }
 }

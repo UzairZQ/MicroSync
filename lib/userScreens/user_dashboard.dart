@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:pie_chart/pie_chart.dart';
-import 'package:flutter/src/rendering/box.dart';
 
 List<String> month = <String>[
   'January',
@@ -159,7 +157,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-              myTextwidget(fontSize: 17.5, text: 'Visit/Missed Details'),
+              const MyTextwidget(fontSize: 17.5, text: 'Visit/Missed Details'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -173,8 +171,8 @@ class _DashboardState extends State<Dashboard> {
                       color: const Color(0xff89B7FD),
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    child: Center(
-                        child: myTextwidget(
+                    child: const Center(
+                        child: MyTextwidget(
                       fontSize: 17.5,
                       text: '14 Visited Doctors',
                       fontWeight: FontWeight.bold,
@@ -186,8 +184,8 @@ class _DashboardState extends State<Dashboard> {
                         horizontal: 30.0, vertical: 10.0),
                     height: 72.0,
                     width: 144.0,
-                    child: Center(
-                      child: myTextwidget(
+                    child: const Center(
+                      child: MyTextwidget(
                         text: '20 missed doctors',
                         fontSize: 17.5,
                         fontWeight: FontWeight.bold,
@@ -239,7 +237,7 @@ class _DashboardState extends State<Dashboard> {
                 'DCR status',
                 style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold),
               ),
-             const  SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
             ],

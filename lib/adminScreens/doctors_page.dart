@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:micro_pharma/services/database_service.dart';
 import 'package:micro_pharma/userScreens/home_page.dart';
-import 'package:micro_pharma/userScreens/login_page.dart';
 
 class DoctorsPage extends StatelessWidget {
   DoctorsPage({super.key});
@@ -11,46 +10,6 @@ class DoctorsPage extends StatelessWidget {
   TextEditingController areaController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController specializationController = TextEditingController();
-  void adDoctortoDatabase(
-      String docname, String docarea, String address, String special) async {
-    try {
-      await FirebaseFirestore.instance.collection('doctors').add({
-        'address': address,
-        'area': docarea,
-        'name': docname,
-        'speciality': special,
-      });
-      print('Added to database');
-      showCustomDialog(
-          context: navigatorKey.currentContext!,
-          title: myTextwidget(fontSize: 17.5, text: 'Success'),
-          content: myTextwidget(fontSize: 14, text: 'Doctor Added to Database'),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(navigatorKey.currentContext!);
-                },
-                child: const Text('Okay'))
-          ]);
-      doctorNameController.clear();
-      areaController.clear();
-      addressController.clear();
-      specializationController.clear();
-    } catch (a) {
-      showCustomDialog(
-          context: navigatorKey.currentContext!,
-          title: myTextwidget(fontSize: 17.5, text: 'Failure'),
-          content: myTextwidget(fontSize: 14, text: 'An error occured'),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(navigatorKey.currentContext!);
-                },
-                child: const Text('Okay'))
-          ]);
-      print('This is the error $a');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +135,7 @@ class DoctorsPage extends StatelessWidget {
                               onPressed: () {
                                 if (formKey.currentState!.validate()) {
                                   formKey.currentState!.save();
-                                  adDoctortoDatabase(
+                                  DatabaseService.addDoctor(
                                     doctorNameController.text,
                                     areaController.text,
                                     addressController.text,
@@ -198,7 +157,7 @@ class DoctorsPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: kappbarColor,
         centerTitle: true,
-        title: myTextwidget(
+        title: const MyTextwidget(
           fontSize: 20,
           fontWeight: FontWeight.bold,
           text: 'Doctors',

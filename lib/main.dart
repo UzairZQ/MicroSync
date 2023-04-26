@@ -11,7 +11,6 @@ import 'package:micro_pharma/adminScreens/admin_panel.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
-import 'package:micro_pharma/userScreens/call_planner.dart';
 
 import 'package:micro_pharma/userScreens/dailycall_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';

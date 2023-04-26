@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:micro_pharma/adminScreens/products_page.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/adminScreens/doctors_page.dart';
 import 'areas_page.dart';
-import 'product.dart';
 
 class AdminPanel extends StatelessWidget {
   static String id = 'doctors_areas';

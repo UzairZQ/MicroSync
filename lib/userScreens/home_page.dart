@@ -17,7 +17,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 import 'package:workmanager/workmanager.dart';
-import 'call_planner.dart';
 
 class HomePage extends StatefulWidget {
   static String id = 'home';
