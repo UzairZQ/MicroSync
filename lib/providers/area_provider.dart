@@ -5,7 +5,7 @@ import 'package:micro_pharma/models/area_model.dart';
 class AreaProvider with ChangeNotifier {
   List<AreaModel> _areas = [];
 
-  List<AreaModel> get areas => [..._areas];
+  List<AreaModel> get getAreas => [..._areas];
 
   Future<void> fetchAreas() async {
     try {
@@ -14,8 +14,8 @@ class AreaProvider with ChangeNotifier {
       final List<AreaModel> loadedAreas = [];
       for (var doc in snapshot.docs) {
         loadedAreas.add(AreaModel(
-          areaId: doc.id,
-          areaName: doc.data()['areaName'],
+          areaId: doc.data()['id'],
+          areaName: doc.data()['name'],
         ));
       }
       _areas = loadedAreas;

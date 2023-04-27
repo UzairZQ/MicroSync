@@ -3,7 +3,7 @@ class DoctorModel {
     this.name,
     this.area,
     this.address,
-    this.specialty,
+    this.speciality,
   });
 
   factory DoctorModel.fromMap(Map<String, dynamic>? data) {
@@ -11,21 +11,20 @@ class DoctorModel {
       name: data!['name'],
       area: data['area'],
       address: data['address'],
-      specialty: data['specialty'],
+      speciality: data['speciality'],
     );
   }
-  dynamic id;
   String? address;
   String? area;
   String? name;
-  String? specialty;
+  String? speciality;
 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'area': area,
       'address': address,
-      'specialty': specialty,
+      'specialty': speciality,
     };
   }
 }

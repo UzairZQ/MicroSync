@@ -30,21 +30,19 @@ class AdminPanel extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: ((context) =>  DoctorsPage())));
+                            builder: ((context) => DoctorsPage())));
                   },
                   container2Tap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) =>  Areas())));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: ((context) => Areas())));
                   },
                 ),
                 const SizedBox(
                   height: 20.0,
                 ),
                 ContainerRow(
-                  container1Clr: kappbarColor,
-                  container2Clr: kappbarColor,
+                  container1Clr: const Color.fromARGB(255, 114, 191, 254),
+                  container2Clr: const Color.fromARGB(255, 114, 191, 254),
                   container1Icon: Icons.production_quantity_limits_outlined,
                   container2Icon: Icons.abc,
                   container1Text: 'Products',

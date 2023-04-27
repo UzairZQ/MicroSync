@@ -105,8 +105,8 @@ String? validatePassword(String? password) {
 
 Future<void> showCustomDialog({
   required BuildContext context,
-  required Widget title,
-  required Widget content,
+  required String title,
+  required String content,
   List<Widget>? actions,
 }) async {
   return showDialog<void>(
@@ -114,9 +114,16 @@ Future<void> showCustomDialog({
     barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: title,
+        title: MyTextwidget(
+          text: title,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
         content: SingleChildScrollView(
-          child: content,
+          child: MyTextwidget(
+            text: content,
+            fontSize: 14,
+          ),
         ),
         actions: actions ??
             <Widget>[
@@ -133,7 +140,7 @@ Future<void> showCustomDialog({
 }
 
 class MyTextFormField extends StatelessWidget {
- const MyTextFormField(
+  const MyTextFormField(
       {super.key,
       required this.hintext,
       this.onSaved,

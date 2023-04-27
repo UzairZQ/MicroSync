@@ -9,6 +9,9 @@ import 'package:micro_pharma/adminScreens/add_employees.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/adminScreens/admin_panel.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
+import 'package:micro_pharma/providers/area_provider.dart';
+import 'package:micro_pharma/providers/doctor_provider.dart';
+import 'package:micro_pharma/providers/product_data_provider.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
 
@@ -50,7 +53,13 @@ Future<void> main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<UserDataProvider>(
-          create: (_) => UserDataProvider())
+        create: (_) => UserDataProvider(),
+      ),
+      ChangeNotifierProvider<AreaProvider>(create: (_) => AreaProvider()),
+      ChangeNotifierProvider<DoctorDataProvider>(
+          create: (_) => DoctorDataProvider()),
+      ChangeNotifierProvider<ProductDataProvider>(
+          create: (_) => ProductDataProvider()),
     ],
     child: const MicroPharma(),
   ));
@@ -70,7 +79,7 @@ class MicroPharma extends StatelessWidget {
         'admin': (context) => const AdminPage(),
         'dayplan': (context) => const DayPlan(),
         'addproduct': (context) => const AddProduct(),
-       // 'callplanner': (context) => WeeklyCallPlanner(),
+        // 'callplanner': (context) => WeeklyCallPlanner(),
         'addoctor': (context) => const AdminPanel(),
         'dailycallreport': (context) => DailyCallReports(),
         'user_profile': (context) => const UserProfilePage(),
