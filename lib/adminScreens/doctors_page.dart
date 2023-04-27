@@ -1,23 +1,48 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:micro_pharma/models/doctor_model.dart';
+import 'package:micro_pharma/providers/area_provider.dart';
+import 'package:micro_pharma/providers/doctor_provider.dart';
 import 'package:micro_pharma/services/database_service.dart';
 import 'package:micro_pharma/userScreens/home_page.dart';
+import 'package:provider/provider.dart';
 
-class DoctorsPage extends StatelessWidget {
+import '../models/area_model.dart';
+
+class DoctorsPage extends StatefulWidget {
   DoctorsPage({super.key});
+
+  @override
+  State<DoctorsPage> createState() => _DoctorsPageState();
+}
+
+class _DoctorsPageState extends State<DoctorsPage> {
   TextEditingController doctorNameController = TextEditingController();
+
   TextEditingController areaController = TextEditingController();
+
   TextEditingController addressController = TextEditingController();
+
   TextEditingController specializationController = TextEditingController();
+
+  AreaModel? selectedArea;
+
+  @override
+  void initState() {
+    Provider.of<AreaProvider>(context, listen: false).fetchAreas();
+    Provider.of<DoctorDataProvider>(context, listen: false).fetchDoctors();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<AreaModel> areas = Provider.of<AreaProvider>(context).getAreas;
+    List<DoctorModel> doctors =
+        Provider.of<DoctorDataProvider>(context).getDoctorList;
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            // Navigator.push(context,
-            //     MaterialPageRoute(builder: ((context) => const AddDoctor()),));
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
@@ -39,13 +64,14 @@ class DoctorsPage extends StatelessWidget {
                               title: const Text(
                                 'Name & Area',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    fontFamily: 'Poppins'),
                               ),
                               subtitle: Column(
                                 children: [
                                   TextFormField(
+                                    controller: doctorNameController,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Please Enter Doctor Name';
@@ -60,16 +86,28 @@ class DoctorsPage extends StatelessWidget {
                                       contentPadding: EdgeInsets.only(top: 3),
                                     ),
                                   ),
-                                  TextFormField(
+                                  DropdownButtonFormField<AreaModel>(
+                                    value: selectedArea,
                                     validator: (value) {
-                                      if (value!.isEmpty) {
+                                      if (value == null) {
                                         return 'Please Select Area';
                                       }
                                       return null;
                                     },
-                                    onSaved: (area) {
-                                      areaController.text = area!;
+                                    onChanged: (AreaModel? area) {
+                                      setState(() {
+                                        selectedArea = area;
+                                      });
                                     },
+                                    onSaved: (area) {
+                                      areaController.text = area!.areaName;
+                                    },
+                                    items: areas.map((area) {
+                                      return DropdownMenuItem(
+                                        value: area,
+                                        child: Text(area.areaName),
+                                      );
+                                    }).toList(),
                                     decoration: const InputDecoration(
                                       hintText: 'Select Area',
                                       contentPadding: EdgeInsets.only(top: 3),
@@ -77,6 +115,7 @@ class DoctorsPage extends StatelessWidget {
                                     ),
                                   ),
                                   TextFormField(
+                                    controller: addressController,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Please Enter Doctor\'s Address';
@@ -86,7 +125,6 @@ class DoctorsPage extends StatelessWidget {
                                     onSaved: (address) {
                                       addressController.text = address!;
                                     },
-                                    //skdafsgit
                                     decoration: const InputDecoration(
                                       hintText: 'Enter Address',
                                       contentPadding: EdgeInsets.only(top: 3),
@@ -109,6 +147,7 @@ class DoctorsPage extends StatelessWidget {
                               subtitle: Column(
                                 children: [
                                   TextFormField(
+                                    controller: specializationController,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Please Enter Phone Number';
@@ -141,6 +180,10 @@ class DoctorsPage extends StatelessWidget {
                                     addressController.text,
                                     specializationController.text,
                                   );
+                                  doctorNameController.clear();
+                                  areaController.clear();
+                                  addressController.clear();
+                                  specializationController.clear();
                                 }
                               },
                             ),
@@ -154,51 +197,83 @@ class DoctorsPage extends StatelessWidget {
             );
           },
           label: const Text('Add Doctor')),
-      appBar: AppBar(
-        backgroundColor: kappbarColor,
-        centerTitle: true,
-        title: const MyTextwidget(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          text: 'Doctors',
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomePage(),
-                  ));
-            },
-          ),
-        ],
-      ),
-
-      // appBar: MyAppBar(appBartxt: 'Visited Doctors'),
+      appBar: const MyAppBar(appBartxt: 'Docotors'),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Column(
             children: [
               const Padding(padding: EdgeInsets.all(10)),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.blueGrey[900],
-                  ),
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      8.0,
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.blueGrey[900],
+                        ),
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                            8.0,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
+                  const SizedBox(
+                    width: 5.0,
+                  ),
+                  Expanded(
+                    child: DropdownButton<AreaModel>(
+                        hint: const Text('Select Area'),
+                        value: selectedArea,
+                        items: areas.map((area) {
+                          return DropdownMenuItem(
+                            value: area,
+                            child: Text(area.areaName),
+                          );
+                        }).toList(),
+                        onChanged: (AreaModel? area) {
+                          setState(() {
+                            selectedArea = area;
+                          });
+                        }),
+                  ),
+                ],
+              ),
+              Flexible(
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    // Filter doctors based on selected area
+                    final filteredDoctors = selectedArea != null
+                        ? doctors
+                            .where((doctor) =>
+                                doctor.area == selectedArea!.areaName)
+                            .toList()
+                        : doctors;
+
+                    // Display doctors in card
+                    return Card(
+                      child: ListTile(
+                        title: Text(filteredDoctors[index].name!),
+                        subtitle: Text(filteredDoctors[index].speciality!),
+                        trailing: Text(filteredDoctors[index].address!),
+                      ),
+                    );
+                  },
+                  itemCount: selectedArea != null
+                      ? doctors
+                          .where(
+                              (doctor) => doctor.area == selectedArea!.areaName)
+                          .toList()
+                          .length
+                      : doctors.length,
                 ),
               ),
-              // Expanded(child: Container())
             ],
           ),
         ),

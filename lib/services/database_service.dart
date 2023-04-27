@@ -6,19 +6,13 @@ import 'package:micro_pharma/userScreens/login_page.dart';
 import '../components/constants.dart';
 
 class DatabaseService {
-  DatabaseService();
-  late String currentUser;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   static Stream<QuerySnapshot> streamUser() {
-    return FirebaseFirestore.instance
+    return _firestore
         .collection('users')
         .where('role', isEqualTo: 'user')
         .snapshots();
-  }
-
-  String setUser(String id) {
-    currentUser = id;
-    return currentUser;
   }
 
   static Future<void> addProduct({
@@ -38,7 +32,7 @@ class DatabaseService {
                 return const Center(child: CircularProgressIndicator());
               });
             }));
-        await FirebaseFirestore.instance.collection('products').add({
+        await _firestore.collection('products').add({
           'name': name,
           'code': code,
           'mrp': mrp,
@@ -49,17 +43,15 @@ class DatabaseService {
 
         showCustomDialog(
             context: navigatorKey.currentContext!,
-            title: const MyTextwidget(fontSize: 17.5, text: 'Success'),
-            content:
-                const MyTextwidget(fontSize: 14, text: 'Product added successfully'));
+            title: 'Success',
+            content: 'Product added successfully');
         print('product added to database');
       } on FirebaseException catch (e) {
         print('Error in the add product function $e');
         showCustomDialog(
             context: navigatorKey.currentContext!,
-            title: const MyTextwidget(fontSize: 17.5, text: 'Failure'),
-            content: const MyTextwidget(
-                fontSize: 14, text: 'An Error Occurred, Please Try again'));
+            title: 'Failure',
+            content: 'An Error Occurred, Please Try again');
       }
     }
   }
@@ -78,10 +70,7 @@ class DatabaseService {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((UserCredential userCredential) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .set({
+        _firestore.collection('users').doc(userCredential.user!.uid).set({
           'displayName': name,
           'email': email,
           'longitude': 43,
@@ -140,7 +129,7 @@ class DatabaseService {
   static Future<void> addAreatoDatabase(String areaName, String code) async {
     int areaCode = int.parse(code);
     try {
-      await FirebaseFirestore.instance
+      await _firestore
           .collection('areas')
           .add({'id': areaCode, 'name': areaName});
       print('Added to database');
@@ -149,10 +138,25 @@ class DatabaseService {
     }
   }
 
+  static Future<void> deleteAreaFromDatabase(int areaId) async {
+    try {
+      await _firestore
+          .collection('areas')
+          .where('id', isEqualTo: areaId)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.first.reference.delete();
+      });
+    } catch (error) {
+      print('Error deleting area: $error');
+      rethrow;
+    }
+  }
+
   static Future<void> addDoctor(
       String docname, String docarea, String address, String special) async {
     try {
-      await FirebaseFirestore.instance.collection('doctors').add({
+      await _firestore.collection('doctors').add({
         'address': address,
         'area': docarea,
         'name': docname,
@@ -161,8 +165,8 @@ class DatabaseService {
       print('Added to database');
       showCustomDialog(
           context: navigatorKey.currentContext!,
-          title: const MyTextwidget(fontSize: 17.5, text: 'Success'),
-          content:const MyTextwidget(fontSize: 14, text: 'Doctor Added to Database'),
+          title: 'Success',
+          content: 'Doctor Added to Database',
           actions: [
             TextButton(
                 onPressed: () {
@@ -173,8 +177,8 @@ class DatabaseService {
     } catch (a) {
       showCustomDialog(
           context: navigatorKey.currentContext!,
-          title:const MyTextwidget(fontSize: 17.5, text: 'Failure'),
-          content:const MyTextwidget(fontSize: 14, text: 'An error occured'),
+          title: 'Failure',
+          content: 'An error occured',
           actions: [
             TextButton(
                 onPressed: () {

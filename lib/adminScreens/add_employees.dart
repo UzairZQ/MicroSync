@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:micro_pharma/components/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/src/rendering/box.dart';
+
+import 'package:micro_pharma/components/constants.dart';
 
 import '../services/database_service.dart';
 
@@ -179,86 +181,97 @@ class _AddEmployeesState extends State<AddEmployees> {
     );
   }
 
-  Future<dynamic> deleteUserBottomSheet(BuildContext context,
+  Future<void> deleteUserBottomSheet(BuildContext context,
       FirebaseFirestore firebaseFirestore, FirebaseAuth firebaseAuth) {
     return showModalBottomSheet(
+        isDismissible: true,
+        isScrollControlled: true,
+        enableDrag: true,
         context: context,
+        useSafeArea: true,
         builder: (context) {
-          return Column(
-            children: [
-              Text(
-                'Registered Users',
-                style: ktextstyle,
-              ),
-              StreamBuilder(
-                  stream: DatabaseService.streamUser(),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    return ListView.builder(
-                        itemCount: snapshot.data?.docs.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 5,
-                            color: Colors.grey[290],
-                            child: ListTile(
-                              title: Text(
-                                snapshot.data!.docs[index]['displayName']
-                                    .toString(),
-                                style: const TextStyle(fontFamily: 'Poppins'),
-                              ),
-                              subtitle: Row(
-                                children: [
-                                  Text(snapshot.data.docs[index]['role'])
-                                ],
-                              ),
-                              trailing: IconButton(
-                                icon: const Icon(
-                                  Icons.delete_forever,
-                                  color: Colors.red,
+          return SafeArea(
+            child: StreamBuilder(
+                stream: DatabaseService.streamUser(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return Column(
+                    children: [
+                      const MyTextwidget(
+                        fontSize: 20,
+                        text: 'Registered Users',
+                        fontWeight: FontWeight.bold,
+                      ),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data?.docs.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              elevation: 5,
+                              color: Colors.grey[290],
+                              child: ListTile(
+                                title: Text(
+                                  snapshot.data!.docs[index]['displayName']
+                                      .toString(),
+                                  style: ktextstyle,
                                 ),
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: ((context) {
-                                        return Builder(builder: (context) {
-                                          return Center(
-                                              child: AlertDialog(
-                                            title: const Text('Delete'),
-                                            content: const Text(
-                                                'The following User will be permanently deleted!'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  firebaseFirestore
-                                                      .collection('users')
-                                                      .doc(snapshot.data
-                                                          .docs[index]['uid'])
-                                                      .delete();
-
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('Delete',
-                                                    style: TextStyle(
-                                                        color: Colors.red)),
-                                              ),
-                                              TextButton(
+                                subtitle: Row(
+                                  children: [
+                                    Text(
+                                      snapshot.data.docs[index]['role'],
+                                    )
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                  icon: const Icon(
+                                    Icons.delete_forever,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: ((context) {
+                                          return Builder(builder: (context) {
+                                            return Center(
+                                                child: AlertDialog(
+                                              title: const Text('Delete'),
+                                              content: const Text(
+                                                  'The following User will be permanently deleted!'),
+                                              actions: [
+                                                TextButton(
                                                   onPressed: () {
+                                                    firebaseFirestore
+                                                        .collection('users')
+                                                        .doc(snapshot.data
+                                                            .docs[index]['uid'])
+                                                        .delete();
+
                                                     Navigator.pop(context);
                                                   },
-                                                  child: const Text('Cancel')),
-                                            ],
-                                          ));
-                                        });
-                                      }));
-                                },
+                                                  child: const Text('Delete',
+                                                      style: TextStyle(
+                                                          color: Colors.red)),
+                                                ),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child:
+                                                        const Text('Cancel')),
+                                              ],
+                                            ));
+                                          });
+                                        }));
+                                  },
+                                ),
                               ),
-                            ),
-                          );
-                        });
-                  }),
-            ],
+                            );
+                          }),
+                    ],
+                  );
+                }),
           );
         });
   }

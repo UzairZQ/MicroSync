@@ -50,6 +50,7 @@ class _AddProductState extends State<AddProduct> {
     _codeController.dispose();
     _retailPriceController.dispose();
     _tradePriceController.dispose();
+    _packingController.dispose();
 
     super.dispose();
   }
