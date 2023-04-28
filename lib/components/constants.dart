@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 Color kappbarColor = const Color(0xff1FB7CC);
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 // ignore: must_be_immutable
 class MyButton extends StatelessWidget {
   MyButton(

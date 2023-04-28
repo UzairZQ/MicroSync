@@ -277,7 +277,7 @@ class _HomePageState extends State<HomePage> {
                 container1Tap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: ((context) =>  DoctorsPage()),
+                    builder: ((context) => const DoctorsPage()),
                   ),
                 ),
                 container2Tap: () => Navigator.push(

@@ -7,9 +7,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../adminScreens/admin_page.dart';
+import '../components/constants.dart';
 import '../main.dart';
 import '../userScreens/home_page.dart';
-import '../userScreens/login_page.dart';
 
 class AuthService {
   final _auth = FirebaseAuth.instance;

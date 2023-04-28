@@ -6,6 +6,7 @@ class AreaProvider with ChangeNotifier {
   List<AreaModel> _areas = [];
 
   List<AreaModel> get getAreas => [..._areas];
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> fetchAreas() async {
     try {
@@ -22,6 +23,36 @@ class AreaProvider with ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print('Error loading areas: $error');
+      rethrow;
+    }
+  }
+
+  Future<void> addAreatoDatabase(String areaName, String code) async {
+    int areaCode = int.parse(code);
+    try {
+      await _firestore
+          .collection('areas')
+          .add({'id': areaCode, 'name': areaName});
+      notifyListeners();
+
+      print('Added to database');
+    } catch (e) {
+      print('This is the error $e');
+    }
+  }
+
+  Future<void> deleteAreaFromDatabase(int areaId) async {
+    try {
+      await _firestore
+          .collection('areas')
+          .where('id', isEqualTo: areaId)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.first.reference.delete();
+        notifyListeners();
+      });
+    } catch (error) {
+      print('Error deleting area: $error');
       rethrow;
     }
   }

@@ -21,6 +21,7 @@ import 'package:micro_pharma/userScreens/day_plan.dart';
 
 import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'components/constants.dart';
 import 'userScreens/login_page.dart';
 import 'userScreens/home_page.dart';
 import 'package:micro_pharma/adminScreens/admin_settings.dart';
@@ -87,7 +88,6 @@ class MicroPharma extends StatelessWidget {
         // 'map_page': (context) => GoogleMapPage(),
         'location_screen': (context) => const LocationScreen(),
         'add_employees': (context) => const AddEmployees(),
-        // 'doctors_areas_page': (context) => const DoctorsAreas(),
         'doctors_areas': (context) => const AdminPanel(),
       },
       // home: const DoctorsAreas(),

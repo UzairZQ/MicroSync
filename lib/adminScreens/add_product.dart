@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
-import '../services/database_service.dart';
+import 'package:micro_pharma/providers/product_data_provider.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
@@ -19,10 +19,11 @@ class _AddProductState extends State<AddProduct> {
   void _submitProduct() async {
     final tradePrice = double.parse(_tradePriceController.text);
     final retailPrice = double.parse(_retailPriceController.text);
+    final code = int.parse(_codeController.text);
 
-    await DatabaseService.addProduct(
+    await ProductDataProvider.addProduct(
       name: _productController.text,
-      code: _codeController.text,
+      code: code,
       trp: tradePrice,
       mrp: retailPrice,
       packing: _packingController.text,

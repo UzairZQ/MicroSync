@@ -1,17 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/doctor_model.dart';
 import 'package:micro_pharma/providers/area_provider.dart';
 import 'package:micro_pharma/providers/doctor_provider.dart';
-import 'package:micro_pharma/services/database_service.dart';
-import 'package:micro_pharma/userScreens/home_page.dart';
 import 'package:provider/provider.dart';
-
 import '../models/area_model.dart';
 
 class DoctorsPage extends StatefulWidget {
-  DoctorsPage({super.key});
+  const DoctorsPage({super.key});
 
   @override
   State<DoctorsPage> createState() => _DoctorsPageState();
@@ -35,6 +31,12 @@ class _DoctorsPageState extends State<DoctorsPage> {
     super.initState();
   }
 
+  Future<void> _refreshDoctors(BuildContext context) async {
+    // Fetch the products list again
+    await Provider.of<DoctorDataProvider>(context, listen: false)
+        .fetchDoctors();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<AreaModel> areas = Provider.of<AreaProvider>(context).getAreas;
@@ -42,6 +44,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
         Provider.of<DoctorDataProvider>(context).getDoctorList;
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
+          icon: const Icon(Icons.add_outlined),
           onPressed: () {
             showModalBottomSheet(
               context: context,
@@ -174,12 +177,13 @@ class _DoctorsPageState extends State<DoctorsPage> {
                               onPressed: () {
                                 if (formKey.currentState!.validate()) {
                                   formKey.currentState!.save();
-                                  DatabaseService.addDoctor(
+                                  DoctorDataProvider.addDoctor(
                                     doctorNameController.text,
                                     areaController.text,
                                     addressController.text,
                                     specializationController.text,
                                   );
+
                                   doctorNameController.clear();
                                   areaController.clear();
                                   addressController.clear();
@@ -196,9 +200,13 @@ class _DoctorsPageState extends State<DoctorsPage> {
               }),
             );
           },
-          label: const Text('Add Doctor')),
+          label: const MyTextwidget(
+            text: 'Add Doctor',
+            fontSize: 16,
+          )),
       appBar: const MyAppBar(appBartxt: 'Docotors'),
-      body: SafeArea(
+      body: RefreshIndicator(
+        onRefresh: () => _refreshDoctors(context),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Column(
@@ -258,8 +266,12 @@ class _DoctorsPageState extends State<DoctorsPage> {
 
                     // Display doctors in card
                     return Card(
+                      color: Colors.blue[100],
                       child: ListTile(
-                        title: Text(filteredDoctors[index].name!),
+                        title: MyTextwidget(
+                          text: filteredDoctors[index].name!,
+                          fontSize: 18,
+                        ),
                         subtitle: Text(filteredDoctors[index].speciality!),
                         trailing: Text(filteredDoctors[index].address!),
                       ),
