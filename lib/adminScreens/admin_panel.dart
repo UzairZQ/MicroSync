@@ -34,7 +34,7 @@ class AdminPanel extends StatelessWidget {
                   },
                   container2Tap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => Areas())));
+                        MaterialPageRoute(builder: ((context) => const Areas())));
                   },
                 ),
                 const SizedBox(
@@ -51,7 +51,7 @@ class AdminPanel extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: ((context) => ProductCatalogPage())));
+                            builder: ((context) => const ProductListScreen())));
                   },
                   container2Tap: () {},
                 ),

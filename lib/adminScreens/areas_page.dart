@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/models/area_model.dart';
 import 'package:micro_pharma/providers/area_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../services/database_service.dart';
 
 class Areas extends StatefulWidget {
   const Areas({Key? key}) : super(key: key);
@@ -24,7 +21,6 @@ class _AreasState extends State<Areas> {
     Provider.of<AreaProvider>(context, listen: false).fetchAreas();
   }
 
-  
   @override
   Widget build(BuildContext context) {
     final areasProvider = Provider.of<AreaProvider>(context);
@@ -32,6 +28,7 @@ class _AreasState extends State<Areas> {
     return Scaffold(
       appBar: const MyAppBar(appBartxt: 'Areas'),
       floatingActionButton: FloatingActionButton.extended(
+        icon: const Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -91,7 +88,7 @@ class _AreasState extends State<Areas> {
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState!.save();
-                            await DatabaseService.addAreatoDatabase(
+                            await AreaProvider().addAreatoDatabase(
                               areaNameController.text,
                               areaCodeController.text,
                             );
@@ -110,7 +107,10 @@ class _AreasState extends State<Areas> {
             },
           );
         },
-        label: const Text('Add Area'),
+        label: const MyTextwidget(
+          text: 'Add Area',
+          fontSize: 16,
+        ),
       ),
       body: ListView.builder(
         itemCount: areasProvider.getAreas.length,
@@ -142,8 +142,8 @@ class _AreasState extends State<Areas> {
                           style:
                               TextButton.styleFrom(foregroundColor: Colors.red),
                           onPressed: () async {
-                            await DatabaseService.deleteAreaFromDatabase(
-                                area.areaId);
+                            await AreaProvider()
+                                .deleteAreaFromDatabase(area.areaId);
                             areasProvider.fetchAreas();
                           },
                           child: const Text('Delete'),

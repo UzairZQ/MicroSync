@@ -28,7 +28,7 @@ class _WeeklyCallPlannerState extends State<WeeklyCallPlanner> {
                 style: TextStyle(fontSize: 16),
               ),
               TextFormField(
-                decoration: InputDecoration(),
+                decoration: const InputDecoration(),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter your name';
