@@ -286,8 +286,9 @@ class _HomePageState extends State<HomePage> {
               ContainerRow(
                 container1Clr: const Color.fromARGB(255, 133, 254, 226),
                 container1Icon: Icons.assignment_outlined,
-                container1Text: 'Day Plan',
-                container1Tap: () => Navigator.pushNamed(context, DayPlansScreen.id),
+                container1Text: 'My Call Plans',
+                container1Tap: () =>
+                    Navigator.pushNamed(context, DayPlansScreen.id),
                 container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Daily Call Reports',

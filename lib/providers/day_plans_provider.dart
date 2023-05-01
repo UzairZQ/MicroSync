@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 import '../models/day_plan_model.dart';
 
@@ -36,6 +37,13 @@ class DayPlanProvider extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
+  }
+
+  DayPlanModel getCurrentDayPlan() {
+    DateTime currentDate = DateTime.now();
+    return _dayPlans.firstWhere(
+      (dayPlan) => dayPlan.date == currentDate,
+    );
   }
 
   Future<void> deleteDayPlan(DayPlanModel dayPlan) async {

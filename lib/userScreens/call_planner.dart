@@ -11,9 +11,7 @@ import 'package:micro_pharma/providers/doctor_provider.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import '../providers/day_plans_provider.dart';
-import 'day_plans.dart';
 
 class CallPlanner extends StatefulWidget {
   static const String id = 'call_planner';
@@ -34,10 +32,11 @@ class _CallPlannerState extends State<CallPlanner> {
   bool _isDayPlanEnabled = false;
   String _selectedShift = 'Morning';
 
-  TextEditingController _doctorController = TextEditingController();
+  final TextEditingController _doctorController = TextEditingController();
 
   @override
   void initState() {
+    print(DateTime.now());
     final user = FirebaseAuth.instance.currentUser;
     Provider.of<AreaProvider>(context, listen: false).fetchAreas();
     Provider.of<DoctorDataProvider>(context, listen: false).fetchDoctors();
@@ -51,12 +50,6 @@ class _CallPlannerState extends State<CallPlanner> {
     setState(() {
       _selectedDate = date;
     });
-  }
-
-  String dateTime() {
-    DateFormat dateFormat = DateFormat('dd/MM/yyyy');
-    String formattedDate = dateFormat.format(_selectedDate);
-    return formattedDate;
   }
 
   void _clearDayPlanSelection() {
@@ -95,7 +88,15 @@ class _CallPlannerState extends State<CallPlanner> {
             Row(
               children: [
                 Expanded(
-                  child: DropdownButtonFormField<String>(
+                    child: Form(
+                  key: formKey,
+                  child: DropdownButtonFormField<String?>(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please Select Area';
+                      }
+                      return null;
+                    },
                     decoration: const InputDecoration(
                       hintText: 'Select Area',
                       border: OutlineInputBorder(),
@@ -117,11 +118,11 @@ class _CallPlannerState extends State<CallPlanner> {
                         )
                         .toList(),
                   ),
-                ),
+                )),
                 const SizedBox(width: 8),
                 DropdownButton<String>(
                   value: _selectedShift,
-                  hint: Text('Select Shift'),
+                  hint: const Text('Select Shift'),
                   items: <String>['Morning', 'Evening'].map((String shift) {
                     return DropdownMenuItem<String>(
                       value: shift,
@@ -241,27 +242,31 @@ class _CallPlannerState extends State<CallPlanner> {
                       text: 'Submit Day Plan',
                       color: Colors.teal,
                       onPressed: () async {
-                        final userData = Provider.of<UserDataProvider>(context,
-                                listen: false)
-                            .getUserData;
-                        if (_selectedDoctors.isNotEmpty) {
-                          final newDayPlan = DayPlanModel(
-                            shift: _selectedShift,
-                            userName: userData.displayName!,
-                            date: _selectedDate,
-                            area: _selectedArea!.areaName,
-                            doctors: _selectedDoctors.toList(),
-                          );
-                          await Provider.of<DayPlanProvider>(context,
+                        if (formKey.currentState!.validate()) {
+                          formKey.currentState!.save();
+                          final userData = Provider.of<UserDataProvider>(
+                                  context,
                                   listen: false)
-                              .addDayPlan(newDayPlan);
+                              .getUserData;
+                          if (_selectedDoctors.isNotEmpty) {
+                            final newDayPlan = DayPlanModel(
+                              shift: _selectedShift,
+                              userName: userData.displayName!,
+                              date: _selectedDate,
+                              area: _selectedArea!.areaName,
+                              doctors: _selectedDoctors.toList(),
+                            );
+                            await Provider.of<DayPlanProvider>(context,
+                                    listen: false)
+                                .addDayPlan(newDayPlan);
 
-                          showCustomDialog(
-                              context: navigatorKey.currentContext!,
-                              title: 'Success',
-                              content: 'Day Plan Added');
+                            showCustomDialog(
+                                context: navigatorKey.currentContext!,
+                                title: 'Success',
+                                content: 'Day Plan Added');
 
-                          _clearDayPlanSelection();
+                            _clearDayPlanSelection();
+                          }
                         }
                       },
                     ),
