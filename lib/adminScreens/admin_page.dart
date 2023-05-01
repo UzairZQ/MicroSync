@@ -41,117 +41,148 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     print(currentUser!.email);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return Center(
-                    child: AlertDialog(
-                      title: const Text('Logout'),
-                      content: const Text('Do you really want to Logout?'),
-                      actions: [
-                        TextButton(
-                            onPressed: () async {
-                              Provider.of<UserDataProvider>(context,
-                                      listen: false)
-                                  .logOut();
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: kappbarColor,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        selectedFontSize: 14,
+        unselectedFontSize: 14,
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AdminProfilePage()),
+              );
+              break;
+            case 1:
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Center(
+                      child: AlertDialog(
+                        title: const Text('Logout'),
+                        content: const Text('Do you really want to Logout?'),
+                        actions: [
+                          TextButton(
+                              onPressed: () async {
+                                Provider.of<UserDataProvider>(context,
+                                        listen: false)
+                                    .logOut();
 
-                              FirebaseAuth.instance.signOut();
+                                FirebaseAuth.instance.signOut();
 
-                              var sharedLogin =
-                                  await SharedPreferences.getInstance();
-                              sharedLogin.setBool(
-                                  SplashPageState.loginKey, false);
-                              var sharedUser =
-                                  await SharedPreferences.getInstance();
-                              sharedUser.setBool(
-                                  SplashPageState.userKey, false);
-                              // Provider.of<UserDataProvider>(
-                              //   context,
-                              //   listen: false,
-                              // ).dispose();
+                                var sharedLogin =
+                                    await SharedPreferences.getInstance();
+                                sharedLogin.setBool(
+                                    SplashPageState.loginKey, false);
+                                var sharedUser =
+                                    await SharedPreferences.getInstance();
+                                sharedUser.setBool(
+                                    SplashPageState.userKey, false);
 
-                              Navigator.pushReplacement(
-                                navigatorKey.currentContext!,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginPage(),
-                                ),
-                              );
-                            },
-                            child: const Text('Logout')),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Cancel'))
-                      ],
-                    ),
-                  );
-                });
-          },
-          child: const Icon(Icons.logout_outlined)),
+                                Navigator.pushReplacement(
+                                  navigatorKey.currentContext!,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginPage(),
+                                  ),
+                                );
+                              },
+                              child: const Text('Logout')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Cancel'))
+                        ],
+                      ),
+                    );
+                  });
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            label: 'My Profile',
+            icon: Icon(
+              Icons.person_outlined,
+              size: 30,
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Logout',
+            icon: Icon(
+              Icons.logout_outlined,
+              size: 30,
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                height: 230.0,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Color(0xFF1FB7CC),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(40.0),
-                    bottomRight: Radius.circular(40.0),
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Consumer<UserDataProvider>(
-                      builder: (context, dataProvider, child) {
-                        //dataProvider.fetchUserData(currentUser!.uid);
-                        UserModel? userData = dataProvider.getUserData;
-                        if (userData.displayName == null ||
-                            userData.displayName!.isEmpty) {
-                          return const CircularProgressIndicator();
-                        } else {
-                          return Text(
-                            'Welcome ${userData.displayName} !',
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
-                              color: Colors.white,
-                            ),
-                          );
-                        }
-                      },
+              Material(
+                elevation: 5.0,
+                child: Container(
+                  height: 230,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Color(0xFF1FB7CC),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(40.0),
+                      bottomRight: Radius.circular(40.0),
                     ),
-                    const SizedBox(height: 17.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(
-                          Icons.calendar_month,
-                          color: Colors.white,
-                        ),
-                        Text(
-                          'Employees on Work :',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Consumer<UserDataProvider>(
+                        builder: (context, dataProvider, child) {
+                          //dataProvider.fetchUserData(currentUser!.uid);
+                          UserModel? userData = dataProvider.getUserData;
+                          if (userData.displayName == null ||
+                              userData.displayName!.isEmpty) {
+                            return const CircularProgressIndicator();
+                          } else {
+                            return Text(
+                              'Welcome ${userData.displayName} !',
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                                color: Colors.white,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 17.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(
+                            Icons.calendar_month,
                             color: Colors.white,
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-                  ],
+                          Text(
+                            'Employees on Work :',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -198,16 +229,6 @@ class _AdminPageState extends State<AdminPage> {
                 },
                 container2Tap: () {
                   Navigator.pushNamed(context, 'add_employees');
-                },
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              MyButton(
-                color: kappbarColor,
-                text: 'Settings',
-                onPressed: () {
-                  Navigator.pushNamed(context, AdminProfilePage.id);
                 },
               ),
             ],

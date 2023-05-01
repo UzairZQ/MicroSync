@@ -1,8 +1,8 @@
 class AreaModel {
   AreaModel({required this.areaId, required this.areaName});
 
-  final int areaId;
-  final String areaName;
+  int areaId;
+  String areaName;
 
   factory AreaModel.fromMap(Map<String, dynamic>? data) {
     return AreaModel(

@@ -24,7 +24,7 @@ Install the required dependencies using flutter pub get
 Run the app on an emulator or connected device using flutter run
 
 # Contributors
-Uzair Zia Qureshi (@johndoe)
+Uzair Zia Qureshi (@UzairZQ)
 Sajjad Ahmed (@janesmith)
 # License
 This project is licensed under the MIT License. See the LICENSE file for more details.
