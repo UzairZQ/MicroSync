@@ -9,6 +9,7 @@ import 'package:micro_pharma/adminScreens/add_employees.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/adminScreens/admin_panel.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
+import 'package:micro_pharma/adminScreens/user_call_plans.dart';
 import 'package:micro_pharma/providers/area_provider.dart';
 import 'package:micro_pharma/providers/day_plans_provider.dart';
 import 'package:micro_pharma/providers/doctor_provider.dart';
@@ -82,6 +83,7 @@ class MicroPharma extends StatelessWidget {
         'user_dashboard': (context) => const Dashboard(),
         'admin': (context) => const AdminPage(),
         'day_plans': (context) => DayPlansScreen(),
+        'call_plans': (context) => CallPlansForAdmin(),
         'addproduct': (context) => const AddProduct(),
         'call_planner': (context) => const CallPlanner(),
         'addoctor': (context) => const AdminPanel(),

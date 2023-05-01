@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user_model.dart';
+import './user_call_plans.dart';
 
 class AdminPage extends StatefulWidget {
   static String id = 'admin';
@@ -123,66 +124,63 @@ class _AdminPageState extends State<AdminPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Material(
-                elevation: 5.0,
-                child: Container(
-                  height: 230,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: Color(0xFF1FB7CC),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40.0),
-                      bottomRight: Radius.circular(40.0),
-                    ),
+              Container(
+                height: 230,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  color: Color(0xFF1FB7CC),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(40.0),
+                    bottomRight: Radius.circular(40.0),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Consumer<UserDataProvider>(
-                        builder: (context, dataProvider, child) {
-                          //dataProvider.fetchUserData(currentUser!.uid);
-                          UserModel? userData = dataProvider.getUserData;
-                          if (userData.displayName == null ||
-                              userData.displayName!.isEmpty) {
-                            return const CircularProgressIndicator();
-                          } else {
-                            return Text(
-                              'Welcome ${userData.displayName} !',
-                              style: const TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0,
-                                color: Colors.white,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 17.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
-                            Icons.calendar_month,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            'Employees on Work :',
-                            style: TextStyle(
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Consumer<UserDataProvider>(
+                      builder: (context, dataProvider, child) {
+                        //dataProvider.fetchUserData(currentUser!.uid);
+                        UserModel? userData = dataProvider.getUserData;
+                        if (userData.displayName == null ||
+                            userData.displayName!.isEmpty) {
+                          return const CircularProgressIndicator();
+                        } else {
+                          return Text(
+                            'Welcome ${userData.displayName} !',
+                            style: const TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 15.0,
                               fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
                               color: Colors.white,
                             ),
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 17.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.calendar_month,
+                          color: Colors.white,
+                        ),
+                        Text(
+                          'Employees on Work :',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -208,7 +206,9 @@ class _AdminPageState extends State<AdminPage> {
                 container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Call Plans',
-                container2Tap: () {},
+                container2Tap: () {
+                  Navigator.pushNamed(context, CallPlansForAdmin.id);
+                },
               ),
               const SizedBox(
                 height: 30.0,
