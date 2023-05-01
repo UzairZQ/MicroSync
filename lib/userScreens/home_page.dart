@@ -8,9 +8,10 @@ import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
+import 'call_planner.dart';
 import 'dailycall_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
-import 'package:micro_pharma/userScreens/day_plan.dart';
+import 'package:micro_pharma/userScreens/day_plans.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:provider/provider.dart';
@@ -67,54 +68,85 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.logout_outlined),
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return Center(
-                  child: AlertDialog(
-                    title: const Text('Logout'),
-                    content: const Text('Do you really want to Logout?'),
-                    actions: [
-                      TextButton(
-                          onPressed: () async {
-                            Provider.of<UserDataProvider>(context,
-                                    listen: false)
-                                .logOut();
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: kappbarColor,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        selectedFontSize: 14,
+        unselectedFontSize: 14,
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const UserProfilePage()),
+              );
+              break;
+            case 1:
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Center(
+                      child: AlertDialog(
+                        title: const Text('Logout'),
+                        content: const Text('Do you really want to Logout?'),
+                        actions: [
+                          TextButton(
+                              onPressed: () async {
+                                Provider.of<UserDataProvider>(context,
+                                        listen: false)
+                                    .logOut();
 
-                            FirebaseAuth.instance.signOut();
-                            // Provider.of<UserDataProvider>(
-                            //   context,
-                            //   listen: false,
-                            // ).dispose();
-                            Workmanager().cancelByTag('location');
-                            var sharedLogin =
-                                await SharedPreferences.getInstance();
-                            sharedLogin.setBool(
-                                SplashPageState.loginKey, false);
-                            var sharedUser =
-                                await SharedPreferences.getInstance();
-                            sharedUser.setBool(SplashPageState.userKey, false);
-                            Navigator.pushReplacement(
-                              navigatorKey.currentContext!,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginPage(),
-                              ),
-                            );
-                          },
-                          child: const Text('Logout')),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Cancel'))
-                    ],
-                  ),
-                );
-              });
+                                FirebaseAuth.instance.signOut();
+
+                                Workmanager().cancelByTag('location');
+                                var sharedLogin =
+                                    await SharedPreferences.getInstance();
+                                sharedLogin.setBool(
+                                    SplashPageState.loginKey, false);
+                                var sharedUser =
+                                    await SharedPreferences.getInstance();
+                                sharedUser.setBool(
+                                    SplashPageState.userKey, false);
+                                Navigator.pushReplacement(
+                                  navigatorKey.currentContext!,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginPage(),
+                                  ),
+                                );
+                              },
+                              child: const Text('Logout')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Cancel'))
+                        ],
+                      ),
+                    );
+                  });
+
+              break;
+          }
         },
+        items: const [
+          BottomNavigationBarItem(
+            label: 'My Profile',
+            icon: Icon(
+              Icons.person_outlined,
+              size: 30,
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Logout',
+            icon: Icon(
+              Icons.logout_outlined,
+              size: 30,
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -243,10 +275,10 @@ class _HomePageState extends State<HomePage> {
                   container2Icon: Icons.calendar_month_outlined,
                   container2Text: 'Call Planner',
                   container2Tap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: ((context) => CallPlanner())));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => const CallPlanner())));
                   }),
               const SizedBox(
                 height: 30.0,
@@ -255,7 +287,7 @@ class _HomePageState extends State<HomePage> {
                 container1Clr: const Color.fromARGB(255, 133, 254, 226),
                 container1Icon: Icons.assignment_outlined,
                 container1Text: 'Day Plan',
-                container1Tap: () => Navigator.pushNamed(context, DayPlan.id),
+                container1Tap: () => Navigator.pushNamed(context, DayPlansScreen.id),
                 container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Daily Call Reports',
@@ -287,15 +319,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              MyButton(
-                  color: kappbarColor,
-                  text: 'Settings',
-                  onPressed: () {
-                    Navigator.pushNamed(context, UserProfilePage.id);
-                  }),
             ],
           ),
         ),
