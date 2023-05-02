@@ -40,9 +40,12 @@ class DayPlanProvider extends ChangeNotifier {
   }
 
   DayPlanModel getCurrentDayPlan() {
-    DateTime currentDate = DateTime.now();
+    DateTime currentDate = DateTime.now().toUtc().toLocal();
     return _dayPlans.firstWhere(
-      (dayPlan) => dayPlan.date == currentDate,
+      (dayPlan) =>
+          dayPlan.date.year == currentDate.year &&
+          dayPlan.date.month == currentDate.month &&
+          dayPlan.date.day == currentDate.day,
     );
   }
 

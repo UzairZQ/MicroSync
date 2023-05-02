@@ -8,6 +8,7 @@ import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
+import '../splash_page.dart';
 import 'call_planner.dart';
 import 'dailycall_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
@@ -295,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                 container2Tap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: ((context) => DailyCallReports()))),
+                        builder: ((context) => DailyCallReportScreen()))),
               ),
               const SizedBox(
                 height: 30.0,

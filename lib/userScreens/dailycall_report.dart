@@ -1,92 +1,103 @@
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/components/constants.dart';
+import 'package:provider/provider.dart';
 
-class DailyCallReports extends StatefulWidget {
+import '../providers/day_plans_provider.dart';
+import '../models/day_plan_model.dart';
+
+class DailyCallReportScreen extends StatefulWidget {
+  static const String id = 'dailycallreport';
   @override
-  _DailyCallReportsState createState() => _DailyCallReportsState();
+  _DailyCallReportScreenState createState() => _DailyCallReportScreenState();
 }
 
-class _DailyCallReportsState extends State<DailyCallReports> {
-  final _formKey = GlobalKey<FormState>();
-  String? _doctorName;
-  String? _purpose;
-  String? _remarks;
+class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
+  late DayPlanModel _currentDayPlan;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentDayPlan = Provider.of<DayPlanProvider>(context, listen: false)
+        .getCurrentDayPlan();
+  }
+
+  Future<void> _showDoctorsDialog(BuildContext context) async {
+    List<String> doctors = _currentDayPlan.doctors;
+
+    List<bool> doctorSelections =
+        List.filled(doctors.length, false, growable: false);
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Doctors'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(doctors.length, (index) {
+                return CheckboxListTile(
+                  title: Text(doctors[index]),
+                  value: doctorSelections[index],
+                  onChanged: (bool? value) {
+                    setState(() {
+                      doctorSelections[index] = value ?? false;
+                    });
+                  },
+                );
+              }),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('CANCEL'),
+            ),
+            TextButton(
+              onPressed: () {
+                // TODO: Add logic to save selected doctors
+                Navigator.of(context).pop();
+              },
+              child: const Text('OKAY'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(appBartxt: 'Daily Call Report'),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Doctor Name:',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter doctor name';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _doctorName = value;
-                    },
-                  ),
-                  const SizedBox(height: 16.0),
-                  const Text(
-                    'Purpose of visit:',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter purpose of visit';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _purpose = value;
-                    },
-                  ),
-                 const  SizedBox(height: 16.0),
-                  const Text(
-                    'Remarks:',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  TextFormField(
-                    onSaved: (value) {
-                      _remarks = value;
-                    },
-                  ),
-                  const SizedBox(height: 30.0),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: MyButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          // Send data to admin here
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Report submitted successfully')),
-                          );
-                        }
-                      },
-                      text: 'Submit Report',
-                    ),
-                  ),
-                ],
+      appBar: AppBar(
+        title: Text('Daily Call Report'),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Doctors as per Day Plan: ${_currentDayPlan.date}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: null,
+              items: _currentDayPlan.doctors
+                  .map((doctor) => DropdownMenuItem(
+                        value: doctor,
+                        child: Text(doctor),
+                      ))
+                  .toList(),
+              onChanged: (_) => _showDoctorsDialog(context),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Select Doctor',
+                hintText: 'Choose a doctor',
+                contentPadding: EdgeInsets.symmetric(horizontal: 16),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
