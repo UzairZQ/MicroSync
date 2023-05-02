@@ -23,6 +23,10 @@ class _CallPlansForAdminState extends State<CallPlansForAdmin> {
     Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
   }
 
+  Future<void> _refreshDayPlans(BuildContext context) async {
+    await Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
+  }
+
   @override
   Widget build(BuildContext context) {
     final dayPlans = Provider.of<DayPlanProvider>(context).dayPlans;
@@ -39,64 +43,67 @@ class _CallPlansForAdminState extends State<CallPlansForAdmin> {
         appBar: const MyAppBar(
           appBartxt: 'Call Plans',
         ),
-        body: ListView.builder(
-          itemCount: dayPlans.length,
-          itemBuilder: (context, index) {
-            final dayPlan = dayPlans[index];
+        body: RefreshIndicator(
+          onRefresh: () => _refreshDayPlans(context),
+          child: ListView.builder(
+            itemCount: dayPlans.length,
+            itemBuilder: (context, index) {
+              final dayPlan = dayPlans[index];
 
-            String dayPlanTime() {
-              DateFormat dateFormat =
-                  DateFormat('EEEE dd/MM/yyyy'); // create date format
-              String formattedDate =
-                  dateFormat.format(dayPlan.date); // format current date
-              return formattedDate;
-            }
+              String dayPlanTime() {
+                DateFormat dateFormat =
+                    DateFormat('EEEE dd/MM/yyyy'); // create date format
+                String formattedDate =
+                    dateFormat.format(dayPlan.date); // format current date
+                return formattedDate;
+              }
 
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.blue.shade100,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: MyTextwidget(
-                          fontSize: 15,
-                          text: ' Submitted by: ${dayPlan.userName}',
-                          fontWeight: FontWeight.bold,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.blue.shade100,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: MyTextwidget(
+                            fontSize: 15,
+                            text: ' Submitted by: ${dayPlan.userName}',
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8.0),
-                      MyTextwidget(
-                        text: 'Date : ${dayPlanTime()}',
-                        fontSize: 14,
-                      ),
-                      const SizedBox(height: 8.0),
-                      MyTextwidget(
-                        text: 'Area: ${dayPlan.area}',
-                        fontSize: 15,
-                      ),
-                      const SizedBox(height: 8.0),
-                      MyTextwidget(
-                        text: 'Doctors: ${dayPlan.doctors.join(' , ')}',
-                        fontSize: 16,
-                      ),
-                      const SizedBox(height: 8.0),
-                      MyTextwidget(
-                        text: 'Shift: ${dayPlan.shift}',
-                        fontSize: 15,
-                      ),
-                    ],
+                        const SizedBox(height: 8.0),
+                        MyTextwidget(
+                          text: 'Date : ${dayPlanTime()}',
+                          fontSize: 14,
+                        ),
+                        const SizedBox(height: 8.0),
+                        MyTextwidget(
+                          text: 'Area: ${dayPlan.area}',
+                          fontSize: 15,
+                        ),
+                        const SizedBox(height: 8.0),
+                        MyTextwidget(
+                          text: 'Doctors: ${dayPlan.doctors.join(' , ')}',
+                          fontSize: 16,
+                        ),
+                        const SizedBox(height: 8.0),
+                        MyTextwidget(
+                          text: 'Shift: ${dayPlan.shift}',
+                          fontSize: 15,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ));
   }
 }
