@@ -17,7 +17,6 @@ import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../main.dart';
 import 'package:workmanager/workmanager.dart';
 
 class HomePage extends StatefulWidget {
