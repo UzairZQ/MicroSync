@@ -86,7 +86,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 24.0, right: 24.0),
+        padding: const EdgeInsets.only(bottom: 24.0, right: 30.0),
         child: FloatingActionButton.extended(
             onPressed: () {
               setState(() {

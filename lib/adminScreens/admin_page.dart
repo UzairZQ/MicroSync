@@ -1,21 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:micro_pharma/adminScreens/admin_settings.dart';
-
 import 'package:micro_pharma/adminScreens/admin_panel.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/main.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
-
 import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:provider/provider.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../models/user_model.dart';
+import '../splash_page.dart';
 import './user_call_plans.dart';
 
 class AdminPage extends StatefulWidget {
@@ -28,8 +23,6 @@ class AdminPage extends StatefulWidget {
 
 class _AdminPageState extends State<AdminPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
-  // late UserModel userData;
-
   @override
   void initState() {
     super.initState();

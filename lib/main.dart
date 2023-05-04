@@ -11,6 +11,7 @@ import 'package:micro_pharma/adminScreens/admin_panel.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/adminScreens/user_call_plans.dart';
 import 'package:micro_pharma/providers/area_provider.dart';
+import 'package:micro_pharma/providers/daily_call_report_provider.dart';
 import 'package:micro_pharma/providers/day_plans_provider.dart';
 import 'package:micro_pharma/providers/doctor_provider.dart';
 import 'package:micro_pharma/providers/product_data_provider.dart';
@@ -66,6 +67,8 @@ Future<void> main() async {
       ChangeNotifierProvider<ProductDataProvider>(
           create: (_) => ProductDataProvider()),
       ChangeNotifierProvider<DayPlanProvider>(create: (_) => DayPlanProvider()),
+      ChangeNotifierProvider<DailyCallReportProvider>(
+          create: (_) => DailyCallReportProvider())
     ],
     child: const MicroPharma(),
   ));

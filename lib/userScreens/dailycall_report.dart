@@ -1,104 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:micro_pharma/components/constants.dart';
+import 'package:micro_pharma/models/day_plan_model.dart';
+import 'package:micro_pharma/models/product_model.dart';
+import 'package:micro_pharma/providers/day_plans_provider.dart';
+import 'package:micro_pharma/providers/product_data_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/day_plans_provider.dart';
-import '../models/day_plan_model.dart';
-
 class DailyCallReportScreen extends StatefulWidget {
-  static const String id = 'dailycallreport';
+  const DailyCallReportScreen({super.key});
+
   @override
-  _DailyCallReportScreenState createState() => _DailyCallReportScreenState();
+  State<DailyCallReportScreen> createState() => _DailyCallReportScreenState();
 }
 
 class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
-  late DayPlanModel _currentDayPlan;
+  late List<ProductModel> products;
+  DayPlanModel? currentDayPlan;
 
+  bool visitedDoctor = false;
   @override
   void initState() {
-    super.initState();
-    _currentDayPlan = Provider.of<DayPlanProvider>(context, listen: false)
+    print(DateTime.now());
+    Provider.of<ProductDataProvider>(context, listen: false)
+        .fetchProductsList();
+    products =
+        Provider.of<ProductDataProvider>(context, listen: false).productsList;
+    Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
+    currentDayPlan = Provider.of<DayPlanProvider>(context, listen: false)
         .getCurrentDayPlan();
+    super.initState();
   }
 
-  Future<void> _showDoctorsDialog(BuildContext context) async {
-    List<String> doctors = _currentDayPlan.doctors;
-
-    List<bool> doctorSelections =
-        List.filled(doctors.length, false, growable: false);
-
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Doctors'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: List.generate(doctors.length, (index) {
-                return CheckboxListTile(
-                  title: Text(doctors[index]),
-                  value: doctorSelections[index],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      doctorSelections[index] = value ?? false;
-                    });
-                  },
-                );
-              }),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('CANCEL'),
-            ),
-            TextButton(
-              onPressed: () {
-                // TODO: Add logic to save selected doctors
-                Navigator.of(context).pop();
-              },
-              child: const Text('OKAY'),
-            ),
-          ],
-        );
-      },
-    );
+  String dayPlanTime() {
+    DateFormat dateFormat = DateFormat('EEEE dd/MM/yyyy'); // create date format
+    String formattedDate =
+        dateFormat.format(currentDayPlan!.date); // format current date
+    return formattedDate;
   }
 
   @override
   Widget build(BuildContext context) {
+    print(currentDayPlan?.date);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Daily Call Report'),
-      ),
-      body: Container(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Doctors as per Day Plan: ${_currentDayPlan.date}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      appBar: const MyAppBar(appBartxt: 'Daily Call Report'),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MyTextwidget(
+              text:
+                  'Doctors According to your today\'s Day Plan: ${dayPlanTime()}',
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
             ),
-            SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: null,
-              items: _currentDayPlan.doctors
-                  .map((doctor) => DropdownMenuItem(
-                        value: doctor,
-                        child: Text(doctor),
-                      ))
-                  .toList(),
-              onChanged: (_) => _showDoctorsDialog(context),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Select Doctor',
-                hintText: 'Choose a doctor',
-                contentPadding: EdgeInsets.symmetric(horizontal: 16),
-              ),
+          ),
+          if (currentDayPlan != null)
+            Expanded(
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: currentDayPlan!.doctors.length,
+                  itemBuilder: (context, index) {
+                    final dayPlanDoctors = currentDayPlan!.doctors;
+
+                    return Card(
+                      color: Colors.teal[100],
+                      child: ListTile(
+                        title: MyTextwidget(
+                          text: dayPlanDoctors[index],
+                          fontSize: 16,
+                        ),
+                        trailing: TextButton(
+                          child: MyTextwidget(text: 'Add Doctor Info'),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (
+                                  context,
+                                ) {
+                                  return Dialog();
+                                });
+                          },
+                        ),
+                        subtitle: Row(
+                          children: [
+                            MyTextwidget(text: 'Visited?'),
+                            Checkbox(
+                              value: visitedDoctor,
+                              onChanged: (value) {},
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
             ),
-          ],
-        ),
+          MyButton(text: 'Submit Report', onPressed: () {})
+        ],
       ),
     );
   }

@@ -35,7 +35,7 @@ class _DayPlansScreenState extends State<DayPlansScreen> {
             onPressed: () {
               Navigator.pushNamed(context, CallPlanner.id);
             },
-            label: const MyTextwidget(
+            label:  MyTextwidget(
               text: 'Add New Call Plan',
               fontSize: 14,
             )),
