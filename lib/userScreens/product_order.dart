@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:micro_pharma/models/area_model.dart';
 
+import '../models/product_model.dart';
 
 class ProductOrder extends StatefulWidget {
   const ProductOrder({Key? key}) : super(key: key);
@@ -17,9 +20,9 @@ class _ProductOrderState extends State<ProductOrder> {
       TextEditingController();
   final TextEditingController _bonusController = TextEditingController();
   final TextEditingController _discountController = TextEditingController();
-
-  String? _selectedArea;
-  String? _selectedProduct;
+  AreaModel? _selectedArea;
+  List<ProductModel>? _selectedProduct;
+  String userId = FirebaseAuth.instance.currentUser!.uid;
 
   void _submitOrder() {
     if (_formKey.currentState!.validate()) {
@@ -30,7 +33,7 @@ class _ProductOrderState extends State<ProductOrder> {
 
       _formKey.currentState;
 
-      // TODO: Send order details to pharmacy
+      // TODO: Send order details to admin
     }
   }
 
@@ -46,12 +49,8 @@ class _ProductOrderState extends State<ProductOrder> {
 
   @override
   Widget build(BuildContext context) {
-    // final userProvider = Provider.of<UserDataProvider>(context);
-    // final productProvider = Provider.of<ProductDataProvider>(context);
-    // final areaProvider = Provider.of<AreaProvider>(context);
-
     return Scaffold(
-      appBar:const  MyAppBar(appBartxt: 'Product Order'),
+      appBar: const MyAppBar(appBartxt: 'Product Order'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -121,7 +120,7 @@ class _ProductOrderState extends State<ProductOrder> {
               // return null;
               // },
               // ),
-             const  SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _productQuantityController,
                 decoration: const InputDecoration(
@@ -135,7 +134,7 @@ class _ProductOrderState extends State<ProductOrder> {
                   return null;
                 },
               ),
-             const SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _bonusController,
                 decoration: const InputDecoration(
@@ -163,7 +162,7 @@ class _ProductOrderState extends State<ProductOrder> {
                   return null;
                 },
               ),
-             const  SizedBox(height: 32.0),
+              const SizedBox(height: 32.0),
               MyButton(text: 'Send Order', onPressed: _submitOrder)
             ],
           ),
