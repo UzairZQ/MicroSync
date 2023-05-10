@@ -39,9 +39,9 @@ class DayPlanProvider extends ChangeNotifier {
 
   DayPlanModel? getCurrentDayPlan() {
     DateTime currentDate = DateTime.now().toUtc().toLocal();
-    // if (_dayPlans.isEmpty) {
-    //   return null;
-    // }
+    if (_dayPlans.isEmpty) {
+      return null;
+    }
     return _dayPlans.firstWhere(
       (dayPlan) =>
           dayPlan.date.year == currentDate.year &&

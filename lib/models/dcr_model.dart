@@ -1,33 +1,31 @@
 import 'package:micro_pharma/models/product_model.dart';
 
+import '../userScreens/dailycall_report.dart';
+
 class DoctorVisitModel {
   final String? name;
-  final bool? samplesProvided;
-  final ProductModel? products;
-  final int? quantity;
+  final List<SelectedProduct>? selectedProducts;
+   String? doctorRemarks;
 
   DoctorVisitModel({
     this.name,
-    this.samplesProvided,
-    this.products,
-    this.quantity,
+    this.selectedProducts,
+    this.doctorRemarks,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
-      'samplesProvided': samplesProvided,
-      'product': products,
-      'quantity': quantity,
+      'product': selectedProducts,
+      'remarks': doctorRemarks,
     };
   }
 
   factory DoctorVisitModel.fromMap(Map<String, dynamic> map) {
     return DoctorVisitModel(
       name: map['name'],
-      samplesProvided: map['samplesProvided'],
-      products: map['products'],
-      quantity: map['quantity'],
+      selectedProducts: map['products'],
+      doctorRemarks: map['remarks'],
     );
   }
 }

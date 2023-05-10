@@ -8,6 +8,7 @@ import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/product_order.dart';
+import '../providers/day_plans_provider.dart';
 import '../splash_page.dart';
 import 'call_planner.dart';
 import 'dailycall_report.dart';
@@ -38,6 +39,7 @@ class _HomePageState extends State<HomePage> {
     Provider.of<UserDataProvider>(context, listen: false).logIn();
     Provider.of<UserDataProvider>(context, listen: false)
         .fetchUserData(currentUser!.uid);
+    Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
   }
 
   void userLocation() async {
@@ -295,7 +297,7 @@ class _HomePageState extends State<HomePage> {
                 container2Tap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: ((context) => DailyCallReportScreen()))),
+                        builder: ((context) => const DailyCallReportScreen()))),
               ),
               const SizedBox(
                 height: 30.0,
