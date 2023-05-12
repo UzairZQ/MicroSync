@@ -42,12 +42,16 @@ class DayPlanProvider extends ChangeNotifier {
     if (_dayPlans.isEmpty) {
       return null;
     }
-    return _dayPlans.firstWhere(
+    var matchingDayPlans = _dayPlans.where(
       (dayPlan) =>
           dayPlan.date.year == currentDate.year &&
           dayPlan.date.month == currentDate.month &&
           dayPlan.date.day == currentDate.day,
     );
+    if (matchingDayPlans.isEmpty) {
+      return null; // No day plan found for today
+    }
+    return matchingDayPlans.first;
   }
 
   Future<void> deleteDayPlan(DayPlanModel dayPlan) async {
