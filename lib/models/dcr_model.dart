@@ -1,11 +1,10 @@
-import 'package:micro_pharma/models/product_model.dart';
 
 import '../userScreens/dailycall_report.dart';
 
 class DoctorVisitModel {
-  final String? name;
-  final List<SelectedProduct>? selectedProducts;
-   String? doctorRemarks;
+  String? name;
+  List<SelectedProduct>? selectedProducts;
+  String? doctorRemarks;
 
   DoctorVisitModel({
     this.name,
@@ -33,7 +32,7 @@ class DoctorVisitModel {
 class DailyCallReportModel {
   final String? reportId;
   final DateTime date;
-  final List<DoctorVisitModel> doctorsVisited;
+  final List<DoctorVisitModel>? doctorsVisited;
   final String? remarks;
 
   DailyCallReportModel({
@@ -47,7 +46,7 @@ class DailyCallReportModel {
     return {
       'reportId': reportId,
       'date': date.toIso8601String(),
-      'doctorsVisited': doctorsVisited.map((visit) => visit.toMap()).toList(),
+      'doctorsVisited': doctorsVisited?.map((visit) => visit.toMap()).toList(),
       'remarks': remarks,
     };
   }
