@@ -1,3 +1,25 @@
+class OrderSelectedProduct extends ProductModel {
+  int quantity;
+  int? bonus;
+  double? discount;
+
+  OrderSelectedProduct(
+      {required String name,
+      required double tradePrice,
+      double? retailPrice,
+      dynamic packing,
+      required this.quantity,
+       this.bonus,
+       this.discount,
+      int? code})
+      : super(
+            name: name,
+            tradePrice: tradePrice,
+            code: code!,
+            packing: packing,
+            retailPrice: retailPrice!);
+}
+
 class ProductModel {
   final int code;
   final String name;

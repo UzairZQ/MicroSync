@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/day_plan_model.dart';
 
 class DayPlanProvider extends ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _dayPlanCollection =
       FirebaseFirestore.instance.collection('day_plans');
   List<DayPlanModel> _dayPlans = [];

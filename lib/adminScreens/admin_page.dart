@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_model.dart';
 import '../splash_page.dart';
 import './user_call_plans.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class AdminPage extends StatefulWidget {
   static String id = 'admin';
@@ -152,9 +153,9 @@ class _AdminPageState extends State<AdminPage> {
                       },
                     ),
                     const SizedBox(height: 17.0),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Icon(
                           Icons.calendar_month,
                           color: Colors.white,

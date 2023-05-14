@@ -9,13 +9,7 @@ import 'package:micro_pharma/providers/day_plans_provider.dart';
 import 'package:micro_pharma/providers/product_data_provider.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:provider/provider.dart';
-
-class SelectedProduct {
-  final ProductModel product;
-  int quantity;
-
-  SelectedProduct({required this.product, required this.quantity});
-}
+import '../models/doctor_visit_model.dart';
 
 class DailyCallReportScreen extends StatefulWidget {
   const DailyCallReportScreen({Key? key}) : super(key: key);
@@ -28,36 +22,24 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
   late List<ProductModel> products;
   DayPlanModel? currentDayPlan;
   List<DoctorVisitModel>? doctorVisitDetailsList = [];
-
   bool visitedDoctor = false;
-  // bool samplesProvided = false;
-  List<SelectedProduct> selectedProducts = [];
+  bool samplesProvided = false;
   ProductModel? selectedProduct;
   TextEditingController doctorRemarksController = TextEditingController();
+  List<SelectedProduct> selectedProducts = [];
 
   @override
   void initState() {
     super.initState();
-    Provider.of<ProductDataProvider>(context, listen: false)
-        .fetchProductsList();
-    products =
-        Provider.of<ProductDataProvider>(context, listen: false).productsList;
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      Provider.of<ProductDataProvider>(context, listen: false)
+          .fetchProductsList();
+    });
+
     Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
     currentDayPlan = Provider.of<DayPlanProvider>(context, listen: false)
         .getCurrentDayPlan();
-  }
-
-  void _addProduct(DoctorVisitModel doctorVisitDetails, ProductModel? product,
-      int quantity) {
-    setState(() {
-      List<SelectedProduct> updatedList =
-          List.from(doctorVisitDetails.selectedProducts ?? []);
-      updatedList.add(SelectedProduct(
-        product: product!,
-        quantity: quantity,
-      ));
-      doctorVisitDetails.selectedProducts = updatedList;
-    });
   }
 
   String dayPlanTime() {
@@ -76,7 +58,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
             padding: const EdgeInsets.all(8.0),
             child: MyTextwidget(
               text: currentDayPlan != null
-                  ? 'Doctors According to your today\'s Day Plan: ${dayPlanTime()}'
+                  ? 'Doctors According to your today\'s Day Plan: ${dayPlanTime()} for ${currentDayPlan!.area}'
                   : 'No Plan found!',
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -146,12 +128,19 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
             MyButton(
                 text: 'Submit Report',
                 onPressed: () {
+                  String area = currentDayPlan!.area;
                   final DailyCallReportModel dailyCallReportModel =
                       DailyCallReportModel(
+                          area: area,
                           date: currentDayPlan!.date,
-                          doctorsVisited: doctorVisitDetailsList!);
-                  Provider.of<DailyCallReportProvider>(context)
+                          doctorVisits: doctorVisitDetailsList);
+                  Provider.of<DailyCallReportProvider>(context, listen: false)
                       .saveReport(dailyCallReportModel);
+                  showCustomDialog(
+                      context: context,
+                      title: 'Report Submitted',
+                      content:
+                          'Today\'s Report have been successfully submitted');
                 }),
         ],
       ),
@@ -164,17 +153,14 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
       barrierDismissible: true,
       context: context,
       builder: (context) {
-        DoctorVisitModel doctorVisitDetails = DoctorVisitModel(
-          name: dayPlanDoctors[index],
-          selectedProducts: [],
-          doctorRemarks: doctorRemarksController.text,
-        );
-        int selectedQuantity = 1; // Default quantity
+        int selectedQuantity = 1;
+        products = Provider.of<ProductDataProvider>(context, listen: false)
+            .productsList; // Default quantity
         selectedProduct = products.isNotEmpty ? products.first : null;
+
         return StatefulBuilder(
           builder: (context, setState) {
             return Dialog.fullscreen(
-            
               child: SingleChildScrollView(
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
@@ -183,83 +169,97 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       MyTextwidget(
-                        text: 'Add Visit Details',
+                        text: 'Add Visit Details for ${dayPlanDoctors[index]}',
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                       const SizedBox(height: 16.0),
-                      MyTextwidget(text: 'Samples Provided?'),
+                      Row(children: [
+                        MyTextwidget(text: 'Samples Provided?'),
+                        Checkbox(
+                          value: samplesProvided,
+                          onChanged: (ifsamples) {
+                            setState(() {
+                              samplesProvided = ifsamples!;
+                            });
+                          },
+                        ),
+                      ]),
                       const SizedBox(height: 16.0),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: DropdownButtonFormField<ProductModel>(
-                              items: products.map((product) {
-                                return DropdownMenuItem<ProductModel>(
-                                  value: product,
-                                  child: Text(product.name),
-                                );
-                              }).toList(),
-                              onChanged: (selectedproduct) {
-                                if (selectedproduct != null) {
-                                  setState(() {
-                                    selectedProduct = selectedproduct;
-                                  });
-                                }
-                              },
-                              value: selectedProduct,
-                              decoration: const InputDecoration(
-                                labelText: 'Select Product',
-                                border: OutlineInputBorder(),
+                      if (samplesProvided)
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: DropdownButtonFormField<ProductModel>(
+                                items: products.map((product) {
+                                  return DropdownMenuItem<ProductModel>(
+                                    value: product,
+                                    child: Text(product.name),
+                                  );
+                                }).toList(),
+                                onChanged: (selectedproduct) {
+                                  if (selectedproduct != null) {
+                                    setState(() {
+                                      selectedProduct = selectedproduct;
+                                    });
+                                  }
+                                },
+                                value: selectedProduct,
+                                decoration: const InputDecoration(
+                                  labelText: 'Select Product',
+                                  border: OutlineInputBorder(),
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 10.0),
-                          Expanded(
-                            child: DropdownButtonFormField<int>(
-                              items: List.generate(10, (index) => index + 1)
-                                  .map((quantity) => DropdownMenuItem<int>(
-                                        value: quantity,
-                                        child: Text('$quantity'),
-                                      ))
-                                  .toList(),
-                              onChanged: (selectedQty) {
-                                if (selectedQty != null) {
-                                  setState(() {
-                                    selectedQuantity = selectedQty;
-                                  });
-                                }
-                              },
-                              value: selectedQuantity,
-                              decoration: const InputDecoration(
-                                labelText: 'Quantity',
-                                border: OutlineInputBorder(),
+                            const SizedBox(width: 10.0),
+                            Expanded(
+                              child: DropdownButtonFormField<int>(
+                                items: List.generate(10, (index) => index + 1)
+                                    .map((quantity) => DropdownMenuItem<int>(
+                                          value: quantity,
+                                          child: Text('$quantity'),
+                                        ))
+                                    .toList(),
+                                onChanged: (selectedQty) {
+                                  if (selectedQty != null) {
+                                    setState(() {
+                                      selectedQuantity = selectedQty;
+                                    });
+                                  }
+                                },
+                                value: selectedQuantity,
+                                decoration: const InputDecoration(
+                                  labelText: 'Quantity',
+                                  border: OutlineInputBorder(),
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                if (selectedProduct != null) {
-                                  setState(() {
-                                    _addProduct(doctorVisitDetails,
-                                        selectedProduct, selectedQuantity);
-                                  });
-                                }
-                              },
-                              child: MyTextwidget(text: 'Add'),
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  if (selectedProduct != null) {
+                                    setState(() {
+                                      SelectedProduct myselectedProduct =
+                                          SelectedProduct(
+                                              productName:
+                                                  selectedProduct!.name,
+                                              quantity: selectedQuantity);
+                                      selectedProducts.add(myselectedProduct);
+                                    });
+                                  }
+                                },
+                                child: MyTextwidget(text: 'Add'),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                       const SizedBox(height: 16.0),
                       Column(
-                        children: doctorVisitDetails.selectedProducts!
-                            .map((selectedProduct) {
+                        children: selectedProducts.map((selectedProduct) {
                           return ListTile(
                             tileColor: Colors.amber[100],
-                            title: Text(selectedProduct.product.name),
+                            title: Text(selectedProduct.productName),
                             subtitle:
                                 Text('Quantity: ${selectedProduct.quantity}'),
                             trailing: IconButton(
@@ -269,8 +269,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                               ),
                               onPressed: () {
                                 setState(() {
-                                  doctorVisitDetails.selectedProducts!
-                                      .remove(selectedProduct);
+                                  selectedProducts.remove(selectedProduct);
                                 });
                               },
                             ),
@@ -303,15 +302,27 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                             onPressed: () {
                               setState(() {
                                 doctorRemarksController.clear();
+                                selectedProducts.clear();
                               });
                               Navigator.pop(context);
                             },
                           ),
                           TextButton(
-                            child: const Text('Add Information'),
+                            child: const Text('Add Visit Details'),
                             onPressed: () {
                               setState(() {
+                                DoctorVisitModel doctorVisitDetails =
+                                    DoctorVisitModel(
+                                  name: dayPlanDoctors[index],
+                                  selectedProducts: List.from(
+                                      selectedProducts), // Make a copy of the list
+                                  doctorRemarks: doctorRemarksController.text,
+                                );
                                 doctorVisitDetailsList!.add(doctorVisitDetails);
+                                doctorRemarksController.clear();
+                                selectedProducts =
+                                    []; // Clear the original list, not the copied one
+                                doctorVisitDetailsList = [];
                               });
                               Navigator.pop(context);
                             },

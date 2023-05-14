@@ -1,63 +1,41 @@
-
-import '../userScreens/dailycall_report.dart';
-
-class DoctorVisitModel {
-  String? name;
-  List<SelectedProduct>? selectedProducts;
-  String? doctorRemarks;
-
-  DoctorVisitModel({
-    this.name,
-    this.selectedProducts,
-    this.doctorRemarks,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'product': selectedProducts,
-      'remarks': doctorRemarks,
-    };
-  }
-
-  factory DoctorVisitModel.fromMap(Map<String, dynamic> map) {
-    return DoctorVisitModel(
-      name: map['name'],
-      selectedProducts: map['products'],
-      doctorRemarks: map['remarks'],
-    );
-  }
-}
+import 'doctor_visit_model.dart';
 
 class DailyCallReportModel {
+  String area;
   final String? reportId;
   final DateTime date;
-  final List<DoctorVisitModel>? doctorsVisited;
-  final String? remarks;
+  final List<DoctorVisitModel> doctorsVisited;
 
   DailyCallReportModel({
+    required this.area,
     this.reportId,
     required this.date,
-    required this.doctorsVisited,
-    this.remarks,
-  });
+    List<DoctorVisitModel>? doctorVisits,
+  }) : doctorsVisited = doctorVisits ?? [];
 
   Map<String, dynamic> toMap() {
     return {
       'reportId': reportId,
       'date': date.toIso8601String(),
-      'doctorsVisited': doctorsVisited?.map((visit) => visit.toMap()).toList(),
-      'remarks': remarks,
+      'doctorsVisited': doctorsVisited.map((visit) => visit.toMap()).toList(),
+      'area': area
     };
   }
 
-  factory DailyCallReportModel.fromMap(Map<String, dynamic> map, String id) {
+  factory DailyCallReportModel.fromMap(Map<String, dynamic> json, String id) {
+    List<Map<String, dynamic>> visits = [];
+    if (json['doctorsVisited'] != null) {
+      var doctorVisitsData = json['doctorsVisited'];
+      if (doctorVisitsData is List<dynamic>) {
+        visits = List<Map<String, dynamic>>.from(doctorVisitsData);
+      }
+    }
     return DailyCallReportModel(
       reportId: id,
-      date: DateTime.parse(map['date']),
-      doctorsVisited: List<DoctorVisitModel>.from(
-          map['doctorsVisited']?.map((x) => DoctorVisitModel.fromMap(x))),
-      remarks: map['remarks'],
+      date: DateTime.parse(json['date']),
+      area: json['area'],
+      doctorVisits:
+          visits.map((visit) => DoctorVisitModel.fromMap(visit)).toList(),
     );
   }
 
@@ -65,13 +43,13 @@ class DailyCallReportModel {
     String? reportId,
     DateTime? date,
     List<DoctorVisitModel>? doctorsVisited,
-    String? remarks,
+    String? area,
   }) {
     return DailyCallReportModel(
+      area: area ?? this.area,
       reportId: reportId ?? this.reportId,
       date: date ?? this.date,
-      doctorsVisited: doctorsVisited ?? this.doctorsVisited,
-      remarks: remarks ?? this.remarks,
+      doctorVisits: doctorsVisited ?? this.doctorsVisited,
     );
   }
 }
