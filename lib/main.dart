@@ -26,6 +26,7 @@ import 'package:micro_pharma/userScreens/day_plans.dart';
 
 import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:theme_provider/theme_provider.dart';
 import 'components/constants.dart';
 import 'userScreens/login_page.dart';
 import 'userScreens/home_page.dart';
@@ -49,8 +50,6 @@ void callBackDispatcher() async {
     return Future.value(true);
   });
 }
-
-final formKey = GlobalKey<FormState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,26 +78,40 @@ class MicroPharma extends StatelessWidget {
   const MicroPharma({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      routes: {
-        'login': (context) => const LoginPage(),
-        'home': (context) => const HomePage(),
-        'user_dashboard': (context) => const Dashboard(),
-        'admin': (context) => const AdminPage(),
-        'day_plans': (context) => const DayPlansScreen(),
-        'call_plans': (context) => const CallPlansForAdmin(),
-        'addproduct': (context) => const AddProduct(),
-        'call_planner': (context) => const CallPlanner(),
-        'addoctor': (context) => const AdminPanel(),
-        'dailycallreport': (context) => const DailyCallReportScreen(),
-        'user_profile': (context) => const UserProfilePage(),
-        'admin_profile': (context) => const AdminProfilePage(),
-        'location_screen': (context) => const LocationScreen(),
-        'add_employees': (context) => const AddEmployees(),
-        'doctors_areas': (context) => const AdminPanel(),
-      },
-      home: const SplashPage(),
+    return ThemeProvider(
+      onThemeChanged: (oldTheme, newTheme) {},
+      themes: [
+        AppTheme.light(),
+        AppTheme.dark(),
+      ],
+      saveThemesOnChange: true,
+      child: ThemeConsumer(
+        child: Builder(
+          builder: (themeContext) => MaterialApp(
+            theme: ThemeProvider.themeOf(themeContext).data,
+            debugShowCheckedModeBanner: false,
+            navigatorKey: navigatorKey,
+            routes: {
+              'login': (context) => const LoginPage(),
+              'home': (context) => const HomePage(),
+              'user_dashboard': (context) => const Dashboard(),
+              'admin': (context) => const AdminPage(),
+              'day_plans': (context) => const DayPlansScreen(),
+              'call_plans': (context) => const CallPlansForAdmin(),
+              'addproduct': (context) => const AddProduct(),
+              'call_planner': (context) => const CallPlanner(),
+              'addoctor': (context) => const AdminPanel(),
+              'dailycallreport': (context) => const DailyCallReportScreen(),
+              'user_profile': (context) => const UserProfilePage(),
+              'admin_profile': (context) => const AdminProfilePage(),
+              'location_screen': (context) => const LocationScreen(),
+              'add_employees': (context) => const AddEmployees(),
+              'doctors_areas': (context) => const AdminPanel(),
+            },
+            home: const SplashPage(),
+          ),
+        ),
+      ),
     );
   }
 }

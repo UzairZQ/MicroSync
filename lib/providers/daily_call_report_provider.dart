@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/dcr_model.dart';
 
 class DailyCallReportProvider extends ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _reportsCollection =
       FirebaseFirestore.instance.collection('daily_call_reports');
   List<DailyCallReportModel> _reports = [];

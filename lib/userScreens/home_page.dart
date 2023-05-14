@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:theme_provider/theme_provider.dart';
 import 'package:micro_pharma/adminScreens/doctors_page.dart';
 import 'package:micro_pharma/components/container_Row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
-import 'package:micro_pharma/userScreens/product_order.dart';
+import 'package:micro_pharma/userScreens/order_screen.dart';
 import '../providers/day_plans_provider.dart';
 import '../splash_page.dart';
 import 'call_planner.dart';
@@ -80,13 +80,17 @@ class _HomePageState extends State<HomePage> {
         onTap: (int index) {
           switch (index) {
             case 0:
+              ThemeProvider.controllerOf(context).nextTheme();
+
+              break;
+            case 1:
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const UserProfilePage()),
               );
               break;
-            case 1:
+            case 2:
               showDialog(
                   context: context,
                   builder: (context) {
@@ -134,6 +138,13 @@ class _HomePageState extends State<HomePage> {
           }
         },
         items: const [
+          BottomNavigationBarItem(
+            label: 'Change Theme',
+            icon: Icon(
+              Icons.color_lens,
+              size: 30,
+            ),
+          ),
           BottomNavigationBarItem(
             label: 'My Profile',
             icon: Icon(
@@ -189,9 +200,9 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     const SizedBox(height: 17.0),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Icon(
                           Icons.calendar_month,
                           color: Colors.white,
@@ -212,9 +223,9 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(
                       height: 15.0,
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Icon(
                           Icons.medication_rounded,
                           color: Colors.white,
@@ -318,7 +329,7 @@ class _HomePageState extends State<HomePage> {
                 container2Tap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: ((context) => const ProductOrder()),
+                    builder: ((context) => OrderScreen()),
                   ),
                 ),
               ),
