@@ -2,17 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/admin_settings.dart';
 import 'package:micro_pharma/adminScreens/admin_panel.dart';
+import 'package:micro_pharma/adminScreens/view_dcr.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
+import 'package:micro_pharma/adminScreens/submitted_orders.dart';
 import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:theme_provider/theme_provider.dart';
 import '../models/user_model.dart';
 import '../splash_page.dart';
 import './user_call_plans.dart';
-import 'package:theme_provider/theme_provider.dart';
 
 class AdminPage extends StatefulWidget {
   static String id = 'admin';
@@ -46,13 +48,17 @@ class _AdminPageState extends State<AdminPage> {
         onTap: (int index) {
           switch (index) {
             case 0:
+              ThemeProvider.controllerOf(context).nextTheme();
+
+              break;
+            case 1:
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const AdminProfilePage()),
               );
               break;
-            case 1:
+            case 2:
               showDialog(
                   context: context,
                   builder: (context) {
@@ -98,6 +104,13 @@ class _AdminPageState extends State<AdminPage> {
           }
         },
         items: const [
+          BottomNavigationBarItem(
+            label: 'Change Theme',
+            icon: Icon(
+              Icons.color_lens,
+              size: 30,
+            ),
+          ),
           BottomNavigationBarItem(
             label: 'My Profile',
             icon: Icon(
@@ -187,7 +200,9 @@ class _AdminPageState extends State<AdminPage> {
                 container2Clr: const Color(0xFFFFC8C8),
                 container2Icon: Icons.calendar_month_outlined,
                 container2Text: 'Daily Call Report',
-                container2Tap: () {},
+                container2Tap: () {
+                  Navigator.pushNamed(context, ViewDCRScreen.id);
+                },
               ),
               const SizedBox(
                 height: 30.0,
@@ -196,7 +211,9 @@ class _AdminPageState extends State<AdminPage> {
                 container1Clr: const Color.fromARGB(255, 133, 254, 226),
                 container1Icon: Icons.assignment_outlined,
                 container1Text: 'Orders',
-                container1Tap: () {},
+                container1Tap: () {
+                  Navigator.pushNamed(context, SubmittedOrders.id);
+                },
                 container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Call Plans',

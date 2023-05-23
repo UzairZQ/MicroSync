@@ -8,12 +8,15 @@ import 'package:micro_pharma/adminScreens/add_product.dart';
 import 'package:micro_pharma/adminScreens/add_employees.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/adminScreens/admin_panel.dart';
+import 'package:micro_pharma/adminScreens/view_dcr.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
+import 'package:micro_pharma/adminScreens/submitted_orders.dart';
 import 'package:micro_pharma/adminScreens/user_call_plans.dart';
 import 'package:micro_pharma/providers/area_provider.dart';
 import 'package:micro_pharma/providers/daily_call_report_provider.dart';
 import 'package:micro_pharma/providers/day_plans_provider.dart';
 import 'package:micro_pharma/providers/doctor_provider.dart';
+import 'package:micro_pharma/providers/order_data_provider.dart';
 import 'package:micro_pharma/providers/product_data_provider.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
@@ -67,7 +70,10 @@ Future<void> main() async {
           create: (_) => ProductDataProvider()),
       ChangeNotifierProvider<DayPlanProvider>(create: (_) => DayPlanProvider()),
       ChangeNotifierProvider<DailyCallReportProvider>(
-          create: (_) => DailyCallReportProvider())
+        create: (_) => DailyCallReportProvider(),
+      ),
+      ChangeNotifierProvider<OrderDataProvider>(
+          create: (_) => OrderDataProvider())
     ],
     child: const MicroPharma(),
   ));
@@ -107,6 +113,8 @@ class MicroPharma extends StatelessWidget {
               'location_screen': (context) => const LocationScreen(),
               'add_employees': (context) => const AddEmployees(),
               'doctors_areas': (context) => const AdminPanel(),
+              'submitted_orders':(context) => const SubmittedOrders(),
+              'view_dcr': (context) => ViewDCRScreen(),
             },
             home: const SplashPage(),
           ),

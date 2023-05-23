@@ -23,21 +23,22 @@ class DailyCallReportModel {
   }
 
   factory DailyCallReportModel.fromMap(Map<String, dynamic> json, String id) {
-    List<Map<String, dynamic>> visits = [];
-    if (json['doctorsVisited'] != null) {
-      var doctorVisitsData = json['doctorsVisited'];
-      if (doctorVisitsData is List<dynamic>) {
-        visits = List<Map<String, dynamic>>.from(doctorVisitsData);
-      }
+  List<Map<String, dynamic>> visits = [];
+  if (json['doctorsVisited'] != null) {
+    var doctorVisitsData = json['doctorsVisited'];
+    if (doctorVisitsData is List<dynamic>) {
+      visits = List<Map<String, dynamic>>.from(doctorVisitsData);
     }
-    return DailyCallReportModel(
-      reportId: id,
-      date: DateTime.parse(json['date']),
-      area: json['area'],
-      doctorVisits:
-          visits.map((visit) => DoctorVisitModel.fromMap(visit)).toList(),
-    );
   }
+  return DailyCallReportModel(
+    reportId: id,
+    date: DateTime.parse(json['date']),
+    area: json['area'],
+    doctorVisits:
+        visits.map((visit) => DoctorVisitModel.fromMap(visit)).toList(),
+  );
+}
+
 
   DailyCallReportModel copyWith({
     String? reportId,
