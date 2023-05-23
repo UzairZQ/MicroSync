@@ -1,7 +1,7 @@
 class OrderSelectedProduct extends ProductModel {
-  int quantity;
-  int? bonus;
-  double? discount;
+  String quantity;
+  String? bonus;
+  String? discount;
 
   OrderSelectedProduct(
       {required String name,
@@ -9,8 +9,8 @@ class OrderSelectedProduct extends ProductModel {
       double? retailPrice,
       dynamic packing,
       required this.quantity,
-       this.bonus,
-       this.discount,
+      this.bonus,
+      this.discount,
       int? code})
       : super(
             name: name,
@@ -18,6 +18,28 @@ class OrderSelectedProduct extends ProductModel {
             code: code!,
             packing: packing,
             retailPrice: retailPrice!);
+
+  factory OrderSelectedProduct.fromMap(Map<String, dynamic> json) {
+    return OrderSelectedProduct(
+      code: json['code'] as int,
+      name: json['name'] as String,
+      retailPrice: json['mrp'] as double,
+      tradePrice: json['trp'] as double,
+      packing: json['packing'] as dynamic,
+      quantity: json['quantity'] as String,
+      bonus: json['bonus'] as String?,
+      discount: json['discount'] as String?,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = super.toMap();
+    data['quantity'] = quantity;
+    data['bonus'] = bonus;
+    data['discount'] = discount;
+    return data;
+  }
 }
 
 class ProductModel {

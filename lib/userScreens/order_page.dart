@@ -1,9 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/area_model.dart';
+import 'package:micro_pharma/models/order_model.dart';
 import 'package:micro_pharma/models/product_model.dart';
 import 'package:micro_pharma/providers/area_provider.dart';
+import 'package:micro_pharma/providers/order_data_provider.dart';
 import 'package:micro_pharma/providers/product_data_provider.dart';
+import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:provider/provider.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -12,6 +16,7 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  late String currentUserId;
   List<AreaModel> areas = [];
   List<OrderSelectedProduct> selectedProducts = [];
   double total = 0.0;
@@ -30,11 +35,23 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   void initState() {
+    currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
     super.initState();
     // Fetch products when the screen initializes
     Provider.of<ProductDataProvider>(context, listen: false)
         .fetchProductsList();
     Provider.of<AreaProvider>(context, listen: false).fetchAreas();
+    Provider.of<UserDataProvider>(context, listen: false)
+        .fetchUserData(currentUserId);
+  }
+
+  @override
+  void dispose() {
+    _bonusController.dispose();
+    _customerNameController.dispose();
+    _discountController.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,8 +59,10 @@ class _OrderScreenState extends State<OrderScreen> {
     final productProvider = Provider.of<ProductDataProvider>(context);
     final List<ProductModel> products = productProvider.productsList;
     areas = Provider.of<AreaProvider>(context).getAreas;
+    final userData =
+        Provider.of<UserDataProvider>(context, listen: false).getUserData;
 
-    double discountedTotal = total - (total * discount / 100);
+    double discountedTotal = total - (total * (discount / 100));
 
     return Scaffold(
       appBar: const MyAppBar(appBartxt: 'Order Screen'),
@@ -162,37 +181,55 @@ class _OrderScreenState extends State<OrderScreen> {
                         child: MyTextwidget(text: 'Add to List'),
                         onPressed: () {
                           setState(() {
+                            // Check if any of the required fields are empty
+                            if (_productQuantityController.text.isEmpty) {
+                              return; // Do nothing if quantity field is empty
+                            }
                             // Calculate the total price of the selected product
                             final OrderSelectedProduct orderSelectedProduct =
                                 OrderSelectedProduct(
-                                    code: selectedProduct!.code,
-                                    packing: selectedProduct!.packing,
-                                    retailPrice: selectedProduct!.retailPrice,
-                                    name: selectedProduct!.name,
-                                    tradePrice: selectedProduct!.tradePrice,
-                                    quantity: int.parse(
-                                        _productQuantityController.text),
-                                    bonus: int.parse(_bonusController.text),
-                                    discount:
-                                        double.parse(_discountController.text));
+                              code: selectedProduct!.code,
+                              packing: selectedProduct!.packing,
+                              retailPrice: selectedProduct!.retailPrice,
+                              name: selectedProduct!.name,
+                              tradePrice: selectedProduct!.tradePrice,
+                              quantity: _productQuantityController.text,
+                              bonus: _bonusController.text.isNotEmpty
+                                  ? _bonusController.text
+                                  : '0',
+                              discount: _discountController.text.isNotEmpty
+                                  ? _discountController.text
+                                  : '0.0',
+                            );
 
                             double totalPrice =
                                 orderSelectedProduct.tradePrice *
-                                    orderSelectedProduct.quantity;
+                                    int.parse(orderSelectedProduct.quantity);
 
                             // Apply the discount to the total price of the selected product
-                            totalPrice -= (totalPrice *
-                                (orderSelectedProduct.discount! / 100));
+                            double discountPercentage = double.tryParse(
+                                    orderSelectedProduct.discount!) ??
+                                0.0;
+                            totalPrice -=
+                                (totalPrice * (discountPercentage / 100));
 
                             // Update the total value
                             total += totalPrice;
 
+                            // Update the total discount
+                            discount =
+                                selectedProducts.fold(0.0, (sum, product) {
+                              double productDiscount =
+                                  double.tryParse(product.discount!) ?? 0.0;
+                              return sum + productDiscount;
+                            });
+
                             selectedProducts.add(orderSelectedProduct);
 
                             // Clear the input fields
-
                             _productQuantityController.clear();
                             _bonusController.clear();
+                            _discountController.clear();
                           });
                         },
                       ),
@@ -205,19 +242,35 @@ class _OrderScreenState extends State<OrderScreen> {
                   itemCount: selectedProducts.length,
                   itemBuilder: (context, index) {
                     final product = selectedProducts[index];
-                    return ListTile(
-                      title: Text(product.name),
-                      subtitle: Text(
-                          'Quantity: ${product.quantity}, Bonus: ${product.bonus}, Discount: ${product.discount}'),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            // Update the total value
-                            total -= (product.tradePrice * product.quantity);
-                            selectedProducts.removeAt(index);
-                          });
-                        },
+                    double totalPrice =
+                        product.tradePrice * int.parse(product.quantity);
+
+                    // Apply the discount to the total price of the selected product
+                    totalPrice -=
+                        (totalPrice * (double.parse(product.discount!) / 100));
+                    return Card(
+                      color: Colors.amber[100],
+                      child: ListTile(
+                        title: Text(product.name),
+                        subtitle: Text(
+                            'Quantity: ${product.quantity}, Bonus: ${product.bonus}, Discount: ${product.discount}% \n Value: $totalPrice'),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            setState(() {
+                              // Update the total value
+                              total -= (product.tradePrice *
+                                  int.parse(product.quantity));
+                              selectedProducts.removeAt(index);
+
+                              // Update the total discount
+                              discount =
+                                  selectedProducts.fold(0.0, (sum, product) {
+                                return sum + double.parse(product.discount!);
+                              });
+                            });
+                          },
+                        ),
                       ),
                     );
                   },
@@ -229,21 +282,48 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
                 const SizedBox(height: 8.0),
                 MyTextwidget(
-                  text: 'Discount: $discount%', // Display the applied discount
-                ),
-                const SizedBox(height: 8.0),
-                MyTextwidget(
                   fontWeight: FontWeight.bold,
                   text:
                       'Sub Total: $discountedTotal', // Display the discounted total
                 ),
-                const SizedBox(height: 16.0),
-                MyButton(text: 'Place Order', onPressed: () {}),
               ],
             ),
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () async {
+            if (_formKey.currentState!.validate()) {
+              _formKey.currentState!.save();
+
+              // Perform any additional logic for placing the order
+
+              OrderModel orderModel = OrderModel(
+                  userName: userData.displayName!,
+                  date: DateTime.now(),
+                  products: selectedProducts,
+                  customerName: _customerNameController.text,
+                  area: selectedArea!.areaName,
+                  total: total,
+                  subTotal: discountedTotal);
+              await Provider.of<OrderDataProvider>(context, listen: false)
+                  .addOrder(orderModel);
+              showCustomDialog(
+                  context: context,
+                  title: 'Order Sent',
+                  content: 'Order Successfully Submitted!');
+
+              // Clear the form fields
+              _formKey.currentState!.reset();
+              setState(() {
+                selectedProducts.clear();
+              });
+            }
+          },
+          label: MyTextwidget(
+            text: 'Place Order',
+          ),
+          icon: const Icon(Icons.shopping_cart_checkout)),
     );
   }
 }

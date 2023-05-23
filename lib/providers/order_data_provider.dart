@@ -18,14 +18,21 @@ class OrderDataProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print(e);
+      throw Exception;
     }
   }
 
   Future<void> addOrder(OrderModel order) async {
-    final docRef = _ordersCollection.doc();
-    final newOrder = order.copyWith(id: docRef.id);
-    await docRef.set(newOrder.toMap());
-    notifyListeners();
+    try {
+      final docRef = _ordersCollection.doc();
+      final newOrder = order.copyWith(id: docRef.id);
+      await docRef.set(newOrder.toMap());
+      notifyListeners();
+    } catch (e, stackTrace) {
+      print('Error in the addOrder method: $e');
+      print(stackTrace);
+      throw Exception('Failed to add order: $e');
+    }
   }
 
   Future<void> updateOrder(OrderModel order) async {

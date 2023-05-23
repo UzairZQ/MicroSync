@@ -7,12 +7,13 @@ class DailyCallReportProvider extends ChangeNotifier {
       FirebaseFirestore.instance.collection('daily_call_reports');
   List<DailyCallReportModel> _reports = [];
 
+
   Future<void> fetchReports() async {
     try {
       final snapshot = await _reportsCollection.get();
       _reports = snapshot.docs
-          .map((doc) =>
-              DailyCallReportModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+          .map((doc) => DailyCallReportModel.fromMap(
+              doc.data() as Map<String, dynamic>, doc.id))
           .toList();
       notifyListeners();
     } catch (e) {
@@ -22,7 +23,8 @@ class DailyCallReportProvider extends ChangeNotifier {
 
   void saveReport(DailyCallReportModel report) async {
     try {
-      final docRef = _reportsCollection.doc(); // generate a new document reference with a unique ID
+      final docRef = _reportsCollection
+          .doc(); // generate a new document reference with a unique ID
       final newReport = report.copyWith(
           reportId: docRef.id); // update the report with the generated ID
       await docRef.set(newReport.toMap()); // add the report to the database

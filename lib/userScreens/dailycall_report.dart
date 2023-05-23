@@ -128,12 +128,11 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
             MyButton(
                 text: 'Submit Report',
                 onPressed: () {
-                  String area = currentDayPlan!.area;
                   final DailyCallReportModel dailyCallReportModel =
                       DailyCallReportModel(
-                          area: area,
+                          area: currentDayPlan!.area,
                           date: currentDayPlan!.date,
-                          doctorVisits: doctorVisitDetailsList);
+                          doctorVisits: doctorVisitDetailsList!);
                   Provider.of<DailyCallReportProvider>(context, listen: false)
                       .saveReport(dailyCallReportModel);
                   showCustomDialog(
@@ -319,10 +318,15 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                                   doctorRemarks: doctorRemarksController.text,
                                 );
                                 doctorVisitDetailsList!.add(doctorVisitDetails);
+                                for (DoctorVisitModel doctorvisits
+                                    in doctorVisitDetailsList!) {
+                                  print(doctorvisits.name);
+                                  print(doctorvisits.doctorRemarks);
+                                  print(doctorvisits.selectedProducts);
+                                }
                                 doctorRemarksController.clear();
                                 selectedProducts =
                                     []; // Clear the original list, not the copied one
-                                doctorVisitDetailsList = [];
                               });
                               Navigator.pop(context);
                             },
