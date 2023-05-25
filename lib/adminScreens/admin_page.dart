@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user_model.dart';
+import './user_call_plans.dart';
 
 class AdminPage extends StatefulWidget {
   static String id = 'admin';
@@ -41,62 +42,90 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     print(currentUser!.email);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return Center(
-                    child: AlertDialog(
-                      title: const Text('Logout'),
-                      content: const Text('Do you really want to Logout?'),
-                      actions: [
-                        TextButton(
-                            onPressed: () async {
-                              Provider.of<UserDataProvider>(context,
-                                      listen: false)
-                                  .logOut();
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: kappbarColor,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        selectedFontSize: 14,
+        unselectedFontSize: 14,
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AdminProfilePage()),
+              );
+              break;
+            case 1:
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Center(
+                      child: AlertDialog(
+                        title: const Text('Logout'),
+                        content: const Text('Do you really want to Logout?'),
+                        actions: [
+                          TextButton(
+                              onPressed: () async {
+                                Provider.of<UserDataProvider>(context,
+                                        listen: false)
+                                    .logOut();
 
-                              FirebaseAuth.instance.signOut();
+                                FirebaseAuth.instance.signOut();
 
-                              var sharedLogin =
-                                  await SharedPreferences.getInstance();
-                              sharedLogin.setBool(
-                                  SplashPageState.loginKey, false);
-                              var sharedUser =
-                                  await SharedPreferences.getInstance();
-                              sharedUser.setBool(
-                                  SplashPageState.userKey, false);
-                              // Provider.of<UserDataProvider>(
-                              //   context,
-                              //   listen: false,
-                              // ).dispose();
+                                var sharedLogin =
+                                    await SharedPreferences.getInstance();
+                                sharedLogin.setBool(
+                                    SplashPageState.loginKey, false);
+                                var sharedUser =
+                                    await SharedPreferences.getInstance();
+                                sharedUser.setBool(
+                                    SplashPageState.userKey, false);
 
-                              Navigator.pushReplacement(
-                                navigatorKey.currentContext!,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginPage(),
-                                ),
-                              );
-                            },
-                            child: const Text('Logout')),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Cancel'))
-                      ],
-                    ),
-                  );
-                });
-          },
-          child: const Icon(Icons.logout_outlined)),
+                                Navigator.pushReplacement(
+                                  navigatorKey.currentContext!,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginPage(),
+                                  ),
+                                );
+                              },
+                              child: const Text('Logout')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Cancel'))
+                        ],
+                      ),
+                    );
+                  });
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            label: 'My Profile',
+            icon: Icon(
+              Icons.person_outlined,
+              size: 30,
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Logout',
+            icon: Icon(
+              Icons.logout_outlined,
+              size: 30,
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               Container(
-                height: 230.0,
+                height: 230,
                 decoration: const BoxDecoration(
                   shape: BoxShape.rectangle,
                   color: Color(0xFF1FB7CC),
@@ -177,7 +206,9 @@ class _AdminPageState extends State<AdminPage> {
                 container2Clr: const Color(0xffFFE974),
                 container2Icon: Icons.assignment_turned_in_outlined,
                 container2Text: 'Call Plans',
-                container2Tap: () {},
+                container2Tap: () {
+                  Navigator.pushNamed(context, CallPlansForAdmin.id);
+                },
               ),
               const SizedBox(
                 height: 30.0,
@@ -198,16 +229,6 @@ class _AdminPageState extends State<AdminPage> {
                 },
                 container2Tap: () {
                   Navigator.pushNamed(context, 'add_employees');
-                },
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              MyButton(
-                color: kappbarColor,
-                text: 'Settings',
-                onPressed: () {
-                  Navigator.pushNamed(context, AdminProfilePage.id);
                 },
               ),
             ],

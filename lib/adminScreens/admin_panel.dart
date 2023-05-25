@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:micro_pharma/adminScreens/products_page.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/adminScreens/doctors_page.dart';
 import 'areas_page.dart';
-import 'product.dart';
 
 class AdminPanel extends StatelessWidget {
   static String id = 'doctors_areas';
@@ -30,21 +30,19 @@ class AdminPanel extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: ((context) =>  DoctorsPage())));
+                            builder: ((context) => DoctorsPage())));
                   },
                   container2Tap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) =>  Areas())));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: ((context) => const Areas())));
                   },
                 ),
                 const SizedBox(
                   height: 20.0,
                 ),
                 ContainerRow(
-                  container1Clr: kappbarColor,
-                  container2Clr: kappbarColor,
+                  container1Clr: const Color.fromARGB(255, 114, 191, 254),
+                  container2Clr: const Color.fromARGB(255, 114, 191, 254),
                   container1Icon: Icons.production_quantity_limits_outlined,
                   container2Icon: Icons.abc,
                   container1Text: 'Products',
@@ -53,7 +51,7 @@ class AdminPanel extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: ((context) => ProductCatalogPage())));
+                            builder: ((context) => const ProductListScreen())));
                   },
                   container2Tap: () {},
                 ),

@@ -1,13 +1,11 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/adminScreens/add_employees.dart';
 
 import 'package:micro_pharma/components/constants.dart';
 
 import '../services/auth_service.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

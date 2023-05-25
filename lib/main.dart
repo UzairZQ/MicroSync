@@ -9,16 +9,22 @@ import 'package:micro_pharma/adminScreens/add_employees.dart';
 import 'package:micro_pharma/adminScreens/admin_page.dart';
 import 'package:micro_pharma/adminScreens/admin_panel.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
+import 'package:micro_pharma/adminScreens/user_call_plans.dart';
+import 'package:micro_pharma/providers/area_provider.dart';
+import 'package:micro_pharma/providers/day_plans_provider.dart';
+import 'package:micro_pharma/providers/doctor_provider.dart';
+import 'package:micro_pharma/providers/product_data_provider.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 
 import 'package:micro_pharma/userScreens/dailycall_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
-import 'package:micro_pharma/userScreens/day_plan.dart';
+import 'package:micro_pharma/userScreens/day_plans.dart';
 
 import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'components/constants.dart';
 import 'userScreens/login_page.dart';
 import 'userScreens/home_page.dart';
 import 'package:micro_pharma/adminScreens/admin_settings.dart';
@@ -51,7 +57,14 @@ Future<void> main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<UserDataProvider>(
-          create: (_) => UserDataProvider())
+        create: (_) => UserDataProvider(),
+      ),
+      ChangeNotifierProvider<AreaProvider>(create: (_) => AreaProvider()),
+      ChangeNotifierProvider<DoctorDataProvider>(
+          create: (_) => DoctorDataProvider()),
+      ChangeNotifierProvider<ProductDataProvider>(
+          create: (_) => ProductDataProvider()),
+      ChangeNotifierProvider<DayPlanProvider>(create: (_) => DayPlanProvider()),
     ],
     child: const MicroPharma(),
   ));
@@ -69,9 +82,10 @@ class MicroPharma extends StatelessWidget {
         'home': (context) => const HomePage(),
         'user_dashboard': (context) => const Dashboard(),
         'admin': (context) => const AdminPage(),
-        'dayplan': (context) => const DayPlan(),
+        'day_plans': (context) => DayPlansScreen(),
+        'call_plans': (context) => CallPlansForAdmin(),
         'addproduct': (context) => const AddProduct(),
-       // 'callplanner': (context) => WeeklyCallPlanner(),
+        'call_planner': (context) => const CallPlanner(),
         'addoctor': (context) => const AdminPanel(),
         'dailycallreport': (context) => DailyCallReports(),
         'user_profile': (context) => const UserProfilePage(),
@@ -79,7 +93,6 @@ class MicroPharma extends StatelessWidget {
         // 'map_page': (context) => GoogleMapPage(),
         'location_screen': (context) => const LocationScreen(),
         'add_employees': (context) => const AddEmployees(),
-        // 'doctors_areas_page': (context) => const DoctorsAreas(),
         'doctors_areas': (context) => const AdminPanel(),
       },
       // home: const DoctorsAreas(),
