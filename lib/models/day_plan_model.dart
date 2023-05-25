@@ -14,7 +14,7 @@ class DayPlanModel {
     required this.area,
     required this.doctors,
   });
-
+//$$$
   factory DayPlanModel.fromMap(Map<String, dynamic> map, String id) {
     final List<dynamic> doctorsList = map['doctors'];
     final List<String> doctors = List<String>.from(doctorsList);
