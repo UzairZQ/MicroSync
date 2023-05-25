@@ -1,6 +1,6 @@
 class DayPlanModel {
   final String userName;
-  final String? shift;
+  final String shift;
   final String? dayPlanId;
   final DateTime date;
   final String area;

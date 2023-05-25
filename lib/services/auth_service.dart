@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../adminScreens/admin_page.dart';
 import '../components/constants.dart';
-import '../main.dart';
+import '../splash_page.dart';
 import '../userScreens/home_page.dart';
 
 class AuthService {

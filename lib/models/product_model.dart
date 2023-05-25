@@ -1,3 +1,47 @@
+class OrderSelectedProduct extends ProductModel {
+  String quantity;
+  String? bonus;
+  String? discount;
+
+  OrderSelectedProduct(
+      {required String name,
+      required double tradePrice,
+      double? retailPrice,
+      dynamic packing,
+      required this.quantity,
+      this.bonus,
+      this.discount,
+      int? code})
+      : super(
+            name: name,
+            tradePrice: tradePrice,
+            code: code!,
+            packing: packing,
+            retailPrice: retailPrice!);
+
+  factory OrderSelectedProduct.fromMap(Map<String, dynamic> json) {
+    return OrderSelectedProduct(
+      code: json['code'] as int,
+      name: json['name'] as String,
+      retailPrice: json['mrp'] as double,
+      tradePrice: json['trp'] as double,
+      packing: json['packing'] as dynamic,
+      quantity: json['quantity'] as String,
+      bonus: json['bonus'] as String?,
+      discount: json['discount'] as String?,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = super.toMap();
+    data['quantity'] = quantity;
+    data['bonus'] = bonus;
+    data['discount'] = discount;
+    return data;
+  }
+}
+
 class ProductModel {
   final int code;
   final String name;

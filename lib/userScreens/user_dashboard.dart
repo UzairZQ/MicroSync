@@ -157,7 +157,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-              const MyTextwidget(fontSize: 17.5, text: 'Visit/Missed Details'),
+               MyTextwidget(fontSize: 17.5, text: 'Visit/Missed Details'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -171,7 +171,7 @@ class _DashboardState extends State<Dashboard> {
                       color: const Color(0xff89B7FD),
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    child: const Center(
+                    child:  Center(
                         child: MyTextwidget(
                       fontSize: 17.5,
                       text: '14 Visited Doctors',
@@ -184,7 +184,7 @@ class _DashboardState extends State<Dashboard> {
                         horizontal: 30.0, vertical: 10.0),
                     height: 72.0,
                     width: 144.0,
-                    child: const Center(
+                    child:  Center(
                       child: MyTextwidget(
                         text: '20 missed doctors',
                         fontSize: 17.5,
