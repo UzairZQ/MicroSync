@@ -9,12 +9,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geolocator_android/geolocator_android.dart';
 
 class LocationServices extends ChangeNotifier {
-  Future<void> listenLocation(String uid) async {}
-
   Future requestPermission() async {
     var status = await Permission.location.request();
     if (status.isGranted) {
-     
+      var status2 = await Permission.locationAlways.status;
+      if (!status2.isGranted) {
+        status2 = await Permission.locationAlways.request();
+      } else {
+        return; // Both permissions are already granted, no further action needed
+      }
     } else if (status.isDenied) {
       requestPermission();
     } else if (status.isPermanentlyDenied) {
@@ -37,7 +40,7 @@ class LocationServices extends ChangeNotifier {
         String time = dateTime();
         GeolocatorAndroid.registerWith();
         await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
+          desiredAccuracy: LocationAccuracy.best,
           forceAndroidLocationManager: true,
         ).then((position) async {
           await FirebaseFirestore.instance.collection('users').doc(uid).set({
@@ -45,12 +48,11 @@ class LocationServices extends ChangeNotifier {
             'longitude': position.longitude,
             'update': time,
           }, SetOptions(merge: true));
+          print('fetched the locaitn and added to database');
         });
       }
     } catch (e) {
-    print(e);
+      print(e);
     }
   }
-
-  
 }
