@@ -1,13 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:micro_pharma/models/day_plan_model.dart';
+import 'package:theme_provider/theme_provider.dart';
 import 'package:micro_pharma/adminScreens/doctors_page.dart';
 import 'package:micro_pharma/components/container_Row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
-import 'package:micro_pharma/userScreens/product_order.dart';
+import 'package:micro_pharma/userScreens/order_page.dart';
+import '../providers/day_plans_provider.dart';
+import '../splash_page.dart';
 import 'call_planner.dart';
 import 'dailycall_report.dart';
 import 'package:micro_pharma/userScreens/user_dashboard.dart';
@@ -16,7 +19,6 @@ import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:micro_pharma/userScreens/user_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../main.dart';
 import 'package:workmanager/workmanager.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,6 +31,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final currentUser = FirebaseAuth.instance.currentUser;
+  DayPlanModel? currentDayPlan;
 
   @override
   void initState() {
@@ -38,6 +41,9 @@ class _HomePageState extends State<HomePage> {
     Provider.of<UserDataProvider>(context, listen: false).logIn();
     Provider.of<UserDataProvider>(context, listen: false)
         .fetchUserData(currentUser!.uid);
+    Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
+    currentDayPlan = Provider.of<DayPlanProvider>(context, listen: false)
+        .getCurrentDayPlan();
   }
 
   void userLocation() async {
@@ -78,13 +84,17 @@ class _HomePageState extends State<HomePage> {
         onTap: (int index) {
           switch (index) {
             case 0:
+              ThemeProvider.controllerOf(context).nextTheme();
+
+              break;
+            case 1:
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const UserProfilePage()),
               );
               break;
-            case 1:
+            case 2:
               showDialog(
                   context: context,
                   builder: (context) {
@@ -132,6 +142,13 @@ class _HomePageState extends State<HomePage> {
           }
         },
         items: const [
+          BottomNavigationBarItem(
+            label: 'Change Theme',
+            icon: Icon(
+              Icons.color_lens,
+              size: 30,
+            ),
+          ),
           BottomNavigationBarItem(
             label: 'My Profile',
             icon: Icon(
@@ -189,15 +206,15 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 17.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(
+                      children: [
+                        const Icon(
                           Icons.calendar_month,
                           color: Colors.white,
                         ),
-                        Flexible(
+                        Expanded(
                           child: Text(
-                            'Today\'s Scheduled Plan: Abbottabad to Mansehra',
-                            style: TextStyle(
+                            'Today\'s Scheduled Plan: Abbottabad to ${currentDayPlan?.area}',
+                            style: const TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold,
@@ -212,36 +229,20 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(
+                      children: [
+                        const Icon(
                           Icons.medication_rounded,
                           color: Colors.white,
                         ),
                         Text(
-                          'Doctors: 8',
-                          style: TextStyle(
+                          'Doctors: ${currentDayPlan?.doctors.length}',
+                          style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 17.0,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(
-                          width: 20.0,
-                        ),
-                        Icon(
-                          Icons.medical_services_rounded,
-                          color: Colors.white,
-                        ),
-                        Text(
-                          'Chemists:5',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 17.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        )
                       ],
                     ),
                     const SizedBox(height: 25.0),
@@ -256,7 +257,9 @@ class _HomePageState extends State<HomePage> {
                           width: 15.0,
                         ),
                         MyButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, DayPlansScreen.id);
+                            },
                             color: const Color.fromARGB(255, 171, 75, 95),
                             text: 'Change Plan'),
                       ],
@@ -295,7 +298,7 @@ class _HomePageState extends State<HomePage> {
                 container2Tap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: ((context) => DailyCallReports()))),
+                        builder: ((context) => const DailyCallReportScreen()))),
               ),
               const SizedBox(
                 height: 30.0,
@@ -306,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                 container1Text: 'Doctors',
                 container2Clr: Colors.orange.shade200,
                 container2Icon: Icons.add_shopping_cart_outlined,
-                container2Text: 'Orders',
+                container2Text: 'Send Orders',
                 container1Tap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -316,7 +319,7 @@ class _HomePageState extends State<HomePage> {
                 container2Tap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: ((context) => const ProductOrder()),
+                    builder: ((context) => OrderScreen()),
                   ),
                 ),
               ),

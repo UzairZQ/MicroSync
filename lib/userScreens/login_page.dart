@@ -1,11 +1,9 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:micro_pharma/components/constants.dart';
 
 import '../services/auth_service.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -141,17 +139,17 @@ class _LoginPageState extends State<LoginPage> {
                           body: Padding(
                             padding: const EdgeInsets.all(10),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'Change Password',
+                                  'Change Password For Your Account :',
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 18.0),
                                 ),
                                 const SizedBox(
-                                  height: 10.0,
+                                  height: 15.0,
                                 ),
                                 MyTextFormField(
                                     hintext: 'Please Enter your Email',

@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/area_model.dart';
 import 'package:micro_pharma/models/day_plan_model.dart';
@@ -27,7 +25,7 @@ class _CallPlannerState extends State<CallPlanner> {
 
   AreaModel? _selectedArea;
 
-  Set<String> _selectedDoctors = {};
+  List<String> _selectedDoctors = [];
 
   bool _isDayPlanEnabled = false;
   String _selectedShift = 'Morning';
@@ -36,7 +34,6 @@ class _CallPlannerState extends State<CallPlanner> {
 
   @override
   void initState() {
-    print(DateTime.now());
     final user = FirebaseAuth.instance.currentUser;
     Provider.of<AreaProvider>(context, listen: false).fetchAreas();
     Provider.of<DoctorDataProvider>(context, listen: false).fetchDoctors();
@@ -48,6 +45,7 @@ class _CallPlannerState extends State<CallPlanner> {
 
   void _onDateSelected(DateTime date, DateTime day) {
     setState(() {
+      // Extract only the date part of the selected date
       _selectedDate = date;
     });
   }
@@ -55,7 +53,7 @@ class _CallPlannerState extends State<CallPlanner> {
   void _clearDayPlanSelection() {
     setState(() {
       _selectedArea = null;
-      _selectedDoctors = {};
+      _selectedDoctors = [];
       _doctorController.clear();
       _isDayPlanEnabled = false;
     });
@@ -181,7 +179,7 @@ class _CallPlannerState extends State<CallPlanner> {
                                     doctor.area == _selectedArea!.areaName)
                                 .toList()
                             : doctors;
-                        final selectedDoctors = await showDialog<Set<String>>(
+                        final selectedDoctors = await showDialog<List<String>>(
                           context: context,
                           builder: (_) {
                             final allDoctors = filteredDoctors

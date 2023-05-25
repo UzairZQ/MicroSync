@@ -64,12 +64,12 @@ final formKey = GlobalKey<FormState>();
 TextStyle ktextstyle = const TextStyle(
     fontFamily: 'Poppins,', fontSize: 17.5, fontWeight: FontWeight.w400);
 
-class MyTextwidget extends StatelessWidget {
-  const MyTextwidget(
-      {super.key, this.fontWeight, required this.fontSize, required this.text});
+class MyTextwidget extends StatelessWidget  {
+   MyTextwidget(
+      {super.key, this.fontWeight,  this.fontSize, required this.text});
 
   final FontWeight? fontWeight;
-  final double fontSize;
+  double? fontSize = 14.0;
   final String text;
 
   @override

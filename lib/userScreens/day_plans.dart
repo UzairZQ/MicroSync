@@ -4,11 +4,12 @@ import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:provider/provider.dart';
 
 import '../components/constants.dart';
-import '../models/day_plan_model.dart';
 import '../providers/day_plans_provider.dart';
 
 class DayPlansScreen extends StatefulWidget {
   static const String id = 'day_plans';
+
+  const DayPlansScreen({super.key});
 
   @override
   _DayPlansScreenState createState() => _DayPlansScreenState();
@@ -22,7 +23,6 @@ class _DayPlansScreenState extends State<DayPlansScreen> {
   }
 
   Future<void> _refreshDayPlans(BuildContext context) async {
-    // Fetch the products list again
     await Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
   }
 
@@ -35,7 +35,7 @@ class _DayPlansScreenState extends State<DayPlansScreen> {
             onPressed: () {
               Navigator.pushNamed(context, CallPlanner.id);
             },
-            label: const MyTextwidget(
+            label:  MyTextwidget(
               text: 'Add New Call Plan',
               fontSize: 14,
             )),
@@ -48,10 +48,9 @@ class _DayPlansScreenState extends State<DayPlansScreen> {
             itemCount: dayPlans.length,
             itemBuilder: (context, index) {
               final dayPlan = dayPlans[index];
-
               String dayPlanTime() {
                 DateFormat dateFormat =
-                    DateFormat('dd/MM/yyyy'); // create date format
+                    DateFormat('EEEE dd/MM/yyyy'); // create date format
                 String formattedDate =
                     dateFormat.format(dayPlan.date); // format current date
                 return formattedDate;
