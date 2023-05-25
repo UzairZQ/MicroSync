@@ -17,8 +17,8 @@ class ProductModel {
     return ProductModel(
       code: json['code'],
       name: json['name'],
-      retailPrice: json['retailPrice'].toDouble(),
-      tradePrice: json['tradePrice'].toDouble(),
+      retailPrice: json['mrp'].toDouble(),
+      tradePrice: json['trp'].toDouble(),
       packing: json['packing'],
     );
   }
@@ -27,8 +27,8 @@ class ProductModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['code'] = code;
     data['name'] = name;
-    data['retailPrice'] = retailPrice;
-    data['tradePrice'] = tradePrice;
+    data['mrp'] = retailPrice;
+    data['trp'] = tradePrice;
     data['packing'] = packing;
     return data;
   }

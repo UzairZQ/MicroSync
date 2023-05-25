@@ -31,7 +31,7 @@ class MyContainer extends StatelessWidget {
             ),
           ],
           color: containerclr,
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(25.0),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

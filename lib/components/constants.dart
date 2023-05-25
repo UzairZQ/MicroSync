@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 Color kappbarColor = const Color(0xff1FB7CC);
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 // ignore: must_be_immutable
 class MyButton extends StatelessWidget {
   MyButton(
@@ -58,17 +60,17 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 final formKey = GlobalKey<FormState>();
 
-
 //I have added a comment
 TextStyle ktextstyle = const TextStyle(
     fontFamily: 'Poppins,', fontSize: 17.5, fontWeight: FontWeight.w400);
 
-class myTextwidget extends StatelessWidget {
-  myTextwidget({super.key, this.fontWeight, required this.fontSize, required this.text});
+class MyTextwidget extends StatelessWidget {
+  const MyTextwidget(
+      {super.key, this.fontWeight, required this.fontSize, required this.text});
 
-  FontWeight? fontWeight;
-  double fontSize;
-  String text;
+  final FontWeight? fontWeight;
+  final double fontSize;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -105,8 +107,8 @@ String? validatePassword(String? password) {
 
 Future<void> showCustomDialog({
   required BuildContext context,
-  required Widget title,
-  required Widget content,
+  required String title,
+  required String content,
   List<Widget>? actions,
 }) async {
   return showDialog<void>(
@@ -114,9 +116,16 @@ Future<void> showCustomDialog({
     barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: title,
+        title: MyTextwidget(
+          text: title,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
         content: SingleChildScrollView(
-          child: content,
+          child: MyTextwidget(
+            text: content,
+            fontSize: 14,
+          ),
         ),
         actions: actions ??
             <Widget>[
@@ -130,4 +139,37 @@ Future<void> showCustomDialog({
       );
     },
   );
+}
+
+class MyTextFormField extends StatelessWidget {
+  const MyTextFormField(
+      {super.key,
+      required this.hintext,
+      this.onSaved,
+      this.validator,
+      this.controller});
+
+  final String? hintext;
+  final Function(String?)? onSaved;
+  final String? Function(String?)? validator;
+  final TextEditingController? controller;
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      onSaved: onSaved,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.blue[50],
+        hintText: '$hintext',
+        hintStyle: const TextStyle(fontFamily: 'Poppins'),
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.0),
+          ),
+        ),
+      ),
+    );
+  }
 }

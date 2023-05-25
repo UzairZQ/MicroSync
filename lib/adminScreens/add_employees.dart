@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:micro_pharma/components/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import 'package:micro_pharma/components/constants.dart';
 
 import '../services/database_service.dart';
 
@@ -24,84 +25,6 @@ class _AddEmployeesState extends State<AddEmployees> {
     roleController.dispose();
     phoneController.dispose();
     confpasController.dispose();
-  }
-
-  Future createUser(String email, String password) async {
-    try {
-      showDialog(
-          context: context,
-          builder: ((context) {
-            return Builder(builder: (context) {
-              return const Center(child: CircularProgressIndicator());
-            });
-          }));
-
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((UserCredential userCredential) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .set({
-          'displayName': nameController.text,
-          'email': emailController.text,
-          'longitude': 43,
-          'latitude': 73,
-          'role': roleController.text,
-          'uid': userCredential.user!.uid,
-          'phone': phoneController.text
-        });
-        Navigator.pop(context);
-        userCreatedDialog();
-      });
-      nameController.clear();
-      emailController.clear();
-      passwordController.clear();
-      roleController.clear();
-      phoneController.clear();
-      confpasController.clear();
-    } on FirebaseAuthException catch (e) {
-      showDialog(
-          context: context,
-          builder: ((context) {
-            return Builder(builder: (context) {
-              return Center(
-                  child: AlertDialog(
-                title: const Text('Error'),
-                content: Text(
-                    'User creation was unsuccessfull, Please try again:::$e'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('OK'))
-                ],
-              ));
-            });
-          }));
-    }
-  }
-
-  Future<dynamic> userCreatedDialog() {
-    return showDialog(
-        context: context,
-        builder: ((context) {
-          return Builder(builder: (context) {
-            return Center(
-                child: AlertDialog(
-              title: const Text('Success'),
-              content: const Text('New User Created Successfully!'),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('OK'))
-              ],
-            ));
-          });
-        }));
   }
 
   TextEditingController nameController = TextEditingController();
@@ -237,8 +160,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState!.save();
-                            createUser(
-                                emailController.text, passwordController.text);
+                            createUser();
                           }
                         }),
                     MyButton(
@@ -258,121 +180,113 @@ class _AddEmployeesState extends State<AddEmployees> {
     );
   }
 
-  Future<dynamic> deleteUserBottomSheet(BuildContext context,
+  Future<void> deleteUserBottomSheet(BuildContext context,
       FirebaseFirestore firebaseFirestore, FirebaseAuth firebaseAuth) {
     return showModalBottomSheet(
+        isDismissible: true,
+        isScrollControlled: true,
+        enableDrag: true,
         context: context,
+        useSafeArea: true,
         builder: (context) {
-          return Column(
-            children: [
-              Text(
-                'Registered Users',
-                style: ktextstyle,
-              ),
-              StreamBuilder(
-                  stream: DataBaseService().streamUser(),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    return ListView.builder(
-                        itemCount: snapshot.data?.docs.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 5,
-                            color: Colors.grey[290],
-                            child: ListTile(
-                              title: Text(
-                                snapshot.data!.docs[index]['displayName']
-                                    .toString(),
-                                style: const TextStyle(fontFamily: 'Poppins'),
-                              ),
-                              subtitle: Row(
-                                children: [
-                                  Text(snapshot.data.docs[index]['role'])
-                                ],
-                              ),
-                              trailing: IconButton(
-                                icon: const Icon(
-                                  Icons.delete_forever,
-                                  color: Colors.red,
+          return SafeArea(
+            child: StreamBuilder(
+                stream: DatabaseService.streamUser(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return Column(
+                    children: [
+                      const MyTextwidget(
+                        fontSize: 20,
+                        text: 'Registered Users',
+                        fontWeight: FontWeight.bold,
+                      ),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data?.docs.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              elevation: 5,
+                              color: Colors.grey[290],
+                              child: ListTile(
+                                title: Text(
+                                  snapshot.data!.docs[index]['displayName']
+                                      .toString(),
+                                  style: ktextstyle,
                                 ),
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: ((context) {
-                                        return Builder(builder: (context) {
-                                          return Center(
-                                              child: AlertDialog(
-                                            title: const Text('Delete'),
-                                            content: const Text(
-                                                'The following User will be permanently deleted!'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  firebaseFirestore
-                                                      .collection('users')
-                                                      .doc(snapshot.data
-                                                          .docs[index]['uid'])
-                                                      .delete();
-
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('Delete',
-                                                    style: TextStyle(
-                                                        color: Colors.red)),
-                                              ),
-                                              TextButton(
+                                subtitle: Row(
+                                  children: [
+                                    Text(
+                                      snapshot.data.docs[index]['role'],
+                                    )
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                  icon: const Icon(
+                                    Icons.delete_forever,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: ((context) {
+                                          return Builder(builder: (context) {
+                                            return Center(
+                                                child: AlertDialog(
+                                              title: const Text('Delete'),
+                                              content: const Text(
+                                                  'The following User will be permanently deleted!'),
+                                              actions: [
+                                                TextButton(
                                                   onPressed: () {
+                                                    firebaseFirestore
+                                                        .collection('users')
+                                                        .doc(snapshot.data
+                                                            .docs[index]['uid'])
+                                                        .delete();
+
                                                     Navigator.pop(context);
                                                   },
-                                                  child: const Text('Cancel')),
-                                            ],
-                                          ));
-                                        });
-                                      }));
-                                },
+                                                  child: const Text('Delete',
+                                                      style: TextStyle(
+                                                          color: Colors.red)),
+                                                ),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child:
+                                                        const Text('Cancel')),
+                                              ],
+                                            ));
+                                          });
+                                        }));
+                                  },
+                                ),
                               ),
-                            ),
-                          );
-                        });
-                  }),
-            ],
+                            );
+                          }),
+                    ],
+                  );
+                }),
           );
         });
   }
-}
 
-// ignore: must_be_immutable
-class MyTextFormField extends StatelessWidget {
-  MyTextFormField(
-      {super.key,
-      required this.hintext,
-      this.onSaved,
-      this.validator,
-      this.controller});
-
-  String? hintext;
-  Function(String?)? onSaved;
-  String? Function(String?)? validator;
-  TextEditingController? controller;
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      validator: validator,
-      onSaved: onSaved,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.blue[50],
-        hintText: '$hintext',
-        hintStyle: const TextStyle(fontFamily: 'Poppins'),
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10.0),
-          ),
-        ),
-      ),
-    );
+  void createUser() async {
+    await DatabaseService.createUser(
+        emailController.text,
+        passwordController.text,
+        nameController.text,
+        roleController.text,
+        phoneController.text);
+    nameController.clear();
+    emailController.clear();
+    passwordController.clear();
+    confpasController.clear();
+    roleController.clear();
+    phoneController.clear();
   }
 }

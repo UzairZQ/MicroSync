@@ -14,7 +14,6 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   @override
   void dispose() {
-   
     super.dispose();
   }
 
@@ -23,7 +22,7 @@ class _LocationScreenState extends State<LocationScreen> {
     return Scaffold(
       appBar: const MyAppBar(appBartxt: 'Location'),
       body: StreamBuilder(
-          stream: DataBaseService().streamUser(),
+          stream: DatabaseService.streamUser(),
           builder: (context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
@@ -32,35 +31,29 @@ class _LocationScreenState extends State<LocationScreen> {
                 itemCount: snapshot.data?.docs.length,
                 itemBuilder: (context, index) {
                   return Card(
-                    elevation: 5,
-                    color: Colors.grey[290],
+                    elevation: 3,
+                    color: Colors.blue[100],
                     child: ListTile(
-                      title: Text(
-                          snapshot.data!.docs[index]['displayName'].toString()),
+                      title: MyTextwidget(
+                        text: snapshot.data!.docs[index]['displayName']
+                            .toString(),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
                       subtitle: Row(
                         children: [
-                          Text(
-                              'Location Updated at: ${snapshot.data!.docs[index]['update']}'
-                                  ),
-                          // Text(snapshot.data!.docs[index]['latitude']
-                          //     .toString()),
-                          // const SizedBox(
-                          //   width: 20,
-                          // ),
-                          // Text(snapshot.data!.docs[index]['longitude']
-                          //     .toString()),
-                          // TextButton(
-                          //   onPressed: () async {
-
-                          //     await LocationServices().getLocation(
-                          //         snapshot.data!.docs[index]['uid']);
-                          //   },
-                          //   child: Text('Refresh Location'),
-                          // ),
+                          MyTextwidget(
+                              fontSize: 15,
+                              text:
+                                  'Location Updated at: ${snapshot.data!.docs[index]['update']}'),
                         ],
                       ),
                       trailing: IconButton(
-                        icon: const Icon(Icons.directions),
+                        color: Colors.red,
+                        icon: const Icon(
+                          Icons.location_pin,
+                          size: 30,
+                        ),
                         onPressed: () {
                           setState(() {});
                           Navigator.of(context).push(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:micro_pharma/providers/product_data_provider.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
@@ -9,23 +10,29 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddProduct> {
-  final _formKey = GlobalKey<FormState>();
   final _productController = TextEditingController();
   final _codeController = TextEditingController();
   final _tradePriceController = TextEditingController();
   final _retailPriceController = TextEditingController();
+  final _packingController = TextEditingController();
 
-  void _submitProduct() {
-    if (_formKey.currentState!.validate()) {
-      final productName = _productController.text;
+  void _submitProduct() async {
+    final tradePrice = double.parse(_tradePriceController.text);
+    final retailPrice = double.parse(_retailPriceController.text);
+    final code = int.parse(_codeController.text);
 
-      final retailPrice = double.parse(_retailPriceController.text);
-      final tradePrice = double.parse(_tradePriceController.text);
-
-      _formKey.currentState;
-
-      // TODO: add product to database
-    }
+    await ProductDataProvider.addProduct(
+      name: _productController.text,
+      code: code,
+      trp: tradePrice,
+      mrp: retailPrice,
+      packing: _packingController.text,
+    );
+    _codeController.clear();
+    _productController.clear();
+    _packingController.clear();
+    _retailPriceController.clear();
+    _tradePriceController.clear();
   }
 
   void _updateTradePrice(String value) {
@@ -44,6 +51,7 @@ class _AddProductState extends State<AddProduct> {
     _codeController.dispose();
     _retailPriceController.dispose();
     _tradePriceController.dispose();
+    _packingController.dispose();
 
     super.dispose();
   }
@@ -57,7 +65,7 @@ class _AddProductState extends State<AddProduct> {
         ),
         body: SafeArea(
           child: Form(
-            key: _formKey,
+            key: formKey,
             child: ListView(
               padding: const EdgeInsets.all(15),
               children: [
@@ -86,9 +94,8 @@ class _AddProductState extends State<AddProduct> {
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: _codeController,
+                  controller: _packingController,
                   decoration: const InputDecoration(labelText: ' Packing'),
-                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter packing ';
