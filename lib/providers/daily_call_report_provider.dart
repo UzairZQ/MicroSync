@@ -7,6 +7,8 @@ class DailyCallReportProvider extends ChangeNotifier {
       FirebaseFirestore.instance.collection('daily_call_reports');
   List<DailyCallReportModel> _reports = [];
 
+//flutter install  --debug --profile --apk build/app/outputs/flutter-apk/app-x86_64-release.apk
+
 
   Future<void> fetchReports() async {
     try {

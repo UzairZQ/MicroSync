@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    userLocation();
+    showPrivacyConsentDialog();
     getBackgroundLocation();
     Provider.of<UserDataProvider>(context, listen: false).logIn();
     Provider.of<UserDataProvider>(context, listen: false)
@@ -46,8 +46,40 @@ class _HomePageState extends State<HomePage> {
         .getCurrentDayPlan();
   }
 
+  Future<void> showPrivacyConsentDialog() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasShownConsent = prefs.getBool('hasShownConsent') ?? false;
+
+    if (!hasShownConsent) {
+      await showDialog(
+        context: navigatorKey.currentContext!,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: MyTextwidget(text: 'Privacy Consent'),
+            content: MyTextwidget(
+              text:
+                  'By using this app, you consent to the collection and use of your location data for the purpose of sales force automation and tracking your work activities in the field. Your location data will be securely stored and used in accordance with our privacy policy.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  prefs.setBool('hasShownConsent', true);
+                  Navigator.of(context).pop();
+                  userLocation();
+                },
+                child: Text('I Agree'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      userLocation();
+    }
+  }
+
   void userLocation() async {
-    await LocationServices().requestPermission();
+    LocationServices().requestPermission();
     await LocationServices().getLocation(currentUser!.uid);
     SharedPreferences userId = await SharedPreferences.getInstance();
     userId.setString('userId', currentUser!.uid.toString());
