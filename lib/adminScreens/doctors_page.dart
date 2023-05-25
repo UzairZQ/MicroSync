@@ -126,7 +126,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                       return null;
                                     },
                                     onSaved: (address) {
-                                      addressController.text = address!;
+                                      doctorNameController.text = address!;
                                     },
                                     decoration: const InputDecoration(
                                       hintText: 'Enter Address',
@@ -158,7 +158,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                       return null;
                                     },
                                     onSaved: (category) {
-                                      specializationController.text = category!;
+                                      doctorNameController.text = category!;
                                     },
                                     decoration: const InputDecoration(
                                       hintText: 'Select Category',

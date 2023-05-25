@@ -86,63 +86,76 @@ class _CallPlannerState extends State<CallPlanner> {
             Row(
               children: [
                 Expanded(
-                    child: Form(
-                  key: formKey,
-                  child: DropdownButtonFormField<String?>(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please Select Area';
-                      }
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      hintText: 'Select Area',
-                      border: OutlineInputBorder(),
+                  flex: 1,
+                  child: Form(
+                    key: formKey,
+                    child: DropdownButtonFormField<String?>(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please Select Area';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Select Area',
+                        border: OutlineInputBorder(),
+                      ),
+                      value: _selectedArea?.areaName,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedArea = areaList.firstWhere(
+                            (area) => area.areaName == value,
+                          );
+                        });
+                      },
+                      items: areaList
+                          .map(
+                            (area) => DropdownMenuItem(
+                              value: area.areaName,
+                              child: Text(area.areaName),
+                            ),
+                          )
+                          .toList(),
                     ),
-                    value: _selectedArea?.areaName,
-                    onChanged: (value) {
+                  ),
+                ),
+                // SizedBox(
+                //   width: ,
+                // ),
+                Expanded(
+                  flex: 1,
+                  child: DropdownButton<String>(
+                    value: _selectedShift,
+                    hint: const Text('Select Shift'),
+                    items: <String>['Morning', 'Evening'].map((String shift) {
+                      return DropdownMenuItem<String>(
+                        value: shift,
+                        child: Text(shift),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
                       setState(() {
-                        _selectedArea = areaList.firstWhere(
-                          (area) => area.areaName == value,
-                        );
+                        _selectedShift = value!;
                       });
                     },
-                    items: areaList
-                        .map(
-                          (area) => DropdownMenuItem(
-                            value: area.areaName,
-                            child: Text(area.areaName),
-                          ),
-                        )
-                        .toList(),
                   ),
-                )),
-                const SizedBox(width: 8),
-                DropdownButton<String>(
-                  value: _selectedShift,
-                  hint: const Text('Select Shift'),
-                  items: <String>['Morning', 'Evening'].map((String shift) {
-                    return DropdownMenuItem<String>(
-                      value: shift,
-                      child: Text(shift),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _selectedShift = value!;
-                    });
-                  },
                 ),
-                Checkbox(
-                  value: _isDayPlanEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _isDayPlanEnabled = value ?? false;
-                    });
-                  },
+                Expanded(
+                  flex: 1,
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: _isDayPlanEnabled,
+                        onChanged: (value) {
+                          setState(() {
+                            _isDayPlanEnabled = value ?? false;
+                          });
+                        },
+                      ),
+                      const Text('Add Day Plan'),
+                    ],
+                  ),
                 ),
-                const SizedBox(width: 8),
-                const Text('Add Day Plan'),
               ],
             ),
             if (_isDayPlanEnabled)
