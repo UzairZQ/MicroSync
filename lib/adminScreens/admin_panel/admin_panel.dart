@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/adminScreens/products_page.dart';
+import 'package:micro_pharma/adminScreens/admin_panel/products_page.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/components/container_row.dart';
-import 'package:micro_pharma/adminScreens/doctors_page.dart';
+import 'package:micro_pharma/adminScreens/admin_panel/doctors_page.dart';
 import 'areas_page.dart';
+import 'export_data.dart';
 
 class AdminPanel extends StatelessWidget {
   static String id = 'doctors_areas';
@@ -46,14 +47,19 @@ class AdminPanel extends StatelessWidget {
                   container1Icon: Icons.production_quantity_limits_outlined,
                   container2Icon: Icons.abc,
                   container1Text: 'Products',
-                  container2Text: 'Nothing',
+                  container2Text: 'Export Data to Database',
                   container1Tap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: ((context) => const ProductListScreen())));
                   },
-                  container2Tap: () {},
+                  container2Tap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => const ExportData())));
+                  },
                 ),
               ],
             )));

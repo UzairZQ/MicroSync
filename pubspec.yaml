@@ -41,6 +41,7 @@ dependencies:
   intl: ^0.17.0
   table_calendar: ^3.0.8
   theme_provider: ^0.6.0
+  csv: ^5.0.2
 
   
 
@@ -69,6 +70,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/products.csv
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

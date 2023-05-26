@@ -5,7 +5,7 @@ import 'package:micro_pharma/userScreens/home_page.dart';
 import 'package:micro_pharma/userScreens/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'adminScreens/admin_page.dart';
+import 'adminScreens/admin_homepage.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
