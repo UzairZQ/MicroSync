@@ -152,15 +152,15 @@ class _LoginPageState extends State<LoginPage> {
                                   height: 15.0,
                                 ),
                                 MyTextFormField(
+                                    key: _formKey,
                                     hintext: 'Please Enter your Email',
                                     controller: changePassController,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Enter Something';
+                                        return 'Email Cannot be empty';
                                       }
                                       return null;
                                     },
-                                    // validator: validateEmail,
                                     onSaved: (value) {
                                       changePassController.text = value!;
                                     }),
@@ -171,19 +171,32 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Colors.amber,
                                     text: 'Send Email',
                                     onPressed: () {
-                                      _auth
-                                          .sendPasswordResetEmail(
-                                              email: changePassController.text)
-                                          .then((value) {
+                                      try {
+                                        if (_formKey.currentState!.validate()) {
+                                          _formKey.currentState!.save();
+                                          _auth
+                                              .sendPasswordResetEmail(
+                                                  email:
+                                                      changePassController.text)
+                                              .then((value) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Please check your Email to reset the password'),
+                                              ),
+                                            );
+
+                                            changePassController.clear();
+                                          });
+                                        }
+                                      } catch (e) {
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Please check your Email to reset the password'),
-                                          ),
-                                        );
-                                        changePassController.clear();
-                                      });
+                                            .showSnackBar(const SnackBar(
+                                          content: Text(
+                                              'Please check your Email to reset the password'),
+                                        ));
+                                      }
                                     })
                               ],
                             ),

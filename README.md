@@ -24,10 +24,10 @@ Install the required dependencies using flutter pub get
 Run the app on an emulator or connected device using flutter run
 
 # Contributors
-Uzair Zia Qureshi (@UzairZQ)
-Sajjad Ahmed (@janesmith)
+Uzair Zia Qureshi (@github.com/UzairZQ)
+Sajjad Ahmed (@github.com/i-sajjad)
 # License
 This project is licensed under the MIT License. See the LICENSE file for more details.
 
 # Support
-If you have any questions or issues with the app, please contact us at support@salesforceautomation.com.
+If you have any questions or issues with the app, please contact us at uzairqureshi9@gmail.com
