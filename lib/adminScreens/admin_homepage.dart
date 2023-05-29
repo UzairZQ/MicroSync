@@ -161,7 +161,7 @@ class _AdminPageState extends State<AdminPage> {
                       },
                     ),
                     const SizedBox(height: 17.0),
-                    const Row(
+                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
