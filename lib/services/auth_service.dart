@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../adminScreens/admin_page.dart';
+import '../adminScreens/admin_homepage.dart';
 import '../components/constants.dart';
 import '../splash_page.dart';
 import '../userScreens/home_page.dart';

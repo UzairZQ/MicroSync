@@ -4,7 +4,7 @@ import 'package:micro_pharma/models/doctor_model.dart';
 import 'package:micro_pharma/providers/area_provider.dart';
 import 'package:micro_pharma/providers/doctor_provider.dart';
 import 'package:provider/provider.dart';
-import '../models/area_model.dart';
+import '../../models/area_model.dart';
 
 class DoctorsPage extends StatefulWidget {
   const DoctorsPage({super.key});

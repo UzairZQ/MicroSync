@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/adminScreens/add_product.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:micro_pharma/providers/product_data_provider.dart';
+
+import 'add_product.dart';
 
 class ProductListScreen extends StatelessWidget {
   const ProductListScreen({Key? key}) : super(key: key);
