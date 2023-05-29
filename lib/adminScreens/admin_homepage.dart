@@ -29,7 +29,6 @@ class _AdminPageState extends State<AdminPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UserDataProvider>(context, listen: false).logIn();
     Provider.of<UserDataProvider>(context, listen: false)
         .fetchUserData(currentUser!.uid);
   }
@@ -69,10 +68,6 @@ class _AdminPageState extends State<AdminPage> {
                         actions: [
                           TextButton(
                               onPressed: () async {
-                                Provider.of<UserDataProvider>(context,
-                                        listen: false)
-                                    .logOut();
-
                                 FirebaseAuth.instance.signOut();
 
                                 var sharedLogin =

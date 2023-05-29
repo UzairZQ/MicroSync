@@ -38,7 +38,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     showPrivacyConsentDialog();
     getBackgroundLocation();
-    Provider.of<UserDataProvider>(context, listen: false).logIn();
     Provider.of<UserDataProvider>(context, listen: false)
         .fetchUserData(currentUser!.uid);
     Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
@@ -67,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pop();
                   userLocation();
                 },
-                child: Text('I Agree'),
+                child: const Text('I Agree'),
               ),
             ],
           );
@@ -137,10 +136,6 @@ class _HomePageState extends State<HomePage> {
                         actions: [
                           TextButton(
                               onPressed: () async {
-                                Provider.of<UserDataProvider>(context,
-                                        listen: false)
-                                    .logOut();
-
                                 FirebaseAuth.instance.signOut();
 
                                 Workmanager().cancelByTag('location');

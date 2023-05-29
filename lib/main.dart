@@ -114,7 +114,7 @@ class MicroPharma extends StatelessWidget {
               'add_employees': (context) => const AddEmployees(),
               'doctors_areas': (context) => const AdminPanel(),
               'submitted_orders':(context) => const SubmittedOrders(),
-              'view_dcr': (context) => ViewDCRScreen(),
+              'view_dcr': (context) => const ViewDCRScreen(),
             },
             home: const SplashPage(),
           ),

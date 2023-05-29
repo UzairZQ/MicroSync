@@ -82,12 +82,21 @@ class ProductDataProvider with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String productId) async {
+  void deleteProduct(String productCode) async {
     try {
-      await FirebaseFirestore.instance
+      final querySnapshot = await FirebaseFirestore.instance
           .collection('products')
-          .doc(productId)
-          .delete();
+          .where('code', isEqualTo: productCode)
+          .get();
+
+      if (querySnapshot.size > 0) {
+        final productDoc = querySnapshot.docs.first;
+        await productDoc.reference.delete();
+      } else {
+        print('Product not found with code: $productCode');
+        return;
+      }
+
       notifyListeners();
     } catch (e) {
       print('Error in deleting product: $e');
