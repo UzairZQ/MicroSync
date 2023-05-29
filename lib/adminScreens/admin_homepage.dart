@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/admin_settings.dart';
-import 'package:micro_pharma/adminScreens/admin_panel.dart';
+import 'package:micro_pharma/adminScreens/admin_panel/admin_panel.dart';
 import 'package:micro_pharma/adminScreens/view_dcr.dart';
 import 'package:micro_pharma/adminScreens/location_screen.dart';
 import 'package:micro_pharma/adminScreens/submitted_orders.dart';
