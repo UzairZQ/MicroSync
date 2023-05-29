@@ -44,12 +44,12 @@ class AdminPanel extends StatelessWidget {
                   height: 20.0,
                 ),
                 ContainerRow(
-                  container1Clr: const Color.fromARGB(255, 114, 191, 254),
-                  container2Clr: const Color.fromARGB(255, 114, 191, 254),
+                  container1Clr: Colors.amber[200]!,
+                  container2Clr: Colors.amber[200]!,
                   container1Icon: Icons.production_quantity_limits_outlined,
-                  container2Icon: Icons.abc,
+                  container2Icon: Icons.assignment_add,
                   container1Text: 'Products',
-                  container2Text: 'Export Data to Database',
+                  container2Text: 'Assign Products & Areas',
                   container1Tap: () {
                     Navigator.push(
                         context,
@@ -61,7 +61,7 @@ class AdminPanel extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: ((context) =>
-                                 const AssignAreasProductsToEmployees())));
+                                const AssignAreasProductsToEmployees())));
                   },
                 ),
               ],

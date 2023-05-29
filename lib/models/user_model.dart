@@ -3,8 +3,8 @@ import 'package:micro_pharma/models/area_model.dart';
 
 class UserModel {
   UserModel({
-     this.displayName,
-     this.email,
+    this.displayName,
+    this.email,
     this.latitude,
     this.longitude,
     this.role,
@@ -19,8 +19,8 @@ class UserModel {
     return UserModel(
       displayName: data!['displayName'],
       email: data['email'],
-      latitude: data['latitude'] ?? 'no Data',
-      longitude: data['longitude'] ?? 'no Data',
+      latitude: data['latitude']?.toDouble(),
+      longitude: data['longitude']?.toDouble(),
       role: data['role'],
       uid: data['uid'],
       phone: data['phone'],
