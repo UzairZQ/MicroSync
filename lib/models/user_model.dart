@@ -1,4 +1,3 @@
-
 class UserModel {
   UserModel({
     this.displayName,
