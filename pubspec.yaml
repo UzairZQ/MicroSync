@@ -42,6 +42,10 @@ dependencies:
   table_calendar: ^3.0.8
   theme_provider: ^0.6.0
   csv: ^5.0.2
+  pdf: ^3.10.4
+  path_provider: ^2.0.15
+  open_file: ^3.3.1
+  path: ^1.8.3
 
   
 
@@ -71,6 +75,7 @@ flutter:
   assets:
     - assets/images/
     - assets/products.csv
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

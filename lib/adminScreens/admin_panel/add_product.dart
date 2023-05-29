@@ -6,10 +6,10 @@ class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
   static String id = 'addproduct';
   @override
-  _AddProductState createState() => _AddProductState();
+  AddProductState createState() => AddProductState();
 }
 
-class _AddProductState extends State<AddProduct> {
+class AddProductState extends State<AddProduct> {
   final _productController = TextEditingController();
   final _codeController = TextEditingController();
   final _tradePriceController = TextEditingController();
