@@ -50,23 +50,23 @@ class ProductListScreen extends StatelessWidget {
                             children: [
                               MyTextwidget(
                                 text: product.name,
-                                fontSize: 18.0,
+                                fontSize: 16.0,
                                 fontWeight: FontWeight.w700,
                               ),
                               const SizedBox(height: 8.0),
                               MyTextwidget(
                                 text: 'Packing: ${product.packing}',
-                                fontSize: 16.0,
+                                fontSize: 14.0,
                               ),
                               const SizedBox(height: 8.0),
                               MyTextwidget(
                                 text: 'Retail Price: ${product.retailPrice}',
-                                fontSize: 16.0,
+                                fontSize: 14.0,
                               ),
                               const SizedBox(height: 8.0),
                               MyTextwidget(
                                 text: 'Trade Price: ${product.tradePrice}',
-                                fontSize: 16.0,
+                                fontSize: 14.0,
                               ),
                             ],
                           ),

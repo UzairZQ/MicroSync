@@ -12,10 +12,10 @@ import 'package:provider/provider.dart';
 
 class OrderScreen extends StatefulWidget {
   @override
-  _OrderScreenState createState() => _OrderScreenState();
+  OrderScreenState createState() => OrderScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class OrderScreenState extends State<OrderScreen> {
   late String currentUserId;
   List<AreaModel> areas = [];
   List<OrderSelectedProduct> selectedProducts = [];
@@ -309,7 +309,7 @@ class _OrderScreenState extends State<OrderScreen> {
               await Provider.of<OrderDataProvider>(context, listen: false)
                   .addOrder(orderModel);
               showCustomDialog(
-                  context: context,
+                  context: navigatorKey.currentContext!,
                   title: 'Order Sent',
                   content: 'Order Successfully Submitted!');
 

@@ -92,13 +92,13 @@ class _CallPlannerState extends State<CallPlanner> {
                     child: DropdownButtonFormField<String?>(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please Select Area';
+                          return 'Select Area';
                         }
                         return null;
                       },
                       decoration: const InputDecoration(
                         hintText: 'Select Area',
-                        border: OutlineInputBorder(),
+                        //border: OutlineInputBorder(),
                       ),
                       value: _selectedArea?.areaName,
                       onChanged: (value) {
@@ -119,11 +119,10 @@ class _CallPlannerState extends State<CallPlanner> {
                     ),
                   ),
                 ),
-                // SizedBox(
-                //   width: ,
-                // ),
+                const SizedBox(
+                  width: 10,
+                ),
                 Expanded(
-                  flex: 1,
                   child: DropdownButton<String>(
                     value: _selectedShift,
                     hint: const Text('Select Shift'),
@@ -141,7 +140,6 @@ class _CallPlannerState extends State<CallPlanner> {
                   ),
                 ),
                 Expanded(
-                  flex: 1,
                   child: Row(
                     children: [
                       Checkbox(

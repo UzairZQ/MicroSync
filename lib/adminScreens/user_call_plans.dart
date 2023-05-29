@@ -11,10 +11,10 @@ class CallPlansForAdmin extends StatefulWidget {
   const CallPlansForAdmin({super.key});
 
   @override
-  _CallPlansForAdminState createState() => _CallPlansForAdminState();
+  CallPlansForAdminState createState() => CallPlansForAdminState();
 }
 
-class _CallPlansForAdminState extends State<CallPlansForAdmin> {
+class CallPlansForAdminState extends State<CallPlansForAdmin> {
   @override
   void initState() {
     super.initState();

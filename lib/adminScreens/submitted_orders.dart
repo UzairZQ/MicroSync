@@ -6,8 +6,9 @@ import '../components/constants.dart';
 import '../providers/order_data_provider.dart';
 
 class SubmittedOrders extends StatelessWidget {
-  const SubmittedOrders({Key? key});
   static const String id = 'submitted_orders';
+
+  const SubmittedOrders({super.key});
   @override
   Widget build(BuildContext context) {
     final orderProvider =
