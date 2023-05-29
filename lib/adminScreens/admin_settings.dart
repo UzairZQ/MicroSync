@@ -10,10 +10,10 @@ class AdminProfilePage extends StatefulWidget {
   const AdminProfilePage({Key? key}) : super(key: key);
 
   @override
-  _AdminProfilePageState createState() => _AdminProfilePageState();
+  AdminProfilePageState createState() => AdminProfilePageState();
 }
 
-class _AdminProfilePageState extends State<AdminProfilePage> {
+class AdminProfilePageState extends State<AdminProfilePage> {
   final TextEditingController _nameEditingController = TextEditingController();
 
   @override

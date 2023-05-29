@@ -4,7 +4,7 @@ import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/adminScreens/admin_panel/doctors_page.dart';
 import 'areas_page.dart';
-import 'export_data.dart';
+import 'assign_areas_products.dart';
 
 class AdminPanel extends StatelessWidget {
   static String id = 'doctors_areas';
@@ -34,8 +34,10 @@ class AdminPanel extends StatelessWidget {
                             builder: ((context) => const DoctorsPage())));
                   },
                   container2Tap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => const Areas())));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => const Areas())));
                   },
                 ),
                 const SizedBox(
@@ -58,7 +60,8 @@ class AdminPanel extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: ((context) => const ExportData())));
+                            builder: ((context) =>
+                                 const AssignAreasProductsToEmployees())));
                   },
                 ),
               ],

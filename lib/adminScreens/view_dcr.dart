@@ -7,6 +7,8 @@ import '../providers/daily_call_report_provider.dart';
 
 class ViewDCRScreen extends StatelessWidget {
   static const String id = 'view_dcr';
+
+  const ViewDCRScreen({super.key});
   @override
   Widget build(BuildContext context) {
     final dcrProvider =
