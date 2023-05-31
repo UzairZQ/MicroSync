@@ -19,8 +19,8 @@ class UserModel {
     return UserModel(
       displayName: data!['displayName'],
       email: data['email'],
-      latitude: data['latitude']?.toDouble(),
-      longitude: data['longitude']?.toDouble(),
+      latitude: data['latitude'].toDouble(),
+      longitude: data['longitude'].toDouble(),
       role: data['role'],
       uid: data['uid'],
       phone: data['phone'],

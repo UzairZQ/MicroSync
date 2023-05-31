@@ -79,11 +79,10 @@ class _AdminPageState extends State<AdminPage> {
                                 sharedUser.setBool(
                                     SplashPageState.userKey, false);
 
-                                Navigator.pushReplacement(
+                                Navigator.pushNamedAndRemoveUntil(
                                   navigatorKey.currentContext!,
-                                  MaterialPageRoute(
-                                    builder: (context) => const LoginPage(),
-                                  ),
+                                  LoginPage.id,
+                                  (route) => false,
                                 );
                               },
                               child: const Text('Logout')),
@@ -161,22 +160,14 @@ class _AdminPageState extends State<AdminPage> {
                       },
                     ),
                     const SizedBox(height: 17.0),
-                     Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.calendar_month,
                           color: Colors.white,
                         ),
-                        Text(
-                          'Employees on Work :',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                        MyTextwidget(text: 'Employees on Work')
                       ],
                     ),
                     const SizedBox(

@@ -1,12 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/day_plan_model.dart';
 import 'package:micro_pharma/models/dcr_model.dart';
 import 'package:micro_pharma/models/product_model.dart';
+import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/providers/daily_call_report_provider.dart';
 import 'package:micro_pharma/providers/day_plans_provider.dart';
 import 'package:micro_pharma/providers/product_data_provider.dart';
+import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:provider/provider.dart';
 import '../models/doctor_visit_model.dart';
@@ -19,7 +22,10 @@ class DailyCallReportScreen extends StatefulWidget {
 }
 
 class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
   late List<ProductModel> products;
+  late List<ProductModel>? userAssignedProducts;
+  late UserModel? userData;
   DayPlanModel? currentDayPlan;
   List<DoctorVisitModel>? doctorVisitDetailsList = [];
   bool visitedDoctor = false;
@@ -32,14 +38,17 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(milliseconds: 500), () {
-      Provider.of<ProductDataProvider>(context, listen: false)
-          .fetchProductsList();
-    });
-
+    Provider.of<ProductDataProvider>(context, listen: false)
+        .fetchProductsList();
     Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
     currentDayPlan = Provider.of<DayPlanProvider>(context, listen: false)
         .getCurrentDayPlan();
+    Provider.of<UserDataProvider>(context, listen: false).fetchUserData(userId);
+    userData =
+        Provider.of<UserDataProvider>(context, listen: false).getUserData;
+    userAssignedProducts = userData?.assignedProducts;
+    products =
+        Provider.of<ProductDataProvider>(context, listen: false).productsList;
   }
 
   String dayPlanTime() {
@@ -51,6 +60,30 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: currentDayPlan == null
+          ? FloatingActionButton.small(
+              child: MyTextwidget(text: 'Go Back'),
+              onPressed: () {
+                Navigator.pop(context);
+              })
+          : FloatingActionButton.extended(
+              onPressed: () {
+                final DailyCallReportModel dailyCallReportModel =
+                    DailyCallReportModel(
+                        area: currentDayPlan!.area,
+                        date: currentDayPlan!.date,
+                        doctorVisits: doctorVisitDetailsList!);
+                Provider.of<DailyCallReportProvider>(context, listen: false)
+                    .saveReport(dailyCallReportModel);
+                showCustomDialog(
+                    context: context,
+                    title: 'Report Submitted',
+                    content:
+                        'Today\'s Report have been successfully submitted');
+              },
+              label: MyTextwidget(text: 'Submit Report'),
+              icon: const Icon(Icons.assignment_turned_in),
+            ),
       appBar: const MyAppBar(appBartxt: 'Daily Call Report'),
       body: Column(
         children: [
@@ -124,23 +157,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                 },
               ),
             ),
-          if (currentDayPlan != null)
-            MyButton(
-                text: 'Submit Report',
-                onPressed: () {
-                  final DailyCallReportModel dailyCallReportModel =
-                      DailyCallReportModel(
-                          area: currentDayPlan!.area,
-                          date: currentDayPlan!.date,
-                          doctorVisits: doctorVisitDetailsList!);
-                  Provider.of<DailyCallReportProvider>(context, listen: false)
-                      .saveReport(dailyCallReportModel);
-                  showCustomDialog(
-                      context: context,
-                      title: 'Report Submitted',
-                      content:
-                          'Today\'s Report have been successfully submitted');
-                }),
+          // if (currentDayPlan != null)
         ],
       ),
     );
@@ -153,9 +170,10 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
       context: context,
       builder: (context) {
         int selectedQuantity = 1;
-        products = Provider.of<ProductDataProvider>(context, listen: false)
-            .productsList; // Default quantity
-        selectedProduct = products.isNotEmpty ? products.first : null;
+        // Default quantity
+        selectedProduct = userAssignedProducts!.isNotEmpty
+            ? userAssignedProducts?.first
+            : products.first;
 
         return StatefulBuilder(
           builder: (context, setState) {
@@ -191,12 +209,19 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                             Expanded(
                               flex: 2,
                               child: DropdownButtonFormField<ProductModel>(
-                                items: products.map((product) {
-                                  return DropdownMenuItem<ProductModel>(
-                                    value: product,
-                                    child: Text(product.name),
-                                  );
-                                }).toList(),
+                                isExpanded: true,
+                                items: userAssignedProducts?.map((product) {
+                                      return DropdownMenuItem<ProductModel>(
+                                        value: product,
+                                        child: Text(product.name),
+                                      );
+                                    }).toList() ??
+                                    products.map((product) {
+                                      return DropdownMenuItem<ProductModel>(
+                                        value: product,
+                                        child: Text(product.name),
+                                      );
+                                    }).toList(),
                                 onChanged: (selectedproduct) {
                                   if (selectedproduct != null) {
                                     setState(() {
@@ -318,12 +343,12 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                                   doctorRemarks: doctorRemarksController.text,
                                 );
                                 doctorVisitDetailsList!.add(doctorVisitDetails);
-                                for (DoctorVisitModel doctorvisits
-                                    in doctorVisitDetailsList!) {
-                                  print(doctorvisits.name);
-                                  print(doctorvisits.doctorRemarks);
-                                  print(doctorvisits.selectedProducts);
-                                }
+                                // for (DoctorVisitModel doctorvisits
+                                //     in doctorVisitDetailsList!) {
+                                //   print(doctorvisits.name);
+                                //   print(doctorvisits.doctorRemarks);
+                                //   print(doctorvisits.selectedProducts);
+                                // }
                                 doctorRemarksController.clear();
                                 selectedProducts =
                                     []; // Clear the original list, not the copied one

@@ -48,16 +48,18 @@ class UserDataProvider with ChangeNotifier {
       final employeeDocRef =
           FirebaseFirestore.instance.collection('users').doc(employee.uid);
 
-      // Create a list of area names
-      final areaNames = areas.map((area) => area.areaName).toList();
+      // Create a list of area objects
+      final List<Map<String, dynamic>> areaObjects =
+          areas.map((area) => area.toMap()).toList();
 
-      // Create a list of product names
-      final productNames = products.map((product) => product.name).toList();
+      // Create a list of product objects
+      final List<Map<String, dynamic>> productObjects =
+          products.map((product) => product.toMap()).toList();
 
       // Update the employee document with the selected areas and products
       await employeeDocRef.update({
-        'assignedAreas': areaNames,
-        'assignedProducts': productNames,
+        'assignedAreas': areaObjects,
+        'assignedProducts': productObjects,
       });
       _isLoading = false;
       // Show a success message or perform any other necessary actions
@@ -77,17 +79,17 @@ class UserDataProvider with ChangeNotifier {
           .get();
       if (docSnapshot.exists) {
         final newUser = UserModel.fromMap(docSnapshot.data()!);
-        if (newUser != _user) {
-          // only update if new user is different
-          _user = newUser;
-          notifyListeners();
-          _isLoading = false;
-        }
+        print('User Data: ${docSnapshot.data()}');
+
+        _user = newUser;
+        notifyListeners();
       }
       _isLoading = false;
+      return;
     } catch (e) {
       _isLoading = false;
       print('error in the fetch user function $e');
+
       return;
     }
   }
