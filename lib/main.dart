@@ -48,7 +48,7 @@ void callBackDispatcher() async {
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final String? userId = preferences.getString('userId');
-    await LocationServices().getLocation(userId!);
+    await LocationServices().getBackgroundLocation(userId!);
 
     return Future.value(true);
   });
@@ -113,7 +113,7 @@ class MicroPharma extends StatelessWidget {
               'location_screen': (context) => const LocationScreen(),
               'add_employees': (context) => const AddEmployees(),
               'doctors_areas': (context) => const AdminPanel(),
-              'submitted_orders':(context) => const SubmittedOrders(),
+              'submitted_orders': (context) => const SubmittedOrders(),
               'view_dcr': (context) => const ViewDCRScreen(),
             },
             home: const SplashPage(),

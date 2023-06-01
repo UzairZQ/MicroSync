@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void userLocation() async {
-    LocationServices().requestPermission();
+    await LocationServices().requestPermission();
     await LocationServices().getLocation(currentUser!.uid);
     SharedPreferences userId = await SharedPreferences.getInstance();
     userId.setString('userId', currentUser!.uid.toString());
@@ -104,6 +104,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    userLocation();
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
