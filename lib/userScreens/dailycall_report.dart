@@ -61,8 +61,8 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: currentDayPlan == null
-          ? FloatingActionButton.small(
-              child: MyTextwidget(text: 'Go Back'),
+          ? FloatingActionButton(
+              child: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pop(context);
               })
@@ -133,19 +133,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                         text: dayPlanDoctors[index],
                         fontSize: 16,
                       ),
-                      subtitle: Row(
-                        children: [
-                          MyTextwidget(text: 'Visited?'),
-                          Checkbox(
-                            value: visitedDoctor,
-                            onChanged: (visited) {
-                              setState(() {
-                                visitedDoctor = visited!;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
+                      // subtitle: MyTextwidget(text:dayPlanDoctors[index] ,),
                       trailing: TextButton(
                         child: MyTextwidget(text: 'Add Doctor Info'),
                         onPressed: () {
@@ -191,17 +179,31 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                       const SizedBox(height: 16.0),
-                      Row(children: [
-                        MyTextwidget(text: 'Samples Provided?'),
-                        Checkbox(
-                          value: samplesProvided,
-                          onChanged: (ifsamples) {
-                            setState(() {
-                              samplesProvided = ifsamples!;
-                            });
-                          },
-                        ),
-                      ]),
+                      Row(
+                        children: [
+                          MyTextwidget(text: 'Visited this doctor?'),
+                          Checkbox(
+                            value: visitedDoctor,
+                            onChanged: (isVisited) {
+                              setState(() {
+                                visitedDoctor = isVisited!;
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                      if (visitedDoctor)
+                        Row(children: [
+                          MyTextwidget(text: 'Samples Provided?'),
+                          Checkbox(
+                            value: samplesProvided,
+                            onChanged: (ifsamples) {
+                              setState(() {
+                                samplesProvided = ifsamples!;
+                              });
+                            },
+                          ),
+                        ]),
                       const SizedBox(height: 16.0),
                       if (samplesProvided)
                         Row(
