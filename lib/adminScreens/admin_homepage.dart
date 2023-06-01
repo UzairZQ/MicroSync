@@ -160,14 +160,22 @@ class _AdminPageState extends State<AdminPage> {
                       },
                     ),
                     const SizedBox(height: 17.0),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.calendar_month,
                           color: Colors.white,
                         ),
-                        MyTextwidget(text: 'Employees on Work')
+                        Text(
+                          'Employees on Work:',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(
