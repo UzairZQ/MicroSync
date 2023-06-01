@@ -29,7 +29,7 @@ class UserProfilePageState extends State<UserProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User Profile'),
+        title: const Text('My Profile'),
         centerTitle: true,
         backgroundColor: kappbarColor,
         actions: [
@@ -75,108 +75,173 @@ class UserProfilePageState extends State<UserProfilePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
-          // mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  user.displayName ?? '',
-                  style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins'),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              TextEditingController emailEditingController =
+                  TextEditingController();
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      'Enter your email address to receive a password reset link',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: emailEditingController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'Email Address',
+                        hintText: 'you@example.com',
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    MyButton(
+                      onPressed: () async {
+                        final email = emailEditingController.text.trim();
+                        if (email.isNotEmpty) {
+                          try {
+                            await FirebaseAuth.instance.sendPasswordResetEmail(
+                              email: email,
+                            );
+                            Navigator.pop(navigatorKey.currentContext!);
+                            ScaffoldMessenger.of(
+                              navigatorKey.currentContext!,
+                            ).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'A password reset email has been sent to $email',
+                                ),
+                              ),
+                            );
+                          } catch (e) {
+                            print(
+                              'Error sending password reset email: $e',
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Error sending password reset email. Please try again later.',
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      text: 'Send Email',
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+        label: MyTextwidget(text: 'Change Password'),
+        icon: const Icon(Icons.lock_clock_outlined),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              Card(
+                color: Colors.teal[100],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MyTextwidget(
+                    text: user.displayName ?? '',
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 5),
-            Card(
+              const SizedBox(height: 5),
+              Card(
+                color: Colors.amber[100],
                 elevation: 3.0,
-                child: Text(
-                  user.email ?? '',
-                  style: ktextstyle,
-                )),
-            const SizedBox(height: 5),
-            Card(
-                child: Text(
-              user.phone ?? '',
-              style: ktextstyle,
-            )),
-            const SizedBox(height: 20),
-            MyButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext context) {
-                    TextEditingController emailEditingController =
-                        TextEditingController();
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          const Text(
-                            'Enter your email address to receive a password reset link',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 17,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 20),
-                          TextFormField(
-                            controller: emailEditingController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: const InputDecoration(
-                              labelText: 'Email Address',
-                              hintText: 'you@example.com',
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          MyButton(
-                            onPressed: () async {
-                              final email = emailEditingController.text.trim();
-                              if (email.isNotEmpty) {
-                                try {
-                                  await FirebaseAuth.instance
-                                      .sendPasswordResetEmail(email: email);
-                                  Navigator.pop(navigatorKey.currentContext!);
-                                  ScaffoldMessenger.of(
-                                          navigatorKey.currentContext!)
-                                      .showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                          'A password reset email has been sent to $email'),
-                                    ),
-                                  );
-                                } catch (e) {
-                                  print(
-                                      'Error sending password reset email: $e');
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'Error sending password reset email. Please try again later.'),
-                                    ),
-                                  );
-                                }
-                              }
-                            },
-                            text: 'Send Email',
-                          ),
-                        ],
+                child: MyTextwidget(
+                  text: user.email ?? '',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Card(
+                color: Colors.blue[100],
+                child: MyTextwidget(
+                  text: user.phone ?? '',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              MyTextwidget(
+                text: 'My Assigned Areas',
+                fontSize: 20,
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: user.assignedAreas?.length,
+                itemBuilder: (context, index) {
+                  final area = user.assignedAreas?[index];
+                  return Card(
+                    color: Colors.amber[200],
+                    child: ListTile(
+                      title: MyTextwidget(text: area!.areaName),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              MyTextwidget(
+                text: 'My Assigned Products',
+                fontSize: 20,
+              ),
+              const SizedBox(height: 10),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 1.7),
+                itemCount: user.assignedProducts!.length,
+                itemBuilder: (context, index) {
+                  final product = user.assignedProducts![index];
+                  return Material(
+                    borderRadius: BorderRadius.circular(15),
+                    elevation: 2,
+                    child: Container(
+                      height: 15,
+                      width: 15,
+                      decoration: BoxDecoration(
+                        color: kappbarColor.withAlpha(100),
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                    );
-                  },
-                );
-              },
-              text: 'Change Password',
-            ),
-          ],
+                      child: Center(
+                        child: MyTextwidget(text: product.name),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

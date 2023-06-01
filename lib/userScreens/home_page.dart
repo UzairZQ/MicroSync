@@ -147,11 +147,10 @@ class _HomePageState extends State<HomePage> {
                                     await SharedPreferences.getInstance();
                                 sharedUser.setBool(
                                     SplashPageState.userKey, false);
-                                Navigator.pushReplacement(
+                                Navigator.pushNamedAndRemoveUntil(
                                   navigatorKey.currentContext!,
-                                  MaterialPageRoute(
-                                    builder: (context) => const LoginPage(),
-                                  ),
+                                  LoginPage.id,
+                                  (route) => false,
                                 );
                               },
                               child: const Text('Logout')),
@@ -212,8 +211,9 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Consumer<UserDataProvider>(
                       builder: (context, dataProvider, child) {
-                        // dataProvider.fetchUserData(currentUser!.uid);
                         UserModel? userData = dataProvider.getUserData;
+                        print(userData.displayName);
+
                         if (userData.displayName == null ||
                             userData.displayName!.isEmpty) {
                           return const CircularProgressIndicator();

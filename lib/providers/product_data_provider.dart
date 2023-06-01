@@ -10,8 +10,12 @@ class ProductDataProvider with ChangeNotifier {
 
   List<ProductModel> get productsList => _productsList;
 
+  bool _isLoading = false;
+  bool get isLoadin => _isLoading;
+
   Future<void> fetchProductsList() async {
     try {
+      _isLoading = true;
       final querySnapshot =
           await FirebaseFirestore.instance.collection('products').get();
       final productsList = querySnapshot.docs
@@ -20,8 +24,10 @@ class ProductDataProvider with ChangeNotifier {
       if (productsList != _productsList) {
         _productsList = productsList;
         notifyListeners();
+        _isLoading = false;
       }
     } catch (e) {
+      _isLoading = false;
       print('Error in the fetch products function $e');
       return;
     }
