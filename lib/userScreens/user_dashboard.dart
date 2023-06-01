@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pie_chart/pie_chart.dart';
 import 'package:micro_pharma/components/constants.dart';
+import 'package:path/path.dart';
 
 List<String> month = <String>[
   'January',
@@ -76,6 +78,8 @@ class _DashboardState extends State<Dashboard> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -157,7 +161,17 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-               MyTextwidget(fontSize: 17.5, text: 'Visit/Missed Details'),
+              SizedBox(
+                height: 20.0,
+              ),
+              MyTextwidget(
+                fontSize: 18,
+                text: 'Visit/Missed Details',
+                fontWeight: FontWeight.bold,
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -171,7 +185,7 @@ class _DashboardState extends State<Dashboard> {
                       color: const Color(0xff89B7FD),
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    child:  Center(
+                    child: Center(
                         child: MyTextwidget(
                       fontSize: 17.5,
                       text: '14 Visited Doctors',
@@ -184,7 +198,11 @@ class _DashboardState extends State<Dashboard> {
                         horizontal: 30.0, vertical: 10.0),
                     height: 72.0,
                     width: 144.0,
-                    child:  Center(
+                    decoration: BoxDecoration(
+                      color: const Color(0xffFF9292),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Center(
                       child: MyTextwidget(
                         text: '20 missed doctors',
                         fontSize: 17.5,
@@ -194,44 +212,82 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 20.0,
+              ),
               const Text(
                 'Call Average',
                 style: TextStyle(
-                    fontSize: 17.5,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Poppins'),
               ),
-              // Container(
-              //     // padding: EdgeInsets.fromLTRB(50, 20, 180, 200),
-              //     padding: EdgeInsets.all(10.0),
-              //     child: Row(
-              //       children: [
-              //         PieChart(
-              //           dataMap: dataMap,
-              //           chartType: ChartType.ring,
-              //           centerText: '1.55 doctor',
-              //           chartValuesOptions: ChartValuesOptions(
-              //             showChartValues: false,
-              //             showChartValueBackground: false,
-              //           ),
-              //           legendOptions: LegendOptions(showLegends: false),
-              //         ),
-              //         Container(
-              //           child: PieChart(
-              //             dataMap: dataMap,
-              //             chartType: ChartType.ring,
-              //             centerText: '0.55 chemists',
-              //             chartValuesOptions: ChartValuesOptions(
-              //               showChartValues: false,
-              //               showChartValueBackground: false,
-              //             ),
-              //             legendOptions: LegendOptions(showLegends: false),
-              //           ),
-              //         )
-              //       ],
-              //     )),
+              SizedBox(
+                height: 20.0,
+              ),
+              Container(
+                  // padding: EdgeInsets.fromLTRB(50, 20, 180, 200),
+                  padding: EdgeInsets.all(8.0),
+                  child: PieChart(
+                    dataMap: dataMap,
+                    chartRadius: MediaQuery.of(context).size.width / 2.2,
+                    chartType: ChartType.ring,
+                    centerText: '1.55 doctor',
+                    chartValuesOptions: ChartValuesOptions(
+                      showChartValues: false,
+                      showChartValueBackground: false,
+                    ),
+                    legendOptions: LegendOptions(showLegends: false),
+                  )),
               const SizedBox(
-                height: 0.0,
+                height: 25.0,
+              ),
+              Text(
+                'Product order booking',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Center(
+                child: Container(
+                    height: 90,
+                    margin: EdgeInsets.all(15),
+                    width: 120,
+                    decoration: BoxDecoration(
+                      color: const Color(0xffD9D9D9),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: const Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Total POB',
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              '0.0984',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        // Additional widgets in the row, if needed
+                      ],
+                    )),
+              ),
+              const SizedBox(
+                height: 20,
               ),
               const Text(
                 'DCR status',
@@ -240,6 +296,96 @@ class _DashboardState extends State<Dashboard> {
               const SizedBox(
                 height: 20.0,
               ),
+              PieChart(
+                dataMap: dataMap,
+                chartRadius: MediaQuery.of(context).size.width / 3.2,
+                chartType: ChartType.ring,
+                centerText: '1.55 doctor',
+                chartValuesOptions: ChartValuesOptions(
+                  showChartValues: false,
+                  showChartValueBackground: false,
+                ),
+                legendOptions: LegendOptions(showLegends: false),
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              const Text(
+                'Tour Program Status',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      padding: EdgeInsets.all(20),
+                      margin: EdgeInsets.all(15),
+                      height: 90,
+                      width: 122.0,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFD9D9D9),
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.check_circle_outline,
+                                size: 25,
+                                color: Color(0xFF333333),
+                              ),
+                              Text(
+                                'Submitted',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.5),
+                              ),
+                            ],
+                          ),
+                          // Additional widgets in the row, if needed
+                        ],
+                      )),
+                  SizedBox(width: 40),
+                  Container(
+                    margin: EdgeInsets.all(15),
+                    height: 90,
+                    width: 122.0,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFD9D9D9),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: const Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.check_circle_outline),
+                            Text(
+                              'Approved',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 17.5),
+                            ),
+                          ],
+                        ),
+                        // Additional widgets in the row, if needed
+                      ],
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),
