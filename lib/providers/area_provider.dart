@@ -8,8 +8,12 @@ class AreaProvider with ChangeNotifier {
   List<AreaModel> get getAreas => [..._areas];
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  bool _isLoading = false;
+  bool get isLoadin => _isLoading;
+
   Future<void> fetchAreas() async {
     try {
+      _isLoading = true;
       final snapshot =
           await FirebaseFirestore.instance.collection('areas').get();
       final List<AreaModel> loadedAreas = [];
@@ -21,7 +25,9 @@ class AreaProvider with ChangeNotifier {
       }
       _areas = loadedAreas;
       notifyListeners();
+      _isLoading = false;
     } catch (error) {
+      _isLoading = false;
       print('Error loading areas: $error');
       rethrow;
     }
