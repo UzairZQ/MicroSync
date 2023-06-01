@@ -49,6 +49,7 @@ class _AddEmployeesState extends State<AddEmployees> {
             child: Column(
               children: [
                 MyTextFormField(
+                  icon: Icon(Icons.person),
                   hintext: 'Please Enter Name',
                   onSaved: (value) {
                     nameController.text = value!;
@@ -64,6 +65,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                   height: 20.0,
                 ),
                 MyTextFormField(
+                    icon: Icon(Icons.email_outlined),
                     hintext: 'Please Enter Email',
                     onSaved: (value) {
                       emailController.text = value!;
@@ -73,6 +75,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                   height: 20.0,
                 ),
                 MyTextFormField(
+                  icon: Icon(Icons.admin_panel_settings),
                   controller: roleController,
                   hintext: 'Please Enter Role(user or admin)',
                   onSaved: (value) {
@@ -91,6 +94,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                   height: 20,
                 ),
                 MyTextFormField(
+                  icon: Icon(Icons.phone),
                   controller: phoneController,
                   hintext: 'Enter Phone Number',
                   onSaved: (phone) {
@@ -107,6 +111,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                   height: 20.0,
                 ),
                 MyTextFormField(
+                  icon: Icon(Icons.lock),
                   controller: passwordController,
                   hintext: 'Please Enter Password',
                   onSaved: (value) {
@@ -127,6 +132,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                   height: 20.0,
                 ),
                 MyTextFormField(
+                  icon: Icon(Icons.lock),
                   controller: confpasController,
                   hintext: 'Enter Confirm Password',
                   validator: (value) {
@@ -198,7 +204,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                   }
                   return Column(
                     children: [
-                       MyTextwidget(
+                      MyTextwidget(
                         fontSize: 20,
                         text: 'Registered Users',
                         fontWeight: FontWeight.bold,
