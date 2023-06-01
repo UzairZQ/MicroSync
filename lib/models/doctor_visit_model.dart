@@ -2,11 +2,13 @@ class DoctorVisitModel {
   String? name;
   List<SelectedProduct>? selectedProducts;
   String? doctorRemarks;
+  bool? visited;
 
   DoctorVisitModel({
     this.name,
     this.selectedProducts,
     this.doctorRemarks,
+    this.visited
   });
 
   Map<String, dynamic> toMap() {
@@ -15,6 +17,7 @@ class DoctorVisitModel {
       'selectedProducts':
           selectedProducts?.map((product) => product.toMap()).toList(),
       'doctorRemarks': doctorRemarks,
+      'visited': visited
     };
   }
 
@@ -24,6 +27,7 @@ class DoctorVisitModel {
       selectedProducts: List<SelectedProduct>.from(map['selectedProducts']
           ?.map((product) => SelectedProduct.fromMap(product))),
       doctorRemarks: map['doctorRemarks'],
+      visited: map['visited']
     );
   }
 }

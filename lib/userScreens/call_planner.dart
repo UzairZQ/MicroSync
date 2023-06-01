@@ -9,6 +9,7 @@ import 'package:micro_pharma/providers/doctor_provider.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../models/user_model.dart';
 import '../providers/day_plans_provider.dart';
 
 class CallPlanner extends StatefulWidget {
@@ -64,6 +65,9 @@ class _CallPlannerState extends State<CallPlanner> {
     List<AreaModel> areaList = Provider.of<AreaProvider>(context).getAreas;
     List<DoctorModel> doctors =
         Provider.of<DoctorDataProvider>(context).getDoctorList;
+    UserModel? userData =
+        Provider.of<UserDataProvider>(context, listen: false).getUserData;
+    List<AreaModel>? assignedAreas = userData.assignedAreas;
 
     return Scaffold(
       appBar: const MyAppBar(
@@ -83,77 +87,86 @@ class _CallPlannerState extends State<CallPlanner> {
               onDaySelected: _onDateSelected,
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Form(
-                    key: formKey,
-                    child: DropdownButtonFormField<String?>(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Select Area';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Select Area',
-                        //border: OutlineInputBorder(),
-                      ),
-                      value: _selectedArea?.areaName,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedArea = areaList.firstWhere(
-                            (area) => area.areaName == value,
-                          );
-                        });
-                      },
-                      items: areaList
-                          .map(
-                            (area) => DropdownMenuItem(
-                              value: area.areaName,
-                              child: Text(area.areaName),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: DropdownButton<String>(
-                    value: _selectedShift,
-                    hint: const Text('Select Shift'),
-                    items: <String>['Morning', 'Evening'].map((String shift) {
-                      return DropdownMenuItem<String>(
-                        value: shift,
-                        child: Text(shift),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
-                      setState(() {
-                        _selectedShift = value!;
-                      });
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: _isDayPlanEnabled,
+            Flexible(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Form(
+                      key: formKey,
+                      child: DropdownButtonFormField<String?>(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Select Area';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Select Area',
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                        ),
+                        value: _selectedArea?.areaName,
                         onChanged: (value) {
                           setState(() {
-                            _isDayPlanEnabled = value ?? false;
+                            _selectedArea = assignedAreas?.firstWhere(
+                                    (area) => area.areaName == value) ??
+                                areaList.firstWhere(
+                                  (area) => area.areaName == value,
+                                );
                           });
                         },
+                        items: assignedAreas
+                                ?.map((area) => DropdownMenuItem(
+                                      value: area.areaName,
+                                      child: Text(area.areaName),
+                                    ))
+                                .toList() ??
+                            areaList
+                                .map(
+                                  (area) => DropdownMenuItem(
+                                    value: area.areaName,
+                                    child: Text(area.areaName),
+                                  ),
+                                )
+                                .toList(),
                       ),
-                      const Text('Add Day Plan'),
-                    ],
+                    ),
                   ),
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  Expanded(
+                    child: DropdownButton<String>(
+                      value: _selectedShift,
+                      hint: const Text('Select Shift'),
+                      items: <String>['Morning', 'Evening'].map((String shift) {
+                        return DropdownMenuItem<String>(
+                          value: shift,
+                          child: Text(shift),
+                        );
+                      }).toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedShift = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Checkbox(
+                  value: _isDayPlanEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      _isDayPlanEnabled = value ?? false;
+                    });
+                  },
                 ),
+                const Text('Add Day Plan'),
               ],
             ),
             if (_isDayPlanEnabled)
@@ -237,11 +250,15 @@ class _CallPlannerState extends State<CallPlanner> {
                         }
                       },
                     ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     ListView.builder(
                       shrinkWrap: true,
                       itemCount: _selectedDoctors.length,
                       itemBuilder: (context, index) {
                         return ListTile(
+                          tileColor: Colors.amber[100],
                           title: Text(_selectedDoctors.elementAt(index)),
                         );
                       },
