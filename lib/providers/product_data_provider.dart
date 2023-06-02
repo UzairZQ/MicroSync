@@ -88,7 +88,7 @@ class ProductDataProvider with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String productCode) async {
+  void deleteProduct(int productCode) async {
     try {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('products')

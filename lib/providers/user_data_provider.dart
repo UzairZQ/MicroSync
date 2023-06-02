@@ -112,6 +112,50 @@ class UserDataProvider with ChangeNotifier {
       return;
     }
   }
+
+  Future<void> removeProductFromUser(ProductModel product) async {
+    try {
+      _isLoading = true;
+      final userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(selectedUser!.uid);
+
+      final List<Map<String, dynamic>> updatedProducts = selectedUser!
+          .assignedProducts!
+          .where((assignedProduct) => assignedProduct.code != product.code)
+          .map((assignedProduct) => assignedProduct.toMap())
+          .toList();
+
+      await userDocRef.update({'assignedProducts': updatedProducts});
+      _isLoading = false;
+      // Show a success message or perform any other necessary actions
+    } catch (e) {
+      _isLoading = false;
+      print('Error removing product from user: $e');
+      // Show an error message or handle the error in an appropriate way
+    }
+  }
+
+  Future<void> removeAreaFromUser(AreaModel area) async {
+    try {
+      _isLoading = true;
+      final userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(selectedUser!.uid);
+
+      final List<Map<String, dynamic>> updatedAreas = selectedUser!
+          .assignedAreas!
+          .where((assignedArea) => assignedArea.areaId != area.areaId)
+          .map((assignedArea) => assignedArea.toMap())
+          .toList();
+
+      await userDocRef.update({'assignedAreas': updatedAreas});
+      _isLoading = false;
+      // Show a success message or perform any other necessary actions
+    } catch (e) {
+      _isLoading = false;
+      print('Error removing area from user: $e');
+      // Show an error message or handle the error in an appropriate way
+    }
+  }
 }
 
 
