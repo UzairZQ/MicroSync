@@ -343,6 +343,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                                   selectedProducts: List.from(
                                       selectedProducts), // Make a copy of the list
                                   doctorRemarks: doctorRemarksController.text,
+                                  visited: visitedDoctor,
                                 );
                                 doctorVisitDetailsList!.add(doctorVisitDetails);
                                 // for (DoctorVisitModel doctorvisits

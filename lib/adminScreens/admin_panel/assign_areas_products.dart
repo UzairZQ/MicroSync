@@ -74,7 +74,6 @@ class AssignAreasProductsToEmployeesState
             }
             setState(() {
               selectedAreas = [];
-              selectedEmployeeIndex = null;
               selectedProducts = [];
             });
 

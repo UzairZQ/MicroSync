@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:path/path.dart';
 
 List<String> month = <String>[
   'January',
@@ -222,27 +221,27 @@ class _DashboardState extends State<Dashboard> {
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Poppins'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
               Container(
                   // padding: EdgeInsets.fromLTRB(50, 20, 180, 200),
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: PieChart(
                     dataMap: dataMap,
                     chartRadius: MediaQuery.of(context).size.width / 2.2,
                     chartType: ChartType.ring,
                     centerText: '1.55 doctor',
-                    chartValuesOptions: ChartValuesOptions(
+                    chartValuesOptions: const ChartValuesOptions(
                       showChartValues: false,
                       showChartValueBackground: false,
                     ),
-                    legendOptions: LegendOptions(showLegends: false),
+                    legendOptions: const LegendOptions(showLegends: false),
                   )),
               const SizedBox(
                 height: 25.0,
               ),
-              Text(
+              const Text(
                 'Product order booking',
                 textAlign: TextAlign.start,
                 style: TextStyle(
@@ -250,7 +249,7 @@ class _DashboardState extends State<Dashboard> {
                   fontSize: 18,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Center(
@@ -301,11 +300,11 @@ class _DashboardState extends State<Dashboard> {
                 chartRadius: MediaQuery.of(context).size.width / 3.2,
                 chartType: ChartType.ring,
                 centerText: '1.55 doctor',
-                chartValuesOptions: ChartValuesOptions(
+                chartValuesOptions: const ChartValuesOptions(
                   showChartValues: false,
                   showChartValueBackground: false,
                 ),
-                legendOptions: LegendOptions(showLegends: false),
+                legendOptions: const LegendOptions(showLegends: false),
               ),
               const SizedBox(
                 height: 20.0,
@@ -323,12 +322,12 @@ class _DashboardState extends State<Dashboard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      padding: EdgeInsets.all(20),
-                      margin: EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.all(15),
                       height: 90,
                       width: 122.0,
                       decoration: BoxDecoration(
-                        color: Color(0xFFD9D9D9),
+                        color: const Color(0xFFD9D9D9),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: const Row(
@@ -355,13 +354,13 @@ class _DashboardState extends State<Dashboard> {
                           // Additional widgets in the row, if needed
                         ],
                       )),
-                  SizedBox(width: 40),
+                  const SizedBox(width: 40),
                   Container(
                     margin: EdgeInsets.all(15),
                     height: 90,
                     width: 122.0,
                     decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
+                      color: const Color(0xFFD9D9D9),
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     child: const Row(

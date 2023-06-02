@@ -31,7 +31,7 @@ class ViewDCRScreen extends StatelessWidget {
                 itemCount: reports.length,
                 itemBuilder: (ctx, index) {
                   final report = reports[index];
-                  return Card(  
+                  return Card(
                     child: ListTile(
                       title: MyTextwidget(
                         text: 'Area: ${report.area}',
@@ -57,47 +57,55 @@ class ViewDCRScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog.fullscreen(
+        return Dialog(
+          backgroundColor: Colors.green[100],
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (var doctorVisit in doctorsVisited)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: MyTextwidget(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (var doctorVisit in doctorsVisited)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        MyTextwidget(
                           text: 'Doctor Name: ${doctorVisit.name}',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        MyTextwidget(
+                          text: 'Remarks: ${doctorVisit.doctorRemarks}',
                           fontSize: 16,
                         ),
-                      ),
-                      MyTextwidget(
-                        text: 'Remarks: ${doctorVisit.doctorRemarks}',
-                        fontSize: 16,
-                      ),
-                      MyTextwidget(
-                        text: 'Samples Provided:',
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: doctorVisit.selectedProducts?.length,
-                        itemBuilder: (ctx, index) {
-                          final product = doctorVisit.selectedProducts?[index];
-                          return Card(
-                            color: Colors.amber[100],
-                            child: ListTile(
-                              title: Text(product?.productName ??
-                                  'No Samples Provided'),
-                              subtitle: Text('Quantity: ${product?.quantity}'),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-              ],
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        MyTextwidget(
+                          text: 'Samples Provided:',
+                          fontSize: 16,
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: doctorVisit.selectedProducts?.length,
+                          itemBuilder: (ctx, index) {
+                            final product =
+                                doctorVisit.selectedProducts?[index];
+                            return Card(
+                              color: Colors.amber[100],
+                              child: ListTile(
+                                title: Text(product?.productName ??
+                                    'No Samples Provided'),
+                                subtitle:
+                                    Text('Quantity: ${product?.quantity}'),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                ],
+              ),
             ),
           ),
         );
