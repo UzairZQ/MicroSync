@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/day_plan_model.dart';
@@ -12,6 +13,7 @@ import 'package:micro_pharma/providers/product_data_provider.dart';
 import 'package:micro_pharma/providers/user_data_provider.dart';
 import 'package:micro_pharma/userScreens/call_planner.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/doctor_visit_model.dart';
 
 class DailyCallReportScreen extends StatefulWidget {
@@ -33,11 +35,29 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
   ProductModel? selectedProduct;
   TextEditingController doctorRemarksController = TextEditingController();
   List<SelectedProduct> selectedProducts = [];
+  bool isReportSubmitted = false;
+  bool _isSharedPrefsInitialized = false;
+
+  late SharedPreferences _sharedPrefs;
+
+  void submitReport() async {
+    setState(() {
+      isReportSubmitted = true;
+    });
+
+    // Store the current date as the last submitted date
+    final now = DateTime.now();
+    await _sharedPrefs.setString('lastSubmittedDate', now.toString());
+  }
 
   @override
   void initState() {
     super.initState();
 
+    _initializeSharedPrefs().then((_) {
+      _isSharedPrefsInitialized = true;
+      _checkReportSubmission();
+    });
     Provider.of<ProductDataProvider>(context, listen: false)
         .fetchProductsList();
     Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
@@ -51,6 +71,31 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
         Provider.of<ProductDataProvider>(context, listen: false).productsList;
   }
 
+  Future<void> _initializeSharedPrefs() async {
+    _sharedPrefs = await SharedPreferences.getInstance();
+  }
+
+  void _checkReportSubmission() {
+    final lastSubmittedDate = _sharedPrefs.getString('lastSubmittedDate');
+
+    if (lastSubmittedDate != null) {
+      final lastSubmittedDateTime = DateTime.parse(lastSubmittedDate);
+      final currentDateTime = DateTime.now();
+
+      if (lastSubmittedDateTime.day != currentDateTime.day ||
+          lastSubmittedDateTime.month != currentDateTime.month ||
+          lastSubmittedDateTime.year != currentDateTime.year) {
+        setState(() {
+          isReportSubmitted = false;
+        });
+      } else {
+        setState(() {
+          isReportSubmitted = true;
+        });
+      }
+    }
+  }
+
   String dayPlanTime() {
     DateFormat dateFormat = DateFormat('EEEE dd/MM/yyyy');
     String formattedDate = dateFormat.format(currentDayPlan!.date);
@@ -59,96 +104,131 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: currentDayPlan == null
-          ? FloatingActionButton(
-              child: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              })
-          : FloatingActionButton.extended(
-              onPressed: () {
-                final DailyCallReportModel dailyCallReportModel =
-                    DailyCallReportModel(
-                        area: currentDayPlan!.area,
-                        date: currentDayPlan!.date,
-                        doctorVisits: doctorVisitDetailsList!);
-                Provider.of<DailyCallReportProvider>(context, listen: false)
-                    .saveReport(dailyCallReportModel);
-                showCustomDialog(
+    if (isReportSubmitted) {
+      return Scaffold(
+        appBar: const MyAppBar(appBartxt: 'Daily Call Report'),
+        body: Center(
+          child: MyTextwidget(
+            text: 'The report has been submitted for today.',
+            fontSize: 20,
+          ),
+        ),
+      );
+    } else {
+      return Scaffold(
+        floatingActionButton: currentDayPlan == null
+            ? FloatingActionButton(
+                child: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                })
+            : FloatingActionButton.extended(
+                onPressed: () {
+                  final List<DoctorVisitModel> allDoctorVisitDetails = [];
+
+                  for (String doctor in currentDayPlan!.doctors) {
+                    DoctorVisitModel? visitDetails = doctorVisitDetailsList!
+                        .firstWhereOrNull((visit) => visit.name == doctor);
+
+                    if (visitDetails != null) {
+                      allDoctorVisitDetails.add(visitDetails);
+                    } else {
+                      DoctorVisitModel visitDetails = DoctorVisitModel(
+                        name: doctor,
+                        visited: false,
+                        selectedProducts: [],
+                        doctorRemarks: '',
+                      );
+                      allDoctorVisitDetails.add(visitDetails);
+                    }
+                  }
+
+                  final DailyCallReportModel dailyCallReportModel =
+                      DailyCallReportModel(
+                    area: currentDayPlan!.area,
+                    date: currentDayPlan!.date,
+                    doctorVisits: allDoctorVisitDetails,
+                  );
+
+                  Provider.of<DailyCallReportProvider>(context, listen: false)
+                      .saveReport(dailyCallReportModel);
+                  submitReport();
+
+                  showCustomDialog(
                     context: context,
                     title: 'Report Submitted',
-                    content:
-                        'Today\'s Report have been successfully submitted');
-              },
-              label: MyTextwidget(text: 'Submit Report'),
-              icon: const Icon(Icons.assignment_turned_in),
-            ),
-      appBar: const MyAppBar(appBartxt: 'Daily Call Report'),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: MyTextwidget(
-              text: currentDayPlan != null
-                  ? 'Doctors According to your today\'s Day Plan: ${dayPlanTime()} for ${currentDayPlan!.area}'
-                  : 'No Plan found!',
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          if (currentDayPlan == null)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  MyTextwidget(
-                    text:
-                        'It seems like there\'s no Day Plan for today, please Proceed to Call Planner Screen and add a Day Plan for today.',
-                    fontSize: 16,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  MyButton(
-                      text: 'Go to Call Planner',
-                      onPressed: () {
-                        Navigator.pushNamed(context, CallPlanner.id);
-                      })
-                ],
-              ),
-            ),
-          if (currentDayPlan != null)
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: currentDayPlan!.doctors.length,
-                itemBuilder: (context, index) {
-                  final dayPlanDoctors = currentDayPlan!.doctors;
-
-                  return Card(
-                    color: Colors.teal[100],
-                    child: ListTile(
-                      title: MyTextwidget(
-                        text: dayPlanDoctors[index],
-                        fontSize: 16,
-                      ),
-                      // subtitle: MyTextwidget(text:dayPlanDoctors[index] ,),
-                      trailing: TextButton(
-                        child: MyTextwidget(text: 'Add Doctor Info'),
-                        onPressed: () {
-                          doctorDetailsDialog(context, dayPlanDoctors, index);
-                        },
-                      ),
-                    ),
+                    content: 'Today\'s Report has been successfully submitted',
                   );
                 },
+                label: MyTextwidget(text: 'Submit Report'),
+                icon: const Icon(Icons.assignment_turned_in),
+              ),
+        appBar: const MyAppBar(appBartxt: 'Daily Call Report'),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MyTextwidget(
+                text: currentDayPlan != null
+                    ? 'Doctors According to your today\'s Day Plan: \n ${dayPlanTime()} for ${currentDayPlan!.area} \n Shift : ${currentDayPlan!.shift}'
+                    : 'No Plan found!',
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          // if (currentDayPlan != null)
-        ],
-      ),
-    );
+            if (currentDayPlan == null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    MyTextwidget(
+                      text:
+                          'It seems like there\'s no Day Plan for today, please Proceed to Call Planner Screen and add a Day Plan for today.',
+                      fontSize: 16,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    MyButton(
+                        text: 'Go to Call Planner',
+                        onPressed: () {
+                          Navigator.pushNamed(context, CallPlanner.id);
+                        })
+                  ],
+                ),
+              ),
+            if (currentDayPlan != null)
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: currentDayPlan!.doctors.length,
+                  itemBuilder: (context, index) {
+                    final dayPlanDoctors = currentDayPlan!.doctors;
+
+                    return Card(
+                      color: Colors.teal[100],
+                      child: ListTile(
+                        title: MyTextwidget(
+                          text: dayPlanDoctors[index],
+                          fontSize: 16,
+                        ),
+                        // subtitle: MyTextwidget(text:dayPlanDoctors[index] ,),
+                        trailing: TextButton(
+                          child: MyTextwidget(text: 'Add Doctor Info'),
+                          onPressed: () {
+                            doctorDetailsDialog(context, dayPlanDoctors, index);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            // if (currentDayPlan != null)
+          ],
+        ),
+      );
+    }
   }
 
   Future<dynamic> doctorDetailsDialog(
