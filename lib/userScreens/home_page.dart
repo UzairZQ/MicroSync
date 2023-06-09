@@ -196,103 +196,111 @@ class _HomePageState extends State<HomePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                height: 250.0,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Color(0xFF1FB7CC),
-                  borderRadius: BorderRadius.only(
+              Material(
+                elevation: 3,
+                borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(40.0),
-                    bottomRight: Radius.circular(40.0),
+                    bottomRight: Radius.circular(40.0)),
+                child: Container(
+                  height: 250.0,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Color(0xFF1FB7CC),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(40.0),
+                      bottomRight: Radius.circular(40.0),
+                    ),
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Consumer<UserDataProvider>(
-                      builder: (context, dataProvider, child) {
-                        UserModel? userData = dataProvider.getUserData;
-                        print(userData.displayName);
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Consumer<UserDataProvider>(
+                        builder: (context, dataProvider, child) {
+                          UserModel? userData = dataProvider.getUserData;
+                          print(userData.displayName);
 
-                        if (userData.displayName == null ||
-                            userData.displayName!.isEmpty) {
-                          return const CircularProgressIndicator();
-                        } else {
-                          return Text(
-                            'Welcome ${userData.displayName} !',
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
-                              color: Colors.white,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 17.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.calendar_month,
-                          color: Colors.white,
-                        ),
-                        Expanded(
-                          child: Text(
-                            'Today\'s Scheduled Plan: Abbottabad to ${currentDayPlan?.area}',
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.medication_rounded,
-                          color: Colors.white,
-                        ),
-                        Text(
-                          'Doctors: ${currentDayPlan?.doctors.length}',
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 17.0,
-                            fontWeight: FontWeight.bold,
+                          if (userData.displayName == null ||
+                              userData.displayName!.isEmpty) {
+                            return const CircularProgressIndicator();
+                          } else {
+                            return Text(
+                              'Welcome ${userData.displayName} !',
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                                color: Colors.white,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 17.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.calendar_month,
                             color: Colors.white,
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 25.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MyButton(
-                            onPressed: () {},
-                            color: const Color(0xFF009AAF),
-                            text: 'Start Your Day'),
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                        MyButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, DayPlansScreen.id);
-                            },
-                            color: const Color.fromARGB(255, 171, 75, 95),
-                            text: 'Change Plan'),
-                      ],
-                    ),
-                  ],
+                          Expanded(
+                            child: Text(
+                              'Today\'s Scheduled Plan: Abbottabad to ${currentDayPlan?.area ?? 'No Area Found'} ',
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.medication_rounded,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            'Doctors: ${currentDayPlan?.doctors.length ?? 'No Doctors found'}',
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 25.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          MyButton(
+                              onPressed: () {
+                                LocationServices().getLocation(currentUser!.uid);
+                              },
+                              color: const Color(0xFF009AAF),
+                              text: 'Start Your Day'),
+                          const SizedBox(
+                            width: 15.0,
+                          ),
+                          MyButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, DayPlansScreen.id);
+                              },
+                              color: const Color.fromARGB(255, 171, 75, 95),
+                              text: 'Change Plan'),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 20.0),
