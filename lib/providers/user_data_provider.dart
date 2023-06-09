@@ -79,7 +79,7 @@ class UserDataProvider with ChangeNotifier {
           .get();
       if (docSnapshot.exists) {
         final newUser = UserModel.fromMap(docSnapshot.data()!);
-        print('User Data: ${docSnapshot.data()}');
+        // print('User Data: ${docSnapshot.data()}');
 
         _user = newUser;
         notifyListeners();
