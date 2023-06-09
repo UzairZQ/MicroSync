@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/adminScreens/admin_panel/products_page.dart';
+import 'package:micro_pharma/adminScreens/admin_panel/show_assigned_areas_products.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/components/container_row.dart';
 import 'package:micro_pharma/adminScreens/admin_panel/doctors_page.dart';
@@ -46,7 +47,7 @@ class AdminPanel extends StatelessWidget {
                 ContainerRow(
                   container1Clr: Colors.amber[200]!,
                   container2Clr: Colors.amber[200]!,
-                  container1Icon: Icons.production_quantity_limits_outlined,
+                  container1Icon: Icons.picture_in_picture_alt_rounded,
                   container2Icon: Icons.assignment_add,
                   container1Text: 'Products',
                   container2Text: 'Assign Products & Areas',
@@ -64,6 +65,24 @@ class AdminPanel extends StatelessWidget {
                                 const AssignAreasProductsToEmployees())));
                   },
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ContainerRow(
+                    container1Clr: Colors.green[100]!,
+                    container2Clr: Colors.purple[100]!,
+                    container1Icon: Icons.assignment_ind_outlined,
+                    container2Icon: Icons.add_chart_outlined,
+                    container1Text:
+                        'Show Assigned Areas & Products to Employees',
+                    container2Text: 'Monthly Targets',
+                    container1Tap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return ShowAssignedAreasProducts();
+                      }));
+                    },
+                    container2Tap: () {})
               ],
             )));
   }

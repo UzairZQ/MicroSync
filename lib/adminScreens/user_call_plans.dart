@@ -28,6 +28,7 @@ class CallPlansForAdminState extends State<CallPlansForAdmin> {
   @override
   Widget build(BuildContext context) {
     final dayPlans = Provider.of<DayPlanProvider>(context).dayPlans;
+    dayPlans.sort((a, b) => b.date.compareTo(a.date));
     return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
             icon: const Icon(Icons.calendar_view_day_outlined),

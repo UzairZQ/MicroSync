@@ -25,29 +25,34 @@ class SubmittedOrders extends StatelessWidget {
             return Center(child: Text('Error occurred: ${snapshot.error}'));
           } else {
             final List<OrderModel> orders = orderProvider.getOrders;
+            orders.sort((a, b) => b.date.compareTo(a.date));
+
             if (orders.isEmpty) {
               return const Center(child: Text('No orders found.'));
             } else {
-              return ListView.builder(
-                itemCount: orders.length,
-                itemBuilder: (context, index) {
-                  final order = orders[index];
-                  return Card(
-                    color: Colors.amber[100],
-                    child: ListTile(
-                      title: MyTextwidget(
-                        text: ' ${order.customerName}',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+              return Padding(
+                padding: const EdgeInsets.all(10),
+                child: ListView.builder(
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) {
+                    final order = orders[index];
+                    return Card(
+                      color: Colors.amber[100],
+                      child: ListTile(
+                        title: MyTextwidget(
+                          text: ' ${order.customerName}',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                        subtitle: Text('Area: ${order.area}'),
+                        trailing: Text('Date: ${order.date}'),
+                        onTap: () {
+                          _showOrderDetails(context, order);
+                        },
                       ),
-                      subtitle: Text('Area: ${order.area}'),
-                      trailing: Text('Date: ${order.date}'),
-                      onTap: () {
-                        _showOrderDetails(context, order);
-                      },
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               );
             }
           }
@@ -61,6 +66,7 @@ class SubmittedOrders extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
+          backgroundColor: Colors.green[50],
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(

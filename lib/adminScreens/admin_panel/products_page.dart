@@ -75,13 +75,6 @@ class ProductListScreen extends StatelessWidget {
                       Row(
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.edit),
-                            color: Colors.green,
-                            onPressed: () {
-                              // Navigate to the edit screen
-                            },
-                          ),
-                          IconButton(
                             icon: const Icon(Icons.delete),
                             color: Colors.red,
                             onPressed: () {
@@ -102,8 +95,8 @@ class ProductListScreen extends StatelessWidget {
                                       TextButton(
                                         child: const Text('Delete'),
                                         onPressed: () {
-                                          provider.deleteProduct(
-                                              product.code.toString());
+                                          provider.deleteProduct(product.code);
+                                          provider.fetchProductsList();
                                           Navigator.pop(context);
                                         },
                                       ),
@@ -127,7 +120,7 @@ class ProductListScreen extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, AddProduct.id);
         },
-        label:  MyTextwidget(
+        label: MyTextwidget(
           text: 'Add New Product',
           fontSize: 14,
         ),
