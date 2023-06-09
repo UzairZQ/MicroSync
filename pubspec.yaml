@@ -79,6 +79,7 @@ flutter:
   assets:
     - assets/images/
     - assets/products.csv
+    - assets/Poppins/Poppins-Regular.ttf
     # - assets/open-sans.ttf
     # - assets/OpenSans-Regular.ttf
     # - assets/OpenSans-Bold.ttf

@@ -209,6 +209,8 @@
 // }
 
 import 'dart:io';
+import 'package:flutter/services.dart';
+
 // import 'package:pdf/widgets.dart' as pdfWidgets;
 // import 'package:pdf/widgets.dart';
 import 'package:pdf/pdf.dart';
@@ -219,7 +221,6 @@ import 'package:intl/intl.dart';
 
 import 'package:provider/provider.dart';
 
-
 import 'package:path_provider/path_provider.dart';
 import '../components/constants.dart';
 import '../models/day_plan_model.dart';
@@ -228,8 +229,6 @@ import 'call_planner.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import 'package:open_file/open_file.dart';
-
-
 
 class DayPlansScreen extends StatefulWidget {
   static const String id = 'day_plans';
@@ -253,7 +252,9 @@ class DayPlansScreenState extends State<DayPlansScreen> {
 
   Future<void> _generatePDF(List<DayPlanModel> dayPlans) async {
     final pdf = pw.Document();
-
+    final poppinsFont =
+        await rootBundle.load('assets/Poppins/Poppins-Regular.ttf');
+    final ttfFont = pw.Font.ttf(poppinsFont);
     for (final dayPlan in dayPlans) {
       pdf.addPage(
         pw.Page(
@@ -305,7 +306,9 @@ class DayPlansScreenState extends State<DayPlansScreen> {
     }
 
     final output = await getTemporaryDirectory();
-    final filePath = '${output.path}/day_plans_report.pdf';
+
+    final filePath = "${output.path}/day_plans_report.pdf";
+
     final file = File(filePath);
     await file.writeAsBytes(await pdf.save());
 
