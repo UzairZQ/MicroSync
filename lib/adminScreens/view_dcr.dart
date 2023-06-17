@@ -34,7 +34,8 @@ class ViewDCRScreen extends StatelessWidget {
                   return Card(
                     child: ListTile(
                       title: MyTextwidget(
-                        text: 'Area: ${report.area}',
+                        text:
+                            ' Submitted By: ${report.submittedBy}  \n Area: ${report.area}',
                         fontSize: 16,
                       ),
                       subtitle:

@@ -15,6 +15,8 @@ class CallPlansForAdmin extends StatefulWidget {
 }
 
 class CallPlansForAdminState extends State<CallPlansForAdmin> {
+  String? selectedFilter;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +31,10 @@ class CallPlansForAdminState extends State<CallPlansForAdmin> {
   Widget build(BuildContext context) {
     final dayPlans = Provider.of<DayPlanProvider>(context).dayPlans;
     dayPlans.sort((a, b) => b.date.compareTo(a.date));
+
+    // Create a list of unique areas for filtering
+    final List<String> areas =
+        dayPlans.map((dayPlan) => dayPlan.area).toSet().toList();
     return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
             icon: const Icon(Icons.calendar_view_day_outlined),
@@ -44,64 +50,107 @@ class CallPlansForAdminState extends State<CallPlansForAdmin> {
         ),
         body: RefreshIndicator(
           onRefresh: () => _refreshDayPlans(context),
-          child: ListView.builder(
-            itemCount: dayPlans.length,
-            itemBuilder: (context, index) {
-              final dayPlan = dayPlans[index];
+          child: Column(
+            children: [
+              DropdownButton<String>(
+                value: selectedFilter,
+                items: areas.map((area) {
+                  return DropdownMenuItem<String>(
+                    value: area,
+                    child: MyTextwidget(text: area),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedFilter = newValue;
+                  });
+                },
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: dayPlans.length,
+                  itemBuilder: (context, index) {
+                    final dayPlan = dayPlans[index];
 
-              String dayPlanTime() {
-                DateFormat dateFormat =
-                    DateFormat('EEEE dd/MM/yyyy'); // create date format
-                String formattedDate =
-                    dateFormat.format(dayPlan.date); // format current date
-                return formattedDate;
-              }
+                    String dayPlanTime() {
+                      DateFormat dateFormat =
+                          DateFormat('EEEE dd/MM/yyyy'); // create date format
+                      String formattedDate = dateFormat
+                          .format(dayPlan.date); // format current date
+                      return formattedDate;
+                    }
 
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    color: Colors.blue.shade100,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: MyTextwidget(
-                            fontSize: 15,
-                            text: ' Submitted by: ${dayPlan.userName}',
-                            fontWeight: FontWeight.bold,
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: Colors.blue.shade100,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(
+                                child: MyTextwidget(
+                                  fontSize: 15,
+                                  text: ' Submitted by: ${dayPlan.userName}',
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 8.0),
+                              Row(
+                                children: [
+                                  const Icon(Icons.date_range),
+                                  MyTextwidget(
+                                    text: 'Date : ${dayPlanTime()}',
+                                    fontSize: 14,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8.0),
+                              Row(
+                                children: [
+                                  const Icon(Icons.place),
+                                  MyTextwidget(
+                                    text: 'Area: ${dayPlan.area}',
+                                    fontSize: 14,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8.0),
+                              Row(
+                                children: [
+                                  const Icon(Icons.person_pin_rounded),
+                                  Flexible(
+                                    child: MyTextwidget(
+                                      text:
+                                          'Doctors: ${dayPlan.doctors.join(' , ')}',
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8.0),
+                              Row(
+                                children: [
+                                  const Icon(Icons.event_outlined),
+                                  MyTextwidget(
+                                    text: 'Shift: ${dayPlan.shift}',
+                                    fontSize: 14,
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 8.0),
-                        MyTextwidget(
-                          text: 'Date : ${dayPlanTime()}',
-                          fontSize: 14,
-                        ),
-                        const SizedBox(height: 8.0),
-                        MyTextwidget(
-                          text: 'Area: ${dayPlan.area}',
-                          fontSize: 15,
-                        ),
-                        const SizedBox(height: 8.0),
-                        MyTextwidget(
-                          text: 'Doctors: ${dayPlan.doctors.join(' , ')}',
-                          fontSize: 16,
-                        ),
-                        const SizedBox(height: 8.0),
-                        MyTextwidget(
-                          text: 'Shift: ${dayPlan.shift}',
-                          fontSize: 15,
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+              ),
+            ],
           ),
         ));
   }

@@ -24,6 +24,8 @@ class _DoctorsPageState extends State<DoctorsPage> {
 
   AreaModel? selectedArea;
 
+  String searchQuery = '';
+
   @override
   void initState() {
     Provider.of<AreaProvider>(context, listen: false).fetchAreas();
@@ -46,161 +48,9 @@ class _DoctorsPageState extends State<DoctorsPage> {
       floatingActionButton: FloatingActionButton.extended(
           icon: const Icon(Icons.add_outlined),
           onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: ((context) {
-                return GestureDetector(
-                  onTap: () {
-                    // dismiss the keyboard when the user taps outside the text fields
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height / 1.2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Form(
-                        key: formKey,
-                        child: Column(
-                          children: [
-                            ListTile(
-                              title: const Text(
-                                'Name & Area',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    fontFamily: 'Poppins'),
-                              ),
-                              subtitle: Column(
-                                children: [
-                                  TextFormField(
-                                    controller: doctorNameController,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please Enter Doctor Name';
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (name) {
-                                      doctorNameController.text = name!;
-                                    },
-                                    decoration: const InputDecoration(
-                                      hintText: 'Enter Doctor Name',
-                                      contentPadding: EdgeInsets.only(top: 3),
-                                    ),
-                                  ),
-                                  DropdownButtonFormField<AreaModel>(
-                                    value: selectedArea,
-                                    validator: (value) {
-                                      if (value == null) {
-                                        return 'Please Select Area';
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (AreaModel? area) {
-                                      setState(() {
-                                        selectedArea = area;
-                                      });
-                                    },
-                                    onSaved: (area) {
-                                      areaController.text = area!.areaName;
-                                    },
-                                    items: areas.map((area) {
-                                      return DropdownMenuItem(
-                                        value: area,
-                                        child: Text(area.areaName),
-                                      );
-                                    }).toList(),
-                                    decoration: const InputDecoration(
-                                      hintText: 'Select Area',
-                                      contentPadding: EdgeInsets.only(top: 3),
-                                      border: UnderlineInputBorder(),
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    controller: addressController,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please Enter Doctor\'s Address';
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (address) {
-                                      doctorNameController.text = address!;
-                                    },
-                                    decoration: const InputDecoration(
-                                      hintText: 'Enter Address',
-                                      contentPadding: EdgeInsets.only(top: 3),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                            ListTile(
-                              title: const Text(
-                                'Specialization',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              subtitle: Column(
-                                children: [
-                                  TextFormField(
-                                    controller: specializationController,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please Enter Phone Number';
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (category) {
-                                      doctorNameController.text = category!;
-                                    },
-                                    decoration: const InputDecoration(
-                                      hintText: 'Select Category',
-                                      contentPadding: EdgeInsets.only(top: 3),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            MyButton(
-                              color: Colors.blue,
-                              text: 'Save',
-                              onPressed: () {
-                                if (formKey.currentState!.validate()) {
-                                  formKey.currentState!.save();
-                                  DoctorDataProvider.addDoctor(
-                                    doctorNameController.text,
-                                    areaController.text,
-                                    addressController.text,
-                                    specializationController.text,
-                                  );
-
-                                  doctorNameController.clear();
-                                  areaController.clear();
-                                  addressController.clear();
-                                  specializationController.clear();
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            );
+            AddDoctorBottomSheet(context, areas);
           },
-          label:  MyTextwidget(
+          label: MyTextwidget(
             text: 'Add Doctor',
             fontSize: 16,
           )),
@@ -215,23 +65,25 @@ class _DoctorsPageState extends State<DoctorsPage> {
               Row(
                 children: [
                   Expanded(
-                    flex: 2,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.blueGrey[900],
-                        ),
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            8.0,
+                      flex: 2,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Search',
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.blueGrey[900],
+                          ),
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
+                        onChanged: (value) {
+                          setState(() {
+                            searchQuery = value;
+                          });
+                        },
+                      )),
                   const SizedBox(
                     width: 5.0,
                   ),
@@ -256,13 +108,20 @@ class _DoctorsPageState extends State<DoctorsPage> {
               Flexible(
                 child: ListView.builder(
                   itemBuilder: (context, index) {
-                    // Filter doctors based on selected area
+                    // Filter doctors based on selected area and search query
                     final filteredDoctors = selectedArea != null
                         ? doctors
                             .where((doctor) =>
-                                doctor.area == selectedArea!.areaName)
+                                doctor.area == selectedArea!.areaName &&
+                                doctor.name!
+                                    .toLowerCase()
+                                    .contains(searchQuery.toLowerCase()))
                             .toList()
-                        : doctors;
+                        : doctors
+                            .where((doctor) => doctor.name!
+                                .toLowerCase()
+                                .contains(searchQuery.toLowerCase()))
+                            .toList();
 
                     // Display doctors in card
                     return Card(
@@ -290,6 +149,163 @@ class _DoctorsPageState extends State<DoctorsPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<dynamic> AddDoctorBottomSheet(
+      BuildContext context, List<AreaModel> areas) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: ((context) {
+        return GestureDetector(
+          onTap: () {
+            // dismiss the keyboard when the user taps outside the text fields
+            FocusScope.of(context).unfocus();
+          },
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height / 1.2,
+            child: Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: const Text(
+                        'Name & Area',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            fontFamily: 'Poppins'),
+                      ),
+                      subtitle: Column(
+                        children: [
+                          TextFormField(
+                            controller: doctorNameController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please Enter Doctor Name';
+                              }
+                              return null;
+                            },
+                            onSaved: (name) {
+                              doctorNameController.text = name!;
+                            },
+                            decoration: const InputDecoration(
+                              hintText: 'Enter Doctor Name',
+                              contentPadding: EdgeInsets.only(top: 3),
+                            ),
+                          ),
+                          DropdownButtonFormField<AreaModel>(
+                            value: selectedArea,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please Select Area';
+                              }
+                              return null;
+                            },
+                            onChanged: (AreaModel? area) {
+                              setState(() {
+                                selectedArea = area;
+                              });
+                            },
+                            onSaved: (area) {
+                              areaController.text = area!.areaName;
+                            },
+                            items: areas.map((area) {
+                              return DropdownMenuItem(
+                                value: area,
+                                child: Text(area.areaName),
+                              );
+                            }).toList(),
+                            decoration: const InputDecoration(
+                              hintText: 'Select Area',
+                              contentPadding: EdgeInsets.only(top: 3),
+                              border: UnderlineInputBorder(),
+                            ),
+                          ),
+                          TextFormField(
+                            controller: addressController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please Enter Doctor\'s Address';
+                              }
+                              return null;
+                            },
+                            onSaved: (address) {
+                              doctorNameController.text = address!;
+                            },
+                            decoration: const InputDecoration(
+                              hintText: 'Enter Address',
+                              contentPadding: EdgeInsets.only(top: 3),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    ListTile(
+                      title: const Text(
+                        'Specialization',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      subtitle: Column(
+                        children: [
+                          TextFormField(
+                            controller: specializationController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please Enter Phone Number';
+                              }
+                              return null;
+                            },
+                            onSaved: (category) {
+                              doctorNameController.text = category!;
+                            },
+                            decoration: const InputDecoration(
+                              hintText: 'Select Category',
+                              contentPadding: EdgeInsets.only(top: 3),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    MyButton(
+                      color: Colors.blue,
+                      text: 'Save',
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          formKey.currentState!.save();
+                          DoctorDataProvider.addDoctor(
+                            doctorNameController.text,
+                            areaController.text,
+                            addressController.text,
+                            specializationController.text,
+                          );
+
+                          doctorNameController.clear();
+                          areaController.clear();
+                          addressController.clear();
+                          specializationController.clear();
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
     );
   }
 }

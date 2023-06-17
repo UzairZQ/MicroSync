@@ -76,4 +76,20 @@ class ProductModel {
     data['packing'] = packing;
     return data;
   }
+
+  ProductModel copyWith({
+    int? code,
+    String? name,
+    double? retailPrice,
+    double? tradePrice,
+    dynamic packing,
+  }) {
+    return ProductModel(
+      code: code ?? this.code,
+      name: name ?? this.name,
+      retailPrice: retailPrice ?? this.retailPrice,
+      tradePrice: tradePrice ?? this.tradePrice,
+      packing: packing ?? this.packing,
+    );
+  }
 }

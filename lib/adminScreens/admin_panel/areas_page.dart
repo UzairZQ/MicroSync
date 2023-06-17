@@ -107,7 +107,7 @@ class _AreasState extends State<Areas> {
             },
           );
         },
-        label:  MyTextwidget(
+        label: MyTextwidget(
           text: 'Add Area',
           fontSize: 16,
         ),
@@ -145,6 +145,7 @@ class _AreasState extends State<Areas> {
                             await AreaProvider()
                                 .deleteAreaFromDatabase(area.areaId);
                             areasProvider.fetchAreas();
+                            Navigator.pop(context);
                           },
                           child: const Text('Delete'),
                         ),

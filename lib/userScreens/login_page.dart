@@ -152,7 +152,7 @@ class LoginPageState extends State<LoginPage> {
                                   height: 15.0,
                                 ),
                                 MyTextFormField(
-                                    key: _formKey,
+                                    key: formKey,
                                     hintext: 'Please Enter your Email',
                                     controller: changePassController,
                                     validator: (value) {
