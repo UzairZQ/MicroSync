@@ -4,7 +4,6 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../components/constants.dart';
 import '../models/day_plan_model.dart';
@@ -24,14 +23,182 @@ class DayPlansScreen extends StatefulWidget {
 }
 
 class DayPlansScreenState extends State<DayPlansScreen> {
+  String? selectedArea;
+
   @override
   void initState() {
     super.initState();
+
     Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
+
+    final dayPlans =
+        Provider.of<DayPlanProvider>(context, listen: false).dayPlans;
+    dayPlans.sort((a, b) => b.date.compareTo(a.date));
+
+    final List<String> areas =
+        dayPlans.map((dayPlan) => dayPlan.area).toSet().toList();
+
+    if (areas.isNotEmpty) {
+      selectedArea = areas[0];
+    }
   }
 
   Future<void> _refreshDayPlans(BuildContext context) async {
     await Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dayPlans = Provider.of<DayPlanProvider>(context).dayPlans;
+    dayPlans.sort((a, b) => b.date.compareTo(a.date));
+
+    // Create a list of unique areas from dayPlans
+    final List<String> areas =
+        dayPlans.map((dayPlan) => dayPlan.area).toSet().toList();
+
+    // Define variables to hold the selected area
+
+    return Scaffold(
+      floatingActionButton: PopupMenuButton(
+        itemBuilder: (BuildContext context) {
+          return [
+            const PopupMenuItem(
+              value: 'add_call_plan',
+              child: ListTile(
+                leading: Icon(Icons.calendar_view_day_outlined),
+                title: Text('Add New Call Plan'),
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'export_pdf',
+              child: ListTile(
+                leading: Icon(Icons.save),
+                title: Text('Export to PDF'),
+              ),
+            ),
+          ];
+        },
+        onSelected: (String value) {
+          if (value == 'add_call_plan') {
+            Navigator.pushNamed(context, CallPlanner.id);
+          } else if (value == 'export_pdf') {
+            _generatePDF(dayPlans);
+          }
+        },
+        child: const Icon(Icons.more_vert),
+      ),
+      appBar: const MyAppBar(
+        appBartxt: 'Call Plans',
+      ),
+      body: RefreshIndicator(
+        onRefresh: () => _refreshDayPlans(context),
+        child: Column(
+          children: [
+            DropdownButton<String>(
+              value: selectedArea,
+              items: areas.map((area) {
+                return DropdownMenuItem<String>(
+                  value: area,
+                  child: Text(area),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    selectedArea = newValue;
+                  });
+                }
+              },
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: dayPlans.length,
+                itemBuilder: (context, index) {
+                  final dayPlan = dayPlans[index];
+                  if (dayPlan.area != selectedArea) {
+                    return const SizedBox
+                        .shrink(); // Skip rendering if the area doesn't match the selected area
+                  }
+                  String dayPlanTime() {
+                    DateFormat dateFormat =
+                        DateFormat('EEEE dd/MM/yyyy'); // create date format
+                    String formattedDate =
+                        dateFormat.format(dayPlan.date); // format current date
+                    return formattedDate;
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                              blurRadius: 5,
+                              blurStyle: BlurStyle.outer,
+                              color: Colors.grey)
+                        ],
+                        borderRadius: BorderRadius.circular(15.0),
+                        color: Colors.blue.shade100,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.date_range),
+                                MyTextwidget(
+                                  text: 'Date : ${dayPlanTime()}',
+                                  fontSize: 14,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8.0),
+                            Row(
+                              children: [
+                                const Icon(Icons.place),
+                                MyTextwidget(
+                                  text: 'Area: ${dayPlan.area}',
+                                  fontSize: 14,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8.0),
+                            Row(
+                              children: [
+                                const Icon(Icons.person_pin_rounded),
+                                Flexible(
+                                  child: MyTextwidget(
+                                    text:
+                                        'Doctors: ${dayPlan.doctors.join(' , ')}',
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8.0),
+                            Row(
+                              children: [
+                                const Icon(Icons.event_outlined),
+                                MyTextwidget(
+                                  text: 'Shift: ${dayPlan.shift}',
+                                  fontSize: 14,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _generatePDF(List<DayPlanModel> dayPlans) async {
@@ -128,98 +295,5 @@ class DayPlansScreenState extends State<DayPlansScreen> {
     } catch (e) {
       print('Error generating PDF: $e');
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final dayPlans = Provider.of<DayPlanProvider>(context).dayPlans;
-    dayPlans.sort((a, b) => b.date.compareTo(a.date));
-    return Scaffold(
-      floatingActionButton: PopupMenuButton(
-        itemBuilder: (BuildContext context) {
-          return [
-            const PopupMenuItem(
-              value: 'add_call_plan',
-              child: ListTile(
-                leading: Icon(Icons.calendar_view_day_outlined),
-                title: Text('Add New Call Plan'),
-              ),
-            ),
-            const PopupMenuItem(
-              value: 'export_pdf',
-              child: ListTile(
-                leading: Icon(Icons.save),
-                title: Text('Export to PDF'),
-              ),
-            ),
-          ];
-        },
-        onSelected: (String value) {
-          if (value == 'add_call_plan') {
-            Navigator.pushNamed(context, CallPlanner.id);
-          } else if (value == 'export_pdf') {
-            _generatePDF(dayPlans);
-          }
-        },
-        child: const Icon(Icons.more_vert),
-      ),
-      appBar: const MyAppBar(
-        appBartxt: 'Call Plans',
-      ),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshDayPlans(context),
-        child: ListView.builder(
-          itemCount: dayPlans.length,
-          itemBuilder: (context, index) {
-            final dayPlan = dayPlans[index];
-
-            String dayPlanTime() {
-              DateFormat dateFormat =
-                  DateFormat('EEEE dd/MM/yyyy'); // create date format
-              String formattedDate =
-                  dateFormat.format(dayPlan.date); // format current date
-              return formattedDate;
-            }
-
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.blue.shade100,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      MyTextwidget(
-                        text: 'Date : ${dayPlanTime()}',
-                        fontSize: 14,
-                      ),
-                      const SizedBox(height: 8.0),
-                      MyTextwidget(
-                        text: 'Area: ${dayPlan.area}',
-                        fontSize: 14,
-                      ),
-                      const SizedBox(height: 8.0),
-                      MyTextwidget(
-                        text: 'Doctors: ${dayPlan.doctors.join(' , ')}',
-                        fontSize: 15,
-                      ),
-                      const SizedBox(height: 8.0),
-                      MyTextwidget(
-                        text: 'Shift: ${dayPlan.shift}',
-                        fontSize: 14,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
   }
 }

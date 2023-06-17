@@ -106,7 +106,7 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
                 height: 10,
               ),
               Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: GridView.builder(
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

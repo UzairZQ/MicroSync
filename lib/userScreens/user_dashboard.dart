@@ -160,7 +160,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
               MyTextwidget(
@@ -168,7 +168,7 @@ class _DashboardState extends State<Dashboard> {
                 text: 'Visit/Missed Details',
                 fontWeight: FontWeight.bold,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
               Row(
@@ -211,7 +211,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
               const Text(
@@ -255,7 +255,7 @@ class _DashboardState extends State<Dashboard> {
               Center(
                 child: Container(
                     height: 90,
-                    margin: EdgeInsets.all(15),
+                    margin: const EdgeInsets.all(15),
                     width: 120,
                     decoration: BoxDecoration(
                       color: const Color(0xffD9D9D9),
@@ -356,7 +356,7 @@ class _DashboardState extends State<Dashboard> {
                       )),
                   const SizedBox(width: 40),
                   Container(
-                    margin: EdgeInsets.all(15),
+                    margin: const EdgeInsets.all(15),
                     height: 90,
                     width: 122.0,
                     decoration: BoxDecoration(

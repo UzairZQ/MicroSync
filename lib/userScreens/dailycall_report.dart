@@ -148,6 +148,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                     area: currentDayPlan!.area,
                     date: currentDayPlan!.date,
                     doctorVisits: allDoctorVisitDetails,
+                    submittedBy: userData!.displayName!,
                   );
 
                   Provider.of<DailyCallReportProvider>(context, listen: false)

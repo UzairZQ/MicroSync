@@ -75,13 +75,28 @@ class ProductDataProvider with ChangeNotifier {
     }
   }
 
-  void updateProduct(String productId, ProductModel newProduct) async {
+  void editProduct(int productCode, ProductModel? newProduct) async {
     try {
-      await FirebaseFirestore.instance
+      final querySnapshot = await FirebaseFirestore.instance
           .collection('products')
-          .doc(productId)
-          .update(newProduct.toMap());
-      notifyListeners();
+          .where('code', isEqualTo: productCode)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final productDoc = querySnapshot.docs.first;
+        final existingProduct = ProductModel.fromMap(productDoc.data());
+
+        final updatedProduct = existingProduct.copyWith(
+          name: newProduct?.name ?? existingProduct.name,
+          packing: newProduct?.packing ?? existingProduct.packing,
+          retailPrice: newProduct?.retailPrice ?? existingProduct.retailPrice,
+          tradePrice: newProduct?.tradePrice ?? existingProduct.tradePrice,
+        );
+
+        await productDoc.reference.update(updatedProduct.toMap());
+        notifyListeners();
+      }
     } catch (e) {
       print('Error in updating product: $e');
       return;

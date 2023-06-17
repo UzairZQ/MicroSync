@@ -3,6 +3,7 @@ import 'package:micro_pharma/components/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:micro_pharma/providers/product_data_provider.dart';
 
+import '../../models/product_model.dart';
 import 'add_product.dart';
 
 class ProductListScreen extends StatelessWidget {
@@ -74,6 +75,20 @@ class ProductListScreen extends StatelessWidget {
                       ),
                       Row(
                         children: [
+                         GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return EditProductBottomSheet(product: product);
+          },
+        );
+                          },
+                           child: const Icon(
+                            (Icons.edit),
+                              color: Colors.green,
+                            ),
+                         ),
                           IconButton(
                             icon: const Icon(Icons.delete),
                             color: Colors.red,
@@ -125,6 +140,110 @@ class ProductListScreen extends StatelessWidget {
           fontSize: 14,
         ),
         icon: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  
+}
+
+class EditProductBottomSheet extends StatefulWidget {
+    final ProductModel product;
+
+  const EditProductBottomSheet({Key? key, required this.product}) : super(key: key);
+
+  @override
+  State<EditProductBottomSheet> createState() => _EditProductBottomSheetState();
+}
+
+class _EditProductBottomSheetState extends State<EditProductBottomSheet> {
+
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _packingController = TextEditingController();
+  TextEditingController _retailPriceController = TextEditingController();
+  TextEditingController _tradePriceController = TextEditingController();
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the text controllers with the product details
+    _nameController.text = widget.product.name;
+    _packingController.text = widget.product.packing;
+    _retailPriceController.text = widget.product.retailPrice.toString();
+    _tradePriceController.text = widget.product.tradePrice.toString();
+    
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _packingController.dispose();
+    _retailPriceController.dispose();
+    _tradePriceController.dispose();
+    super.dispose();
+  }
+
+  void saveChanges() {
+    // Create a new ProductModel object with the updated details
+    ProductModel updatedProduct = ProductModel(
+      code: widget.product.code,
+      name: _nameController.text,
+      packing: _packingController.text,
+      retailPrice: double.parse(_retailPriceController.text),
+      tradePrice: double.parse(_tradePriceController.text),
+    );
+
+    // Call the editProduct method to update the product in Firestore
+    Provider.of<ProductDataProvider>(context, listen: false)
+        .editProduct(widget.product.code, updatedProduct);
+
+    // Close the bottom sheet
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        padding:const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: 'Name',
+              ),
+            ),
+            TextField(
+              controller: _packingController,
+              decoration: const InputDecoration(
+                labelText: 'Packing',
+              ),
+            ),
+            TextField(
+              controller: _retailPriceController,
+              decoration:const InputDecoration(
+                labelText: 'Retail Price',
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: _tradePriceController,
+              decoration: const InputDecoration(
+                labelText: 'Trade Price',
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: saveChanges,
+              child: const Text('Save Changes'),
+            ),
+          ],
+        ),
       ),
     );
   }
