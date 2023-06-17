@@ -1,17 +1,24 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
+
+// import 'package:pdf/widgets.dart' as pdfWidgets;
+// import 'package:pdf/widgets.dart';
+import 'package:pdf/pdf.dart';
+
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
+
+import 'package:path_provider/path_provider.dart';
 import '../components/constants.dart';
 import '../models/day_plan_model.dart';
 import '../providers/day_plans_provider.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
 import 'call_planner.dart';
+import 'package:pdf/widgets.dart' as pw;
+
+import 'package:open_file/open_file.dart';
 
 class DayPlansScreen extends StatefulWidget {
   static const String id = 'day_plans';
@@ -219,15 +226,8 @@ class DayPlansScreenState extends State<DayPlansScreen> {
 
     final fontData =
         await rootBundle.load('assets/Poppins/Poppins-Regular.ttf');
-    final ttfFont = pw.Font.ttf(fontData);
-
+    final ttfFont = pw.Font.ttf(poppinsFont);
     for (final dayPlan in dayPlans) {
-      String dayPlanTime() {
-        DateFormat dateFormat = DateFormat('EEEE dd/MM/yyyy');
-        String formattedDate = dateFormat.format(dayPlan.date);
-        return formattedDate;
-      }
-
       pdf.addPage(
         pw.Page(
           build: (pw.Context context) {
@@ -242,10 +242,9 @@ class DayPlansScreenState extends State<DayPlansScreen> {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text(
-                      'Date: ${dayPlanTime()}',
+                      'Date: ${dayPlan.date.toIso8601String()}',
                       style: pw.TextStyle(
                         fontSize: 14,
-                        font: ttfFont,
                       ),
                     ),
                     pw.SizedBox(height: 8.0),
@@ -253,15 +252,13 @@ class DayPlansScreenState extends State<DayPlansScreen> {
                       'Area: ${dayPlan.area}',
                       style: pw.TextStyle(
                         fontSize: 14,
-                        font: ttfFont,
                       ),
                     ),
                     pw.SizedBox(height: 8.0),
                     pw.Text(
-                      'Doctors: ${dayPlan.doctors.join(' , ')}',
+                      'Doctors: ${dayPlan.doctors.join(', ')}',
                       style: pw.TextStyle(
                         fontSize: 15,
-                        font: ttfFont,
                       ),
                     ),
                     pw.SizedBox(height: 8.0),
@@ -269,7 +266,6 @@ class DayPlansScreenState extends State<DayPlansScreen> {
                       'Shift: ${dayPlan.shift}',
                       style: pw.TextStyle(
                         fontSize: 14,
-                        font: ttfFont,
                       ),
                     ),
                   ],

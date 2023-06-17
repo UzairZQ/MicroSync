@@ -47,9 +47,11 @@ dependencies:
   open_file: ^3.3.1
   path: ^1.8.3
   location: ^4.4.0
+  url_launcher: ^6.0.10
   collection: ^1.17.1
 
 
+  # syncfusion_flutter_pdf: ^18.4.47-beta
   
 
 dev_dependencies:
@@ -78,6 +80,12 @@ flutter:
   assets:
     - assets/images/
     - assets/products.csv
+    - assets/Poppins/Poppins-Regular.ttf
+    # - assets/open-sans.ttf
+    # - assets/OpenSans-Regular.ttf
+    # - assets/OpenSans-Bold.ttf
+    # - assets/OpenSans-Italic.ttf
+    # - assets/OpenSans-BoldItalic.ttf
     
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -95,6 +103,7 @@ flutter:
      - family: Poppins
        fonts:
          - asset: assets/Poppins/Poppins-Regular.ttf
+         
   #      - asset: fonts/Schyler-Italic.ttf
   #        style: italic
   #   - family: Trajan Pro

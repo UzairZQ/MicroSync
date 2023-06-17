@@ -64,9 +64,8 @@ final formKey = GlobalKey<FormState>();
 TextStyle ktextstyle = const TextStyle(
     fontFamily: 'Poppins,', fontSize: 17.5, fontWeight: FontWeight.w400);
 
-class MyTextwidget extends StatelessWidget  {
-   MyTextwidget(
-      {super.key, this.fontWeight,  this.fontSize, required this.text});
+class MyTextwidget extends StatelessWidget {
+  MyTextwidget({super.key, this.fontWeight, this.fontSize, required this.text});
 
   final FontWeight? fontWeight;
   double? fontSize = 14.0;
@@ -142,17 +141,20 @@ Future<void> showCustomDialog({
 }
 
 class MyTextFormField extends StatelessWidget {
-  const MyTextFormField(
-      {super.key,
-      required this.hintext,
-      this.onSaved,
-      this.validator,
-      this.controller});
+  const MyTextFormField({
+    super.key,
+    required this.hintext,
+    this.onSaved,
+    this.validator,
+    this.controller,
+    this.icon,
+  });
 
   final String? hintext;
   final Function(String?)? onSaved;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
+  final Icon? icon;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -160,6 +162,7 @@ class MyTextFormField extends StatelessWidget {
       validator: validator,
       onSaved: onSaved,
       decoration: InputDecoration(
+        prefixIcon: icon, 
         filled: true,
         fillColor: Colors.blue[50],
         hintText: '$hintext',
