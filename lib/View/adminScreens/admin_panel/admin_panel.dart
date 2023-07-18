@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/adminScreens/admin_panel/products_page.dart';
-import 'package:micro_pharma/adminScreens/admin_panel/show_assigned_areas_products.dart';
+import 'package:micro_pharma/View/adminScreens/admin_panel/products_page.dart';
+import 'package:micro_pharma/View/adminScreens/admin_panel/show_assigned_areas_products.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/components/container_row.dart';
-import 'package:micro_pharma/adminScreens/admin_panel/doctors_page.dart';
+import 'package:micro_pharma/components/widgets/container_row.dart';
+import 'package:micro_pharma/View/adminScreens/admin_panel/doctors_page.dart';
 import 'areas_page.dart';
 import 'assign_areas_products.dart';
 

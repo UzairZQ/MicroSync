@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:micro_pharma/userScreens/call_planner.dart';
+import 'package:micro_pharma/View/userScreens/Call%20Planner%20Page/call_planner.dart';
 import 'package:provider/provider.dart';
-import '../components/constants.dart';
-import '../providers/day_plans_provider.dart';
+import '../../components/constants.dart';
+import '../../viewModel/day_plans_provider.dart';
 
 class CallPlansForAdmin extends StatefulWidget {
   static const String id = 'call_plans';

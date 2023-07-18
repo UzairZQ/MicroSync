@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/userScreens/home_page.dart';
-import 'package:micro_pharma/userScreens/login_page.dart';
+import 'package:micro_pharma/View/userScreens/User%20Home%20Page/home_page.dart';
+import 'package:micro_pharma/View/userScreens/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'adminScreens/admin_homepage.dart';
+import 'View/adminScreens/admin_homepage.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});

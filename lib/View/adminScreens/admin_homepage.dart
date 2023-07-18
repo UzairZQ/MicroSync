@@ -1,19 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/adminScreens/admin_settings.dart';
-import 'package:micro_pharma/adminScreens/admin_panel/admin_panel.dart';
-import 'package:micro_pharma/adminScreens/view_dcr.dart';
-import 'package:micro_pharma/adminScreens/location_screen.dart';
-import 'package:micro_pharma/adminScreens/submitted_orders.dart';
-import 'package:micro_pharma/components/container_row.dart';
+import 'package:micro_pharma/View/adminScreens/admin_settings.dart';
+import 'package:micro_pharma/View/adminScreens/admin_panel/admin_panel.dart';
+import 'package:micro_pharma/View/adminScreens/view_dcr.dart';
+import 'package:micro_pharma/View/adminScreens/location_screen.dart';
+import 'package:micro_pharma/View/adminScreens/submitted_orders.dart';
+import 'package:micro_pharma/components/widgets/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/providers/user_data_provider.dart';
-import 'package:micro_pharma/userScreens/login_page.dart';
+import 'package:micro_pharma/viewModel/user_data_provider.dart';
+import 'package:micro_pharma/View/userScreens/login_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:theme_provider/theme_provider.dart';
-import '../models/user_model.dart';
-import '../splash_page.dart';
+import '../../models/user_model.dart';
+import '../../splash_page.dart';
 import './user_call_plans.dart';
 
 class AdminPage extends StatefulWidget {

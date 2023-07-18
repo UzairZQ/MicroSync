@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/providers/product_data_provider.dart';
+import 'package:micro_pharma/viewModel/product_data_provider.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});

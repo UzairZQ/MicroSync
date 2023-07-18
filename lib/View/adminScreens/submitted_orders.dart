@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:micro_pharma/models/order_model.dart';
 
-import '../components/constants.dart';
-import '../providers/order_data_provider.dart';
+import '../../components/constants.dart';
+import '../../viewModel/order_data_provider.dart';
 
 class SubmittedOrders extends StatelessWidget {
   static const String id = 'submitted_orders';

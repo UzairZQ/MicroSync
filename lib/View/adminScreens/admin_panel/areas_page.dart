@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/providers/area_provider.dart';
+import 'package:micro_pharma/viewModel/area_provider.dart';
 import 'package:provider/provider.dart';
 
 class Areas extends StatefulWidget {

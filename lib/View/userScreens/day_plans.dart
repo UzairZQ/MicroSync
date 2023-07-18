@@ -12,13 +12,12 @@ import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 import 'package:path_provider/path_provider.dart';
-import '../components/constants.dart';
-import '../models/day_plan_model.dart';
-import '../providers/day_plans_provider.dart';
-import 'call_planner.dart';
+import '../../components/constants.dart';
+import '../../models/day_plan_model.dart';
+import '../../viewModel/day_plans_provider.dart';
+import 'Call Planner Page/call_planner.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-import 'package:open_file/open_file.dart';
 
 class DayPlansScreen extends StatefulWidget {
   static const String id = 'day_plans';
@@ -226,7 +225,7 @@ class DayPlansScreenState extends State<DayPlansScreen> {
 
     final fontData =
         await rootBundle.load('assets/Poppins/Poppins-Regular.ttf');
-    final ttfFont = pw.Font.ttf(poppinsFont);
+    final ttfFont = pw.Font.ttf(fontData);
     for (final dayPlan in dayPlans) {
       pdf.addPage(
         pw.Page(
@@ -243,28 +242,28 @@ class DayPlansScreenState extends State<DayPlansScreen> {
                   children: [
                     pw.Text(
                       'Date: ${dayPlan.date.toIso8601String()}',
-                      style: pw.TextStyle(
+                      style:const pw.TextStyle(
                         fontSize: 14,
                       ),
                     ),
                     pw.SizedBox(height: 8.0),
                     pw.Text(
                       'Area: ${dayPlan.area}',
-                      style: pw.TextStyle(
+                      style:const  pw.TextStyle(
                         fontSize: 14,
                       ),
                     ),
                     pw.SizedBox(height: 8.0),
                     pw.Text(
                       'Doctors: ${dayPlan.doctors.join(', ')}',
-                      style: pw.TextStyle(
+                      style:const pw.TextStyle(
                         fontSize: 15,
                       ),
                     ),
                     pw.SizedBox(height: 8.0),
                     pw.Text(
                       'Shift: ${dayPlan.shift}',
-                      style: pw.TextStyle(
+                      style:const  pw.TextStyle(
                         fontSize: 14,
                       ),
                     ),

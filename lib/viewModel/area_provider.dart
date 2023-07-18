@@ -28,7 +28,7 @@ class AreaProvider with ChangeNotifier {
       _isLoading = false;
     } catch (error) {
       _isLoading = false;
-      print('Error loading areas: $error');
+      //print('Error loading areas: $error');
       rethrow;
     }
   }
@@ -41,9 +41,9 @@ class AreaProvider with ChangeNotifier {
           .add({'id': areaCode, 'name': areaName});
       notifyListeners();
 
-      print('Added to database');
+      //print('Added to database');
     } catch (e) {
-      print('This is the error $e');
+      //print('This is the error $e');
     }
   }
 
@@ -58,7 +58,7 @@ class AreaProvider with ChangeNotifier {
         notifyListeners();
       });
     } catch (error) {
-      print('Error deleting area: $error');
+      //print('Error deleting area: $error');
       rethrow;
     }
   }

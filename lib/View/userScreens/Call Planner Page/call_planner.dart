@@ -4,13 +4,14 @@ import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/area_model.dart';
 import 'package:micro_pharma/models/day_plan_model.dart';
 import 'package:micro_pharma/models/doctor_model.dart';
-import 'package:micro_pharma/providers/area_provider.dart';
-import 'package:micro_pharma/providers/doctor_provider.dart';
-import 'package:micro_pharma/providers/user_data_provider.dart';
+import 'package:micro_pharma/viewModel/area_provider.dart';
+import 'package:micro_pharma/viewModel/doctor_provider.dart';
+import 'package:micro_pharma/viewModel/user_data_provider.dart';
+import 'package:micro_pharma/View/userScreens/Call%20Planner%20Page/select_doctors.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../models/user_model.dart';
-import '../providers/day_plans_provider.dart';
+import '../../../models/user_model.dart';
+import '../../../viewModel/day_plans_provider.dart';
 
 class CallPlanner extends StatefulWidget {
   static const String id = 'call_planner';
@@ -196,51 +197,9 @@ class _CallPlannerState extends State<CallPlanner> {
                             final allDoctors = filteredDoctors
                                 .map((doctor) => doctor.name)
                                 .toSet();
-                            return AlertDialog(
-                              title: const Text('Select Doctors'),
-                              content: StatefulBuilder(
-                                builder: (context, setState) {
-                                  return SizedBox(
-                                    width: double.maxFinite,
-                                    child: ListView(
-                                      shrinkWrap: true,
-                                      children: allDoctors
-                                          .map((doctor) => CheckboxListTile(
-                                                title: Text(doctor!),
-                                                value: _selectedDoctors
-                                                    .contains(doctor),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    if (value == true) {
-                                                      _selectedDoctors
-                                                          .add(doctor);
-                                                    } else {
-                                                      _selectedDoctors
-                                                          .remove(doctor);
-                                                    }
-                                                  });
-                                                },
-                                              ))
-                                          .toList(),
-                                    ),
-                                  );
-                                },
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context, null);
-                                  },
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context, _selectedDoctors);
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
+                            return SelectDoctorsDialog(
+                                allDoctors: allDoctors,
+                                selectedDoctors: _selectedDoctors);
                           },
                         );
                         if (selectedDoctors != null) {
