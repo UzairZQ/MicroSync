@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:micro_pharma/providers/user_data_provider.dart';
-import 'package:micro_pharma/providers/product_data_provider.dart';
-import 'package:micro_pharma/providers/area_provider.dart';
+import 'package:micro_pharma/viewModel/user_data_provider.dart';
+import 'package:micro_pharma/viewModel/product_data_provider.dart';
+import 'package:micro_pharma/viewModel/area_provider.dart';
 import 'package:micro_pharma/models/area_model.dart';
 import 'package:micro_pharma/models/product_model.dart';
 import 'package:micro_pharma/models/user_model.dart';
 
-import '../../components/constants.dart';
+import '../../../components/constants.dart';
 
 class AssignAreasProductsToEmployees extends StatefulWidget {
   const AssignAreasProductsToEmployees({Key? key}) : super(key: key);

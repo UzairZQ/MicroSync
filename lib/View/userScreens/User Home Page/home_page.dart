@@ -1,25 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/models/day_plan_model.dart';
+import 'package:micro_pharma/View/userScreens/User%20Home%20Page/privacy_consent_dialog.dart';
 import 'package:theme_provider/theme_provider.dart';
-import 'package:micro_pharma/components/container_Row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/user_model.dart';
-import 'package:micro_pharma/providers/user_data_provider.dart';
+import 'package:micro_pharma/viewModel/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
-import 'package:micro_pharma/userScreens/order_page.dart';
-import '../adminScreens/admin_panel/doctors_page.dart';
-import '../providers/day_plans_provider.dart';
-import '../splash_page.dart';
-import 'call_planner.dart';
-import 'dailycall_report.dart';
-import 'package:micro_pharma/userScreens/user_dashboard.dart';
-import 'package:micro_pharma/userScreens/day_plans.dart';
-import 'package:micro_pharma/userScreens/login_page.dart';
-import 'package:micro_pharma/userScreens/user_profile.dart';
+import 'package:micro_pharma/View/userScreens/order_page.dart';
+import '../../adminScreens/admin_panel/doctors_page.dart';
+import '../../../components/widgets/container_row.dart';
+import '../../../viewModel/day_plans_provider.dart';
+import '../Call Planner Page/call_planner.dart';
+import '../dailycall_report.dart';
+import 'package:micro_pharma/View/userScreens/user_dashboard.dart';
+import 'package:micro_pharma/View/userScreens/day_plans.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
+import 'bacground_location.dart';
+import 'bottom_navigation_bar.dart';
 
 class HomePage extends StatefulWidget {
   static String id = 'home';
@@ -36,8 +34,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    showPrivacyConsentDialog();
-    getBackgroundLocation();
+    showPrivacyConsentDialog(currentUser!.uid);
+    getBackgroundLocation(currentUser!.uid);
     Provider.of<UserDataProvider>(context, listen: false)
         .fetchUserData(currentUser!.uid);
     Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
@@ -45,153 +43,11 @@ class _HomePageState extends State<HomePage> {
         .getCurrentDayPlan();
   }
 
-  Future<void> showPrivacyConsentDialog() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool hasShownConsent = prefs.getBool('hasShownConsent') ?? false;
-
-    if (!hasShownConsent) {
-      await showDialog(
-        context: navigatorKey.currentContext!,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: MyTextwidget(text: 'Privacy Consent'),
-            content: MyTextwidget(
-              text:
-                  'By using this app, you consent to the collection and use of your location data for the purpose of sales force automation and tracking your work activities in the field. Your location data will be securely stored and used in accordance with our privacy policy.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  prefs.setBool('hasShownConsent', true);
-                  Navigator.of(context).pop();
-                  userLocation();
-                },
-                child: const Text('I Agree'),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      userLocation();
-    }
-  }
-
-  void userLocation() async {
-    await LocationServices().requestPermission();
-    await LocationServices().getLocation(currentUser!.uid);
-    SharedPreferences userId = await SharedPreferences.getInstance();
-    userId.setString('userId', currentUser!.uid.toString());
-  }
-
-  void getBackgroundLocation() async {
-    const task = 'provideBGLoc';
-    Map<String, dynamic> uid = {'uid': currentUser!.uid};
-    Workmanager().registerPeriodicTask('locationTask', task,
-        backoffPolicy: BackoffPolicy.linear,
-        frequency: const Duration(minutes: 15),
-        initialDelay: const Duration(minutes: 5),
-        tag: 'location',
-        inputData: uid,
-        constraints: Constraints(
-          networkType: NetworkType.connected,
-          requiresBatteryNotLow: false,
-          requiresCharging: false,
-          requiresDeviceIdle: false,
-          requiresStorageNotLow: false,
-        ));
-  }
-
   @override
   Widget build(BuildContext context) {
-    userLocation();
+    userLocation(currentUser!.uid);
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: kappbarColor,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        selectedFontSize: 14,
-        unselectedFontSize: 14,
-        onTap: (int index) {
-          switch (index) {
-            case 0:
-              ThemeProvider.controllerOf(context).nextTheme();
-
-              break;
-            case 1:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const UserProfilePage()),
-              );
-              break;
-            case 2:
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Center(
-                      child: AlertDialog(
-                        title: const Text('Logout'),
-                        content: const Text('Do you really want to Logout?'),
-                        actions: [
-                          TextButton(
-                              onPressed: () async {
-                                FirebaseAuth.instance.signOut();
-
-                                Workmanager().cancelByTag('location');
-                                var sharedLogin =
-                                    await SharedPreferences.getInstance();
-                                sharedLogin.setBool(
-                                    SplashPageState.loginKey, false);
-                                var sharedUser =
-                                    await SharedPreferences.getInstance();
-                                sharedUser.setBool(
-                                    SplashPageState.userKey, false);
-                                Navigator.pushNamedAndRemoveUntil(
-                                  navigatorKey.currentContext!,
-                                  LoginPage.id,
-                                  (route) => false,
-                                );
-                              },
-                              child: const Text('Logout')),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Cancel'))
-                        ],
-                      ),
-                    );
-                  });
-
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            label: 'Change Theme',
-            icon: Icon(
-              Icons.color_lens,
-              size: 30,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: 'My Profile',
-            icon: Icon(
-              Icons.person_outlined,
-              size: 30,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: 'Logout',
-            icon: Icon(
-              Icons.logout_outlined,
-              size: 30,
-            ),
-          ),
-        ],
-      ),
+      bottomNavigationBar: const HomeNavigationBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -366,3 +222,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+

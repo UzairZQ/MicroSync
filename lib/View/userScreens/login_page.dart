@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:micro_pharma/components/constants.dart';
 
-import '../services/auth_service.dart';
+import '../../services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

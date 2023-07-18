@@ -4,10 +4,10 @@ import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/area_model.dart';
 import 'package:micro_pharma/models/order_model.dart';
 import 'package:micro_pharma/models/product_model.dart';
-import 'package:micro_pharma/providers/area_provider.dart';
-import 'package:micro_pharma/providers/order_data_provider.dart';
-import 'package:micro_pharma/providers/product_data_provider.dart';
-import 'package:micro_pharma/providers/user_data_provider.dart';
+import 'package:micro_pharma/viewModel/area_provider.dart';
+import 'package:micro_pharma/viewModel/order_data_provider.dart';
+import 'package:micro_pharma/viewModel/product_data_provider.dart';
+import 'package:micro_pharma/viewModel/user_data_provider.dart';
 import 'package:provider/provider.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -248,31 +248,7 @@ class OrderScreenState extends State<OrderScreen> {
                     // Apply the discount to the total price of the selected product
                     totalPrice -=
                         (totalPrice * (double.parse(product.discount!) / 100));
-                    return Card(
-                      color: Colors.amber[100],
-                      child: ListTile(
-                        title: Text(product.name),
-                        subtitle: Text(
-                            'Quantity: ${product.quantity}, Bonus: ${product.bonus}, Discount: ${product.discount}% \n Value: $totalPrice'),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            setState(() {
-                              // Update the total value
-                              total -= (product.tradePrice *
-                                  int.parse(product.quantity));
-                              selectedProducts.removeAt(index);
-
-                              // Update the total discount
-                              discount =
-                                  selectedProducts.fold(0.0, (sum, product) {
-                                return sum + double.parse(product.discount!);
-                              });
-                            });
-                          },
-                        ),
-                      ),
-                    );
+                    return selectedProductsList(product, totalPrice, index);
                   },
                 ),
                 const SizedBox(height: 16.0),
@@ -325,5 +301,33 @@ class OrderScreenState extends State<OrderScreen> {
           ),
           icon: const Icon(Icons.shopping_cart_checkout)),
     );
+  }
+
+  Card selectedProductsList(OrderSelectedProduct product, double totalPrice, int index) {
+    return Card(
+                    color: Colors.amber[100],
+                    child: ListTile(
+                      title: Text(product.name),
+                      subtitle: Text(
+                          'Quantity: ${product.quantity}, Bonus: ${product.bonus}, Discount: ${product.discount}% \n Value: $totalPrice'),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          setState(() {
+                            // Update the total value
+                            total -= (product.tradePrice *
+                                int.parse(product.quantity));
+                            selectedProducts.removeAt(index);
+
+                            // Update the total discount
+                            discount =
+                                selectedProducts.fold(0.0, (sum, product) {
+                              return sum + double.parse(product.discount!);
+                            });
+                          });
+                        },
+                      ),
+                    ),
+                  );
   }
 }

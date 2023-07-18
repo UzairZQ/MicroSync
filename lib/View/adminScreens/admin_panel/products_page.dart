@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:provider/provider.dart';
-import 'package:micro_pharma/providers/product_data_provider.dart';
+import 'package:micro_pharma/viewModel/product_data_provider.dart';
 
-import '../../models/product_model.dart';
+import '../../../models/product_model.dart';
 import 'add_product.dart';
 
 class ProductListScreen extends StatelessWidget {
@@ -158,10 +158,10 @@ class EditProductBottomSheet extends StatefulWidget {
 
 class _EditProductBottomSheetState extends State<EditProductBottomSheet> {
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _packingController = TextEditingController();
-  TextEditingController _retailPriceController = TextEditingController();
-  TextEditingController _tradePriceController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _packingController = TextEditingController();
+  final TextEditingController _retailPriceController = TextEditingController();
+  final TextEditingController _tradePriceController = TextEditingController();
 
 
 

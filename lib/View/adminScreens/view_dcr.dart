@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import '../models/doctor_visit_model.dart';
-import '../providers/daily_call_report_provider.dart';
+import '../../models/doctor_visit_model.dart';
+import '../../viewModel/daily_call_report_provider.dart';
 
 class ViewDCRScreen extends StatelessWidget {
   static const String id = 'view_dcr';

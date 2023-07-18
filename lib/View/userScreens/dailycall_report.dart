@@ -7,14 +7,14 @@ import 'package:micro_pharma/models/day_plan_model.dart';
 import 'package:micro_pharma/models/dcr_model.dart';
 import 'package:micro_pharma/models/product_model.dart';
 import 'package:micro_pharma/models/user_model.dart';
-import 'package:micro_pharma/providers/daily_call_report_provider.dart';
-import 'package:micro_pharma/providers/day_plans_provider.dart';
-import 'package:micro_pharma/providers/product_data_provider.dart';
-import 'package:micro_pharma/providers/user_data_provider.dart';
-import 'package:micro_pharma/userScreens/call_planner.dart';
+import 'package:micro_pharma/viewModel/daily_call_report_provider.dart';
+import 'package:micro_pharma/viewModel/day_plans_provider.dart';
+import 'package:micro_pharma/viewModel/product_data_provider.dart';
+import 'package:micro_pharma/viewModel/user_data_provider.dart';
+import 'package:micro_pharma/View/userScreens/Call%20Planner%20Page/call_planner.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/doctor_visit_model.dart';
+import '../../models/doctor_visit_model.dart';
 
 class DailyCallReportScreen extends StatefulWidget {
   const DailyCallReportScreen({Key? key}) : super(key: key);

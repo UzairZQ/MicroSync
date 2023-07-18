@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/providers/user_data_provider.dart';
+import 'package:micro_pharma/viewModel/user_data_provider.dart';
 import 'package:provider/provider.dart';
 
 class AdminProfilePage extends StatefulWidget {

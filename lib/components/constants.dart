@@ -162,7 +162,7 @@ class MyTextFormField extends StatelessWidget {
       validator: validator,
       onSaved: onSaved,
       decoration: InputDecoration(
-        prefixIcon: icon, 
+        prefixIcon: icon,
         filled: true,
         fillColor: Colors.blue[50],
         hintText: '$hintext',
