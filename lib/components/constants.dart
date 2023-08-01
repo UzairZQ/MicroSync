@@ -65,18 +65,19 @@ TextStyle ktextstyle = const TextStyle(
     fontFamily: 'Poppins,', fontSize: 17.5, fontWeight: FontWeight.w400);
 
 class MyTextwidget extends StatelessWidget {
-  MyTextwidget({super.key, this.fontWeight, this.fontSize, required this.text});
+  MyTextwidget({super.key, this.fontWeight, this.fontSize, required this.text, this.fontColor});
 
   final FontWeight? fontWeight;
   double? fontSize = 14.0;
   final String text;
+  final Color? fontColor;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
       style: TextStyle(
-          fontFamily: 'Poppins', fontWeight: fontWeight, fontSize: fontSize),
+          fontFamily: 'Poppins', fontWeight: fontWeight, fontSize: fontSize, color: fontColor),
     );
   }
 }

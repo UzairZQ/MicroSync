@@ -8,7 +8,7 @@ import 'package:workmanager/workmanager.dart';
 import '../../../components/constants.dart';
 import '../../../splash_page.dart';
 import '../User Profile Page/user_profile_page.dart';
-import '../login_page.dart';
+import '../../LoginPage/login_page.dart';
 class HomeNavigationBar extends StatelessWidget {
   const HomeNavigationBar({
     super.key,

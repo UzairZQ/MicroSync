@@ -8,7 +8,7 @@ import 'package:micro_pharma/View/adminScreens/submitted_orders.dart';
 import 'package:micro_pharma/components/widgets/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/viewModel/user_data_provider.dart';
-import 'package:micro_pharma/View/userScreens/login_page.dart';
+import 'package:micro_pharma/View/LoginPage/login_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:theme_provider/theme_provider.dart';

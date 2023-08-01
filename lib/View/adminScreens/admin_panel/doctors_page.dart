@@ -54,7 +54,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
             text: 'Add Doctor',
             fontSize: 16,
           )),
-      appBar: const MyAppBar(appBartxt: 'Docotors'),
+      appBar: const MyAppBar(appBartxt: 'Doctors'),
       body: RefreshIndicator(
         onRefresh: () => _refreshDoctors(context),
         child: Padding(
@@ -62,50 +62,21 @@ class _DoctorsPageState extends State<DoctorsPage> {
           child: Column(
             children: [
               const Padding(padding: EdgeInsets.all(10)),
-              Row(
-                children: [
-                  Expanded(
-                      flex: 2,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.blueGrey[900],
-                          ),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            searchQuery = value;
-                          });
-                        },
-                      )),
-                  const SizedBox(
-                    width: 5.0,
-                  ),
-                  Expanded(
-                    child: DropdownButton<AreaModel>(
-                        hint: const Text('Select Area'),
-                        value: selectedArea,
-                        items: areas.map((area) {
-                          return DropdownMenuItem(
-                            value: area,
-                            child: Text(area.areaName),
-                          );
-                        }).toList(),
-                        onChanged: (AreaModel? area) {
-                          setState(() {
-                            selectedArea = area;
-                          });
-                        }),
-                  ),
-                ],
-              ),
-              Flexible(
+              DropdownButton<AreaModel>(
+                  hint: MyTextwidget(text: 'Select Area to filter'),
+                  value: selectedArea,
+                  items: areas.map((area) {
+                    return DropdownMenuItem(
+                      value: area,
+                      child: MyTextwidget(text: area.areaName),
+                    );
+                  }).toList(),
+                  onChanged: (AreaModel? area) {
+                    setState(() {
+                      selectedArea = area;
+                    });
+                  }),
+              Expanded(
                 child: ListView.builder(
                   itemBuilder: (context, index) {
                     // Filter doctors based on selected area and search query
@@ -133,6 +104,33 @@ class _DoctorsPageState extends State<DoctorsPage> {
                         ),
                         subtitle: Text(filteredDoctors[index].speciality!),
                         trailing: Text(filteredDoctors[index].address!),
+                        onLongPress: () {
+                          showCustomDialog(
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+
+                                    DoctorDataProvider.deleteDoctor(
+                                        filteredDoctors[index].name!,
+                                        filteredDoctors[index].area!);
+                                  },
+                                  child: MyTextwidget(
+                                    text: 'Delete',
+                                  ),
+                                ),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      return;
+                                    },
+                                    child: MyTextwidget(text: 'Cancel'))
+                              ],
+                              context: context,
+                              title: 'Delete this doctor?',
+                              content:
+                                  'Are you sure you want to permanently delete this doctor from the database?');
+                        },
                       ),
                     );
                   },
