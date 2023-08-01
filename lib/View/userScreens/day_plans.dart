@@ -1,23 +1,16 @@
 import 'dart:io';
-import 'package:flutter/services.dart';
-
-// import 'package:pdf/widgets.dart' as pdfWidgets;
-// import 'package:pdf/widgets.dart';
-import 'package:pdf/pdf.dart';
-
-import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
-
 import 'package:path_provider/path_provider.dart';
 import '../../components/constants.dart';
 import '../../models/day_plan_model.dart';
 import '../../viewModel/day_plans_provider.dart';
 import 'Call Planner Page/call_planner.dart';
 import 'package:pdf/widgets.dart' as pw;
-
 
 class DayPlansScreen extends StatefulWidget {
   static const String id = 'day_plans';
@@ -88,7 +81,7 @@ class DayPlansScreenState extends State<DayPlansScreen> {
           if (value == 'add_call_plan') {
             Navigator.pushNamed(context, CallPlanner.id);
           } else if (value == 'export_pdf') {
-            _generatePDF(dayPlans);
+            _generatePDFFile(dayPlans);
           }
         },
         child: const Icon(Icons.more_vert),
@@ -207,78 +200,69 @@ class DayPlansScreenState extends State<DayPlansScreen> {
     );
   }
 
-  Future<void> _generatePDF(List<DayPlanModel> dayPlans) async {
-    // Request permission
-    // final status = await Permission.storage.request();
-
-    // if (status.isGranted) {
-    //   _generatePDFFile(dayPlans);
-    // } else {
-    //   print('Permission denied. Cannot generate PDF.');
-    // }
-    _generatePDFFile(dayPlans);
-  }
-
   Future<void> _generatePDFFile(List<DayPlanModel> dayPlans) async {
-    final pdf = pw.Document();
-    dayPlans.sort((a, b) => b.date.compareTo(a.date));
-
     final fontData =
         await rootBundle.load('assets/Poppins/Poppins-Regular.ttf');
-    final ttfFont = pw.Font.ttf(fontData);
-    for (final dayPlan in dayPlans) {
-      pdf.addPage(
-        pw.Page(
-          build: (pw.Context context) {
-            return pw.Container(
-              decoration: pw.BoxDecoration(
-                borderRadius: pw.BorderRadius.circular(15.0),
-                color: PdfColors.blue100,
-              ),
-              child: pw.Padding(
-                padding: const pw.EdgeInsets.all(16.0),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text(
-                      'Date: ${dayPlan.date.toIso8601String()}',
-                      style:const pw.TextStyle(
-                        fontSize: 14,
-                      ),
+    final pw.Font ttfFont = pw.Font.ttf(fontData);
+
+    final pw.ThemeData theme = pw.ThemeData.withFont(base: ttfFont);
+    final pdf = pw.Document(theme: theme);
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          final List<pw.Widget> dayPlanWidgets = [];
+
+          for (final dayPlan in dayPlans) {
+            dayPlanWidgets.add(
+              pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text(
+                    'Date: ${dayPlan.date.toIso8601String()}',
+                    style: const pw.TextStyle(
+                      fontSize: 14,
                     ),
-                    pw.SizedBox(height: 8.0),
-                    pw.Text(
-                      'Area: ${dayPlan.area}',
-                      style:const  pw.TextStyle(
-                        fontSize: 14,
-                      ),
+                  ),
+                  pw.SizedBox(height: 8.0),
+                  pw.Text(
+                    'Area: ${dayPlan.area}',
+                    style: const pw.TextStyle(
+                      fontSize: 14,
                     ),
-                    pw.SizedBox(height: 8.0),
-                    pw.Text(
-                      'Doctors: ${dayPlan.doctors.join(', ')}',
-                      style:const pw.TextStyle(
-                        fontSize: 15,
-                      ),
+                  ),
+                  pw.SizedBox(height: 8.0),
+                  pw.Text(
+                    'Doctors: ${dayPlan.doctors.join(', ')}',
+                    style: const pw.TextStyle(
+                      fontSize: 15,
                     ),
-                    pw.SizedBox(height: 8.0),
-                    pw.Text(
-                      'Shift: ${dayPlan.shift}',
-                      style:const  pw.TextStyle(
-                        fontSize: 14,
-                      ),
+                  ),
+                  pw.SizedBox(height: 8.0),
+                  pw.Text(
+                    'Shift: ${dayPlan.shift}',
+                    style: const pw.TextStyle(
+                      fontSize: 14,
                     ),
-                  ],
-                ),
+                  ),
+                  pw.Divider(), // Add a divider between day plans
+                ],
               ),
             );
-          },
-        ),
-      );
-    }
+          }
+
+          return pw.Wrap(
+            spacing: 10.0,
+            runSpacing: 10.0,
+            children: dayPlanWidgets,
+          );
+        },
+      ),
+    );
 
     try {
-      final tempDir = await getTemporaryDirectory();
-      final filePath = path.join(tempDir.path, 'day_plans_report.pdf');
+      final storageDir = await getExternalStorageDirectory();
+      final filePath = path.join(storageDir!.path, 'day_plans_report.pdf');
       final file = File(filePath);
       await file.writeAsBytes(await pdf.save());
       if (await file.exists()) {
@@ -287,8 +271,9 @@ class DayPlansScreenState extends State<DayPlansScreen> {
       } else {
         print('Error: PDF file not found');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('Error generating PDF: $e');
+      print(stackTrace);
     }
   }
 }

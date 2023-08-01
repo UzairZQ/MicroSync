@@ -2,20 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/models/day_plan_model.dart';
 import 'package:micro_pharma/View/userScreens/User%20Home%20Page/privacy_consent_dialog.dart';
-import 'package:theme_provider/theme_provider.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/viewModel/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
-import 'package:micro_pharma/View/userScreens/order_page.dart';
 import '../../adminScreens/admin_panel/doctors_page.dart';
 import '../../../components/widgets/container_row.dart';
 import '../../../viewModel/day_plans_provider.dart';
+import '../Daily Call Report Page/dailycall_report.dart';
 import '../Call Planner Page/call_planner.dart';
-import '../dailycall_report.dart';
 import 'package:micro_pharma/View/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/View/userScreens/day_plans.dart';
 import 'package:provider/provider.dart';
+import '../OrderPage/order_page.dart';
 import 'bacground_location.dart';
 import 'bottom_navigation_bar.dart';
 
@@ -53,7 +52,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Material(
-                elevation: 3,
+                elevation: 5,
                 borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(40.0),
                     bottomRight: Radius.circular(40.0)),
@@ -100,16 +99,24 @@ class _HomePageState extends State<HomePage> {
                             Icons.calendar_month,
                             color: Colors.white,
                           ),
-                          Expanded(
-                            child: Text(
-                              'Today\'s Scheduled Plan: Abbottabad to ${currentDayPlan?.area ?? 'No Area Found'} ',
-                              style: const TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
+                          Consumer<DayPlanProvider>(
+                            builder: (context, dayPlanProvier, child) {
+                              DayPlanModel? currentDayPlan =
+                                  dayPlanProvier.getCurrentDayPlan();
+                              if (currentDayPlan == null) {
+                                return const CircularProgressIndicator();
+                              } else {
+                                return Flexible(
+                                  child: MyTextwidget(
+                                    text:
+                                        'Today\'s Scheduled Plan: ${currentDayPlan?.area ?? 'No Area Found'} ',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    fontColor: Colors.white,
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),
@@ -123,14 +130,26 @@ class _HomePageState extends State<HomePage> {
                             Icons.medication_rounded,
                             color: Colors.white,
                           ),
-                          Text(
-                            'Doctors: ${currentDayPlan?.doctors.length ?? 'No Doctors found'}',
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 17.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                          Consumer<DayPlanProvider>(
+                            builder: (context, dayPlanProvider, child) {
+                              DayPlanModel? dayplandoctors =
+                                  dayPlanProvider.getCurrentDayPlan();
+                              if (dayplandoctors == null) {
+                                return const CircularProgressIndicator();
+                              } else {
+                                return Flexible(
+                                  child: Text(
+                                    'Doctors to meet: ${dayplandoctors.doctors.join(',') ?? 'No Doctors found'}',
+                                    style: const TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 17.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),
@@ -140,7 +159,8 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           MyButton(
                               onPressed: () {
-                                LocationServices().getLocation(currentUser!.uid);
+                                LocationServices()
+                                    .getLocation(currentUser!.uid);
                               },
                               color: const Color(0xFF009AAF),
                               text: 'Start Your Day'),
@@ -222,4 +242,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

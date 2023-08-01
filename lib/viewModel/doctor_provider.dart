@@ -34,7 +34,7 @@ class DoctorDataProvider with ChangeNotifier {
         'name': docname,
         'speciality': special,
       });
-   
+
       print('Added to database');
       showCustomDialog(
           context: navigatorKey.currentContext!,
@@ -60,6 +60,32 @@ class DoctorDataProvider with ChangeNotifier {
                 child: const Text('Okay'))
           ]);
       print('This is the error $a');
+    }
+  }
+
+  static Future<void> deleteDoctor(String doctorName, String doctorArea) async {
+    // Get the reference to the Firestore collection 'doctors'
+    CollectionReference doctorsCollection =
+        FirebaseFirestore.instance.collection('doctors');
+
+    try {
+      // Query the doctors collection based on the provided name and area
+      QuerySnapshot querySnapshot = await doctorsCollection
+          .where('name', isEqualTo: doctorName)
+          .where('area', isEqualTo: doctorArea)
+          .get();
+
+      // Iterate through the documents returned from the query and delete each one
+      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+        await docSnapshot.reference.delete();
+      }
+      showCustomDialog(
+          context: navigatorKey.currentContext!,
+          title: 'Deleted',
+          content: 'The doctor is removed from the database ');
+    } catch (e) {
+      print('Error deleting doctor: $e');
+      // Handle any error that occurred during the deletion process
     }
   }
 }

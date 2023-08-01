@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/View/userScreens/User%20Home%20Page/home_page.dart';
-import 'package:micro_pharma/View/userScreens/login_page.dart';
+import 'package:micro_pharma/View/LoginPage/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'View/adminScreens/admin_homepage.dart';

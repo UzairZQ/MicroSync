@@ -4,6 +4,7 @@ import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/area_model.dart';
 import 'package:micro_pharma/models/order_model.dart';
 import 'package:micro_pharma/models/product_model.dart';
+import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/viewModel/area_provider.dart';
 import 'package:micro_pharma/viewModel/order_data_provider.dart';
 import 'package:micro_pharma/viewModel/product_data_provider.dart';
@@ -77,6 +78,7 @@ class OrderScreenState extends State<OrderScreen> {
                 TextFormField(
                   controller: _customerNameController,
                   decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.store),
                     labelText: 'Customer Name',
                     border: OutlineInputBorder(),
                   ),
@@ -99,32 +101,46 @@ class OrderScreenState extends State<OrderScreen> {
                     );
                   }).toList(),
                   decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.location_pin),
                     labelText: 'Area',
                     hintText: 'Select Area',
                     border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                DropdownButtonFormField<ProductModel>(
-                  value: selectedProduct,
-                  onChanged: (newValue) {
-                    if (newValue != null) {
-                      setState(() {
-                        selectedProduct = newValue;
-                      });
+                Autocomplete<ProductModel>(
+                  optionsBuilder: (TextEditingValue textEditingValue) {
+                    if (textEditingValue.text.isEmpty) {
+                      return const Iterable<ProductModel>.empty();
                     }
+                    return products.where((product) => product.name
+                        .toLowerCase()
+                        .contains(textEditingValue.text.toLowerCase()));
                   },
-                  items: products.map((product) {
-                    return DropdownMenuItem<ProductModel>(
-                      value: product,
-                      child: Text(product.name),
+                  displayStringForOption: (ProductModel option) => option.name,
+                  fieldViewBuilder: (BuildContext context,
+                      TextEditingController textEditingController,
+                      FocusNode focusNode,
+                      VoidCallback onFieldSubmitted) {
+                    return TextFormField(
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.shopping_cart_outlined),
+                        labelText: 'Products',
+                        hintText: 'Select products',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        // If you want to do something when the user types in the search field
+                      },
                     );
-                  }).toList(),
-                  decoration: const InputDecoration(
-                    labelText: 'Products',
-                    hintText: 'Select products',
-                    border: OutlineInputBorder(),
-                  ),
+                  },
+                  onSelected: (ProductModel selection) {
+                    setState(() {
+                      selectedProduct = selection;
+                    });
+                  },
                 ),
                 const SizedBox(height: 16.0),
                 Row(
@@ -134,6 +150,7 @@ class OrderScreenState extends State<OrderScreen> {
                         controller: _productQuantityController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.numbers),
                           labelText: 'Quantity',
                           border: OutlineInputBorder(),
                         ),
@@ -148,6 +165,7 @@ class OrderScreenState extends State<OrderScreen> {
                         controller: _bonusController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
+                          // prefixIcon: Icon(Icons.),
                           labelText: 'Bonus',
                           border: OutlineInputBorder(),
                         ),
@@ -166,6 +184,7 @@ class OrderScreenState extends State<OrderScreen> {
                         controller: _discountController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.percent),
                           labelText: 'Discount',
                           border: OutlineInputBorder(),
                         ),
@@ -176,64 +195,7 @@ class OrderScreenState extends State<OrderScreen> {
                         },
                       ),
                     ),
-                    Expanded(
-                      child: TextButton(
-                        child: MyTextwidget(text: 'Add to List'),
-                        onPressed: () {
-                          setState(() {
-                            // Check if any of the required fields are empty
-                            if (_productQuantityController.text.isEmpty) {
-                              return; // Do nothing if quantity field is empty
-                            }
-                            // Calculate the total price of the selected product
-                            final OrderSelectedProduct orderSelectedProduct =
-                                OrderSelectedProduct(
-                              code: selectedProduct!.code,
-                              packing: selectedProduct!.packing,
-                              retailPrice: selectedProduct!.retailPrice,
-                              name: selectedProduct!.name,
-                              tradePrice: selectedProduct!.tradePrice,
-                              quantity: _productQuantityController.text,
-                              bonus: _bonusController.text.isNotEmpty
-                                  ? _bonusController.text
-                                  : '0',
-                              discount: _discountController.text.isNotEmpty
-                                  ? _discountController.text
-                                  : '0.0',
-                            );
-
-                            double totalPrice =
-                                orderSelectedProduct.tradePrice *
-                                    int.parse(orderSelectedProduct.quantity);
-
-                            // Apply the discount to the total price of the selected product
-                            double discountPercentage = double.tryParse(
-                                    orderSelectedProduct.discount!) ??
-                                0.0;
-                            totalPrice -=
-                                (totalPrice * (discountPercentage / 100));
-
-                            // Update the total value
-                            total += totalPrice;
-
-                            // Update the total discount
-                            discount =
-                                selectedProducts.fold(0.0, (sum, product) {
-                              double productDiscount =
-                                  double.tryParse(product.discount!) ?? 0.0;
-                              return sum + productDiscount;
-                            });
-
-                            selectedProducts.add(orderSelectedProduct);
-
-                            // Clear the input fields
-                            _productQuantityController.clear();
-                            _bonusController.clear();
-                            _discountController.clear();
-                          });
-                        },
-                      ),
-                    ),
+                    addProductToList(),
                   ],
                 ),
                 const SizedBox(height: 16.0),
@@ -267,67 +229,129 @@ class OrderScreenState extends State<OrderScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-
-              // Perform any additional logic for placing the order
-
-              OrderModel orderModel = OrderModel(
-                  userName: userData.displayName!,
-                  date: DateTime.now(),
-                  products: selectedProducts,
-                  customerName: _customerNameController.text,
-                  area: selectedArea!.areaName,
-                  total: total,
-                  subTotal: discountedTotal);
-              await Provider.of<OrderDataProvider>(context, listen: false)
-                  .addOrder(orderModel);
-              showCustomDialog(
-                  context: navigatorKey.currentContext!,
-                  title: 'Order Sent',
-                  content: 'Order Successfully Submitted!');
-
-              // Clear the form fields
-              _formKey.currentState!.reset();
-              setState(() {
-                selectedProducts.clear();
-              });
-            }
-          },
-          label: MyTextwidget(
-            text: 'Place Order',
-          ),
-          icon: const Icon(Icons.shopping_cart_checkout)),
+      floatingActionButton:
+          submitOrderActionButton(userData, discountedTotal, context),
     );
   }
 
-  Card selectedProductsList(OrderSelectedProduct product, double totalPrice, int index) {
-    return Card(
-                    color: Colors.amber[100],
-                    child: ListTile(
-                      title: Text(product.name),
-                      subtitle: Text(
-                          'Quantity: ${product.quantity}, Bonus: ${product.bonus}, Discount: ${product.discount}% \n Value: $totalPrice'),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            // Update the total value
-                            total -= (product.tradePrice *
-                                int.parse(product.quantity));
-                            selectedProducts.removeAt(index);
+  FloatingActionButton submitOrderActionButton(
+      UserModel userData, double discountedTotal, BuildContext context) {
+    return FloatingActionButton.extended(
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            _formKey.currentState!.save();
 
-                            // Update the total discount
-                            discount =
-                                selectedProducts.fold(0.0, (sum, product) {
-                              return sum + double.parse(product.discount!);
-                            });
-                          });
-                        },
-                      ),
-                    ),
-                  );
+            // Perform any additional logic for placing the order
+
+            OrderModel orderModel = OrderModel(
+                userName: userData.displayName!,
+                date: DateTime.now(),
+                products: selectedProducts,
+                customerName: _customerNameController.text,
+                area: selectedArea!.areaName,
+                total: total,
+                subTotal: discountedTotal);
+            await Provider.of<OrderDataProvider>(context, listen: false)
+                .addOrder(orderModel);
+            showCustomDialog(
+                context: navigatorKey.currentContext!,
+                title: 'Order Sent',
+                content: 'Order Successfully Submitted!');
+
+            // Clear the form fields
+            _formKey.currentState!.reset();
+            setState(() {
+              selectedProducts.clear();
+            });
+          }
+        },
+        label: MyTextwidget(
+          text: 'Place Order',
+        ),
+        icon: const Icon(Icons.shopping_cart_checkout));
+  }
+
+  Expanded addProductToList() {
+    return Expanded(
+      child: TextButton(
+        child: MyTextwidget(text: 'Add to List'),
+        onPressed: () {
+          setState(() {
+            // Check if any of the required fields are empty
+            if (_productQuantityController.text.isEmpty) {
+              return; // Do nothing if quantity field is empty
+            }
+            // Calculate the total price of the selected product
+            final OrderSelectedProduct orderSelectedProduct =
+                OrderSelectedProduct(
+              code: selectedProduct!.code,
+              packing: selectedProduct!.packing,
+              retailPrice: selectedProduct!.retailPrice,
+              name: selectedProduct!.name,
+              tradePrice: selectedProduct!.tradePrice,
+              quantity: _productQuantityController.text,
+              bonus: _bonusController.text.isNotEmpty
+                  ? _bonusController.text
+                  : '0',
+              discount: _discountController.text.isNotEmpty
+                  ? _discountController.text
+                  : '0.0',
+            );
+
+            double totalPrice = orderSelectedProduct.tradePrice *
+                int.parse(orderSelectedProduct.quantity);
+
+            // Apply the discount to the total price of the selected product
+            double discountPercentage =
+                double.tryParse(orderSelectedProduct.discount!) ?? 0.0;
+            totalPrice -= (totalPrice * (discountPercentage / 100));
+
+            // Update the total value
+            total += totalPrice;
+
+            // Update the total discount
+            discount = selectedProducts.fold(0.0, (sum, product) {
+              double productDiscount =
+                  double.tryParse(product.discount!) ?? 0.0;
+              return sum + productDiscount;
+            });
+
+            selectedProducts.add(orderSelectedProduct);
+
+            // Clear the input fields
+            _productQuantityController.clear();
+            _bonusController.clear();
+            _discountController.clear();
+          });
+        },
+      ),
+    );
+  }
+
+  Card selectedProductsList(
+      OrderSelectedProduct product, double totalPrice, int index) {
+    return Card(
+      color: Colors.amber[100],
+      child: ListTile(
+        title: Text(product.name),
+        subtitle: Text(
+            'Quantity: ${product.quantity}, Bonus: ${product.bonus}, Discount: ${product.discount}% \n Value: $totalPrice'),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: () {
+            setState(() {
+              // Update the total value
+              total -= (product.tradePrice * int.parse(product.quantity));
+              selectedProducts.removeAt(index);
+
+              // Update the total discount
+              discount = selectedProducts.fold(0.0, (sum, product) {
+                return sum + double.parse(product.discount!);
+              });
+            });
+          },
+        ),
+      ),
+    );
   }
 }

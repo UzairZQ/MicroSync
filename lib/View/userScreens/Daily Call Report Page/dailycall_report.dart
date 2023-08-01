@@ -14,7 +14,7 @@ import 'package:micro_pharma/viewModel/user_data_provider.dart';
 import 'package:micro_pharma/View/userScreens/Call%20Planner%20Page/call_planner.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../models/doctor_visit_model.dart';
+import '../../../models/doctor_visit_model.dart';
 
 class DailyCallReportScreen extends StatefulWidget {
   const DailyCallReportScreen({Key? key}) : super(key: key);
@@ -30,7 +30,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
   late UserModel? userData;
   DayPlanModel? currentDayPlan;
   List<DoctorVisitModel>? doctorVisitDetailsList = [];
-  bool visitedDoctor = false;
+  List<bool>? visitedDoctor = [];
   bool samplesProvided = false;
   ProductModel? selectedProduct;
   TextEditingController doctorRemarksController = TextEditingController();
@@ -69,10 +69,17 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
     userAssignedProducts = userData?.assignedProducts;
     products =
         Provider.of<ProductDataProvider>(context, listen: false).productsList;
+    visitedDoctor =
+        initializeVisitedDoctorList(currentDayPlan?.doctors.length ?? 5);
   }
 
   Future<void> _initializeSharedPrefs() async {
     _sharedPrefs = await SharedPreferences.getInstance();
+  }
+
+  List<bool> initializeVisitedDoctorList(int length) {
+    return List<bool>.generate(
+        length, (index) => false); // Initialize with false for all doctors
   }
 
   void _checkReportSubmission() {
@@ -264,16 +271,16 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                         children: [
                           MyTextwidget(text: 'Visited this doctor?'),
                           Checkbox(
-                            value: visitedDoctor,
+                            value: visitedDoctor?[index] ?? false,
                             onChanged: (isVisited) {
                               setState(() {
-                                visitedDoctor = isVisited!;
+                                visitedDoctor?[index] = isVisited!;
                               });
                             },
                           )
                         ],
                       ),
-                      if (visitedDoctor)
+                      if (visitedDoctor![index])
                         Row(children: [
                           MyTextwidget(text: 'Samples Provided?'),
                           Checkbox(
@@ -424,7 +431,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                                   selectedProducts: List.from(
                                       selectedProducts), // Make a copy of the list
                                   doctorRemarks: doctorRemarksController.text,
-                                  visited: visitedDoctor,
+                                  visited: visitedDoctor?[index] ?? false,
                                 );
                                 doctorVisitDetailsList!.add(doctorVisitDetails);
                                 // for (DoctorVisitModel doctorvisits
