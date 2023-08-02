@@ -42,10 +42,12 @@ class _LocationScreenState extends State<LocationScreen> {
                       ),
                       subtitle: Row(
                         children: [
-                          MyTextwidget(
-                              fontSize: 15,
-                              text:
-                                  'Location Updated at: ${snapshot.data!.docs[index]['update']}'),
+                          Flexible(
+                            child: MyTextwidget(
+                                fontSize: 15,
+                                text:
+                                    'Location Updated at: ${snapshot.data!.docs[index]['update']}'),
+                          ),
                         ],
                       ),
                       trailing: IconButton(

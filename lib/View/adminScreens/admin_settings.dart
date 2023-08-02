@@ -15,6 +15,7 @@ class AdminProfilePage extends StatefulWidget {
 
 class AdminProfilePageState extends State<AdminProfilePage> {
   final TextEditingController _nameEditingController = TextEditingController();
+  TextEditingController emailEditingController = TextEditingController();
 
   @override
   void dispose() {
@@ -109,12 +110,10 @@ class AdminProfilePageState extends State<AdminProfilePage> {
             const SizedBox(height: 20),
             MyButton(
               onPressed: () {
-                
                 showModalBottomSheet(
                   context: context,
+                  constraints: BoxConstraints.loose(const Size.fromHeight(500)),
                   builder: (BuildContext context) {
-                    TextEditingController emailEditingController =
-                        TextEditingController();
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -147,7 +146,9 @@ class AdminProfilePageState extends State<AdminProfilePage> {
                                   await FirebaseAuth.instance
                                       .sendPasswordResetEmail(email: email);
                                   Navigator.pop(navigatorKey.currentContext!);
-                                  ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+                                  ScaffoldMessenger.of(
+                                          navigatorKey.currentContext!)
+                                      .showSnackBar(
                                     SnackBar(
                                       content: Text(
                                           'A password reset email has been sent to $email'),

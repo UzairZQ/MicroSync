@@ -15,6 +15,7 @@ class UserProfilePage extends StatefulWidget {
 
 class UserProfilePageState extends State<UserProfilePage> {
   final TextEditingController _nameEditingController = TextEditingController();
+  TextEditingController emailEditingController = TextEditingController();
 
   @override
   void dispose() {
@@ -78,10 +79,10 @@ class UserProfilePageState extends State<UserProfilePage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           showModalBottomSheet(
+            isScrollControlled: true,
+            constraints: BoxConstraints.loose(const Size.fromHeight(600)),
             context: context,
             builder: (BuildContext context) {
-              TextEditingController emailEditingController =
-                  TextEditingController();
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(

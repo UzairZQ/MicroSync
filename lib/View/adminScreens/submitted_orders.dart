@@ -42,10 +42,10 @@ class SubmittedOrders extends StatelessWidget {
                         title: MyTextwidget(
                           text: ' ${order.customerName}',
                           fontWeight: FontWeight.w500,
-                          fontSize: 18,
+                          fontSize: 16,
                         ),
-                        subtitle: Text('Area: ${order.area}'),
-                        trailing: Text('Date: ${order.date}'),
+                        subtitle:
+                            Text('Area: ${order.area} \nDate: ${order.date}'),
                         onTap: () {
                           _showOrderDetails(context, order);
                         },
@@ -83,17 +83,17 @@ class SubmittedOrders extends StatelessWidget {
                 const SizedBox(height: 10),
                 MyTextwidget(
                   text: 'Medical Store: ${order.customerName}',
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
                 const SizedBox(height: 10),
                 MyTextwidget(
                   text: 'Area: ${order.area}',
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
                 const SizedBox(height: 10),
                 MyTextwidget(
                   text: 'Products:',
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
                 ListView.builder(
                   shrinkWrap: true,
@@ -105,7 +105,7 @@ class SubmittedOrders extends StatelessWidget {
                       child: ListTile(
                         title: MyTextwidget(
                           text: product.name,
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                         subtitle: Column(
@@ -113,15 +113,14 @@ class SubmittedOrders extends StatelessWidget {
                           children: [
                             MyTextwidget(
                               text: 'Quantity: ${product.quantity}',
-                              fontSize: 18,
+                              fontSize: 15,
                             ),
                             MyTextwidget(
-                              text: 'Bonus: ${product.bonus ?? '0'}',
-                              fontSize: 18,
-                            ),
+                                text: 'Bonus: ${product.bonus ?? '0'}',
+                                fontSize: 15),
                             MyTextwidget(
                               text: 'Discount: ${product.discount ?? '0.0'}',
-                              fontSize: 18,
+                              fontSize: 15,
                             ),
                           ],
                         ),
