@@ -31,6 +31,8 @@ class _AreasState extends State<Areas> {
         icon: const Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
+            isScrollControlled: true,
+            constraints: BoxConstraints.loose(const Size.fromHeight(550)),
             context: context,
             builder: (context) {
               return Padding(
@@ -94,8 +96,6 @@ class _AreasState extends State<Areas> {
                             );
                             areaCodeController.clear();
                             areaNameController.clear();
-                            areaCodeController.dispose();
-                            areaCodeController.dispose();
                             areasProvider.fetchAreas();
                           }
                         },

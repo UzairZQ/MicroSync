@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:micro_pharma/models/area_model.dart';
 
+AreaProvider areaProvider = AreaProvider();
+
+
 class AreaProvider with ChangeNotifier {
   List<AreaModel> _areas = [];
 

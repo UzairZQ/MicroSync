@@ -133,6 +133,9 @@ class LoginPageState extends State<LoginPage> {
               TextButton(
                 onPressed: () {
                   showModalBottomSheet(
+                      isScrollControlled: true,
+                      constraints:
+                          BoxConstraints.loose(const Size.fromHeight(500)),
                       context: context,
                       builder: (context) {
                         return Scaffold(
@@ -146,7 +149,7 @@ class LoginPageState extends State<LoginPage> {
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 18.0),
+                                      fontSize: 14.0),
                                 ),
                                 const SizedBox(
                                   height: 15.0,

@@ -174,38 +174,42 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 30.0, right: 15.0),
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 30.0, vertical: 10.0),
-                    height: 72.0,
-                    width: 144.0,
-                    decoration: BoxDecoration(
-                      color: const Color(0xff89B7FD),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Center(
-                        child: MyTextwidget(
-                      fontSize: 17.5,
-                      text: '14 Visited Doctors',
-                      fontWeight: FontWeight.bold,
-                    )),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(left: 30.0, right: 15.0),
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 30.0, vertical: 10.0),
-                    height: 72.0,
-                    width: 144.0,
-                    decoration: BoxDecoration(
-                      color: const Color(0xffFF9292),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Center(
-                      child: MyTextwidget(
-                        text: '20 missed doctors',
-                        fontSize: 17.5,
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 30.0, right: 15.0),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 30.0, vertical: 10.0),
+                      height: 72.0,
+                      width: 144.0,
+                      decoration: BoxDecoration(
+                        color: const Color(0xff89B7FD),
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Center(
+                          child: MyTextwidget(
+                        fontSize: 13.5,
+                        text: '14 Visited Doctors',
                         fontWeight: FontWeight.bold,
+                      )),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 30.0, right: 15.0),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 30.0, vertical: 10.0),
+                      height: 72.0,
+                      width: 144.0,
+                      decoration: BoxDecoration(
+                        color: const Color(0xffFF9292),
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Center(
+                        child: MyTextwidget(
+                          text: '20 missed doctors',
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -317,74 +321,74 @@ class _DashboardState extends State<Dashboard> {
                   fontFamily: 'Poppins',
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      padding: const EdgeInsets.all(20),
-                      margin: const EdgeInsets.all(15),
-                      height: 90,
-                      width: 122.0,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: const Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.check_circle_outline,
-                                size: 25,
-                                color: Color(0xFF333333),
-                              ),
-                              Text(
-                                'Submitted',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17.5),
-                              ),
-                            ],
-                          ),
-                          // Additional widgets in the row, if needed
-                        ],
-                      )),
-                  const SizedBox(width: 40),
-                  Container(
-                    margin: const EdgeInsets.all(15),
-                    height: 90,
-                    width: 122.0,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: const Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.check_circle_outline),
-                            Text(
-                              'Approved',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 17.5),
-                            ),
-                          ],
-                        ),
-                        // Additional widgets in the row, if needed
-                      ],
-                    ),
-                  ),
-                ],
-              )
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     Container(
+              //         padding: const EdgeInsets.all(20),
+              //         margin: const EdgeInsets.all(15),
+              //         height: 90,
+              //         width: 122.0,
+              //         decoration: BoxDecoration(
+              //           color: const Color(0xFFD9D9D9),
+              //           borderRadius: BorderRadius.circular(15.0),
+              //         ),
+              //         child: const Row(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: [
+              //             Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 Icon(
+              //                   Icons.check_circle_outline,
+              //                   size: 25,
+              //                   color: Color(0xFF333333),
+              //                 ),
+              //                 Text(
+              //                   'Submitted',
+              //                   style: TextStyle(
+              //                       fontWeight: FontWeight.bold,
+              //                       fontSize: 17.5),
+              //                 ),
+              //               ],
+              //             ),
+              //             // Additional widgets in the row, if needed
+              //           ],
+              //         )),
+              //     const SizedBox(width: 40),
+              //     Container(
+              //       margin: const EdgeInsets.all(15),
+              //       height: 90,
+              //       width: 122.0,
+              //       decoration: BoxDecoration(
+              //         color: const Color(0xFFD9D9D9),
+              //         borderRadius: BorderRadius.circular(15.0),
+              //       ),
+              //       child: const Row(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           Column(
+              //             crossAxisAlignment: CrossAxisAlignment.start,
+              //             mainAxisAlignment: MainAxisAlignment.center,
+              //             children: [
+              //               Icon(Icons.check_circle_outline),
+              //               Text(
+              //                 'Approved',
+              //                 style: TextStyle(
+              //                     fontWeight: FontWeight.bold, fontSize: 17.5),
+              //               ),
+              //             ],
+              //           ),
+              //           // Additional widgets in the row, if needed
+              //         ],
+              //       ),
+              //     ),
+              //   ],
+              // )
             ],
           ),
         ),

@@ -104,12 +104,13 @@ class _HomePageState extends State<HomePage> {
                               DayPlanModel? currentDayPlan =
                                   dayPlanProvier.getCurrentDayPlan();
                               if (currentDayPlan == null) {
-                                return const CircularProgressIndicator();
+                                return const Text('No Day Plan found for today',
+                                    style: TextStyle(color: Colors.white));
                               } else {
                                 return Flexible(
                                   child: MyTextwidget(
                                     text:
-                                        'Today\'s Scheduled Plan: ${currentDayPlan?.area ?? 'No Area Found'} ',
+                                        'Today\'s Scheduled Plan: ${currentDayPlan.area} ',
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     fontColor: Colors.white,
@@ -135,11 +136,14 @@ class _HomePageState extends State<HomePage> {
                               DayPlanModel? dayplandoctors =
                                   dayPlanProvider.getCurrentDayPlan();
                               if (dayplandoctors == null) {
-                                return const CircularProgressIndicator();
+                                return const Text(
+                                  'No Doctors found',
+                                  style: TextStyle(color: Colors.white),
+                                );
                               } else {
                                 return Flexible(
                                   child: Text(
-                                    'Doctors to meet: ${dayplandoctors.doctors.join(',') ?? 'No Doctors found'}',
+                                    'Doctors to meet: ${dayplandoctors.doctors.join(',')}',
                                     style: const TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 17.0,

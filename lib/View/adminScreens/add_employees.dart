@@ -160,22 +160,26 @@ class _AddEmployeesState extends State<AddEmployees> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    MyButton(
-                        color: kappbarColor,
-                        text: 'Create User',
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            formKey.currentState!.save();
-                            createUser();
-                          }
-                        }),
-                    MyButton(
-                        color: const Color.fromARGB(255, 224, 57, 90),
-                        text: 'Delete User',
-                        onPressed: () {
-                          deleteUserBottomSheet(
-                              context, firebaseFirestore, firebaseAuth);
-                        })
+                    Expanded(
+                      child: MyButton(
+                          color: kappbarColor,
+                          text: 'Create User',
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
+                              createUser();
+                            }
+                          }),
+                    ),
+                    Expanded(
+                      child: MyButton(
+                          color: const Color.fromARGB(255, 224, 57, 90),
+                          text: 'Delete User',
+                          onPressed: () {
+                            deleteUserBottomSheet(
+                                context, firebaseFirestore, firebaseAuth);
+                          }),
+                    )
                   ],
                 ),
               ],

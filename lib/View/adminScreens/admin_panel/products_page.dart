@@ -75,20 +75,24 @@ class ProductListScreen extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                         GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return EditProductBottomSheet(product: product);
-          },
-        );
-                          },
-                           child: const Icon(
-                            (Icons.edit),
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                constraints: BoxConstraints.loose(
+                                    const Size.fromHeight(600)),
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return EditProductBottomSheet(
+                                      product: product);
+                                },
+                              );
+                            },
+                            child: const Icon(
+                              (Icons.edit),
                               color: Colors.green,
                             ),
-                         ),
+                          ),
                           IconButton(
                             icon: const Icon(Icons.delete),
                             color: Colors.red,
@@ -143,27 +147,23 @@ class ProductListScreen extends StatelessWidget {
       ),
     );
   }
-
-  
 }
 
 class EditProductBottomSheet extends StatefulWidget {
-    final ProductModel product;
+  final ProductModel product;
 
-  const EditProductBottomSheet({Key? key, required this.product}) : super(key: key);
+  const EditProductBottomSheet({Key? key, required this.product})
+      : super(key: key);
 
   @override
   State<EditProductBottomSheet> createState() => _EditProductBottomSheetState();
 }
 
 class _EditProductBottomSheetState extends State<EditProductBottomSheet> {
-
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _packingController = TextEditingController();
   final TextEditingController _retailPriceController = TextEditingController();
   final TextEditingController _tradePriceController = TextEditingController();
-
-
 
   @override
   void initState() {
@@ -173,7 +173,6 @@ class _EditProductBottomSheetState extends State<EditProductBottomSheet> {
     _packingController.text = widget.product.packing;
     _retailPriceController.text = widget.product.retailPrice.toString();
     _tradePriceController.text = widget.product.tradePrice.toString();
-    
   }
 
   @override
@@ -205,45 +204,44 @@ class _EditProductBottomSheetState extends State<EditProductBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding:const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-              ),
+    return Container(
+      height: 650,
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _nameController,
+            decoration: const InputDecoration(
+              labelText: 'Name',
             ),
-            TextField(
-              controller: _packingController,
-              decoration: const InputDecoration(
-                labelText: 'Packing',
-              ),
+          ),
+          TextField(
+            controller: _packingController,
+            decoration: const InputDecoration(
+              labelText: 'Packing',
             ),
-            TextField(
-              controller: _retailPriceController,
-              decoration:const InputDecoration(
-                labelText: 'Retail Price',
-              ),
-              keyboardType: TextInputType.number,
+          ),
+          TextField(
+            controller: _retailPriceController,
+            decoration: const InputDecoration(
+              labelText: 'Retail Price',
             ),
-            TextField(
-              controller: _tradePriceController,
-              decoration: const InputDecoration(
-                labelText: 'Trade Price',
-              ),
-              keyboardType: TextInputType.number,
+            keyboardType: TextInputType.number,
+          ),
+          TextField(
+            controller: _tradePriceController,
+            decoration: const InputDecoration(
+              labelText: 'Trade Price',
             ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: saveChanges,
-              child: const Text('Save Changes'),
-            ),
-          ],
-        ),
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: 16.0),
+          ElevatedButton(
+            onPressed: saveChanges,
+            child: const Text('Save Changes'),
+          ),
+        ],
       ),
     );
   }

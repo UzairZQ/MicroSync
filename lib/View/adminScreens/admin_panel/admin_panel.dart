@@ -73,13 +73,12 @@ class AdminPanel extends StatelessWidget {
                     container2Clr: Colors.purple[100]!,
                     container1Icon: Icons.assignment_ind_outlined,
                     container2Icon: Icons.add_chart_outlined,
-                    container1Text:
-                        'Show Assigned Areas & Products to Employees',
+                    container1Text: 'Show Assigned Areas/Products to Employees',
                     container2Text: 'Monthly Targets',
                     container1Tap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return const  ShowAssignedAreasProducts();
+                        return const ShowAssignedAreasProducts();
                       }));
                     },
                     container2Tap: () {})
