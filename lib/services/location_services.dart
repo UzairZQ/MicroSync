@@ -1,26 +1,39 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:intl/intl.dart';
-
 import 'package:permission_handler/permission_handler.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:geolocator_android/geolocator_android.dart';
+import 'package:location/location.dart' as location;
 
 class LocationServices extends ChangeNotifier {
-  Future<void> listenLocation(String uid) async {}
+  // Declare permission status variables
 
-  Future requestPermission() async {
-    var status = await Permission.location.request();
-    if (status.isGranted) {
-     
-    } else if (status.isDenied) {
-      requestPermission();
-    } else if (status.isPermanentlyDenied) {
-      openAppSettings();
+  Future<void> requestPermission() async {
+    try {
+      print('requested permission');
+      PermissionStatus locationPermission = await Permission.location.request();
+      if (locationPermission.isGranted) {
+        PermissionStatus locationAlwaysPermission =
+            await Permission.locationAlways.status;
+        if (!locationAlwaysPermission.isGranted) {
+          locationPermission = PermissionStatus.granted;
+          locationAlwaysPermission = await Permission.locationAlways.request();
+        } else {
+          locationPermission = PermissionStatus.granted;
+          locationAlwaysPermission = PermissionStatus.granted;
+          return; // Both permissions are already granted, no further action needed
+        }
+      } else if (locationPermission.isDenied) {
+        await requestPermission();
+      } else if (locationPermission.isPermanentlyDenied) {
+        openAppSettings();
+      }
+      notifyListeners();
+    } catch (e) {
+      print(e);
     }
-    notifyListeners();
   }
 
   String dateTime() {
@@ -31,13 +44,13 @@ class LocationServices extends ChangeNotifier {
     return formattedDate;
   }
 
-  Future<void> getLocation(String uid) async {
+  Future<void> getBackgroundLocation(String uid) async {
     try {
       if (defaultTargetPlatform == TargetPlatform.android) {
         String time = dateTime();
         GeolocatorAndroid.registerWith();
-        await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
+        await geolocator.Geolocator.getCurrentPosition(
+          desiredAccuracy: geolocator.LocationAccuracy.best,
           forceAndroidLocationManager: true,
         ).then((position) async {
           await FirebaseFirestore.instance.collection('users').doc(uid).set({
@@ -45,12 +58,30 @@ class LocationServices extends ChangeNotifier {
             'longitude': position.longitude,
             'update': time,
           }, SetOptions(merge: true));
+          print('Fetched the location and added it to the database');
         });
       }
     } catch (e) {
-    print(e);
+      print(e);
     }
   }
 
-  stopListening() {}
+  Future<void> getLocation(String uid) async {
+    try {
+      print('reached getLocation method');
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        String time = dateTime();
+        location.LocationData currentLocation =
+            await location.Location().getLocation();
+        await FirebaseFirestore.instance.collection('users').doc(uid).set({
+          'latitude': currentLocation.latitude,
+          'longitude': currentLocation.longitude,
+          'update': time,
+        }, SetOptions(merge: true));
+        print('Fetched the location and added it to the database');
+      }
+    } catch (e) {
+      print('error in the getLocation function ::: $e');
+    }
+  }
 }
