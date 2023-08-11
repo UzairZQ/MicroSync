@@ -1,27 +1,35 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:flutter/material.dart';
-import 'package:micro_pharma/userScreens/order.dart';
-import 'package:micro_pharma/adminScreens/add_employees.dart';
-import 'package:micro_pharma/adminScreens/admin_page.dart';
-import 'package:micro_pharma/adminScreens/doctors_areas_page.dart';
-import 'package:micro_pharma/adminScreens/location_screen.dart';
-import 'package:micro_pharma/providers/user_data_provider.dart';
+import 'package:micro_pharma/View/adminScreens/add_employees.dart';
+import 'package:micro_pharma/View/adminScreens/admin_homepage.dart';
+import 'package:micro_pharma/View/adminScreens/view_dcr.dart';
+import 'package:micro_pharma/View/adminScreens/location_screen.dart';
+import 'package:micro_pharma/View/adminScreens/submitted_orders.dart';
+import 'package:micro_pharma/View/adminScreens/user_call_plans.dart';
+import 'package:micro_pharma/viewModel/area_provider.dart';
+import 'package:micro_pharma/viewModel/daily_call_report_provider.dart';
+import 'package:micro_pharma/viewModel/day_plans_provider.dart';
+import 'package:micro_pharma/viewModel/doctor_provider.dart';
+import 'package:micro_pharma/viewModel/order_data_provider.dart';
+import 'package:micro_pharma/viewModel/product_data_provider.dart';
+import 'package:micro_pharma/viewModel/user_data_provider.dart';
 import 'package:micro_pharma/services/location_services.dart';
-import 'package:micro_pharma/userScreens/call_plans.dart';
-
-import 'package:micro_pharma/userScreens/dailycall_report.dart';
-import 'package:micro_pharma/userScreens/user_dashboard.dart';
-import 'package:micro_pharma/userScreens/day_plan.dart';
-
-import 'package:micro_pharma/userScreens/user_profile.dart';
+import 'package:micro_pharma/splash_page.dart';
+import 'package:micro_pharma/View/userScreens/Call%20Planner%20Page/call_planner.dart';
+import 'package:micro_pharma/View/userScreens/user_dashboard.dart';
+import 'package:micro_pharma/View/userScreens/day_plans.dart';
+import 'package:micro_pharma/View/userScreens/User%20Profile%20Page/user_profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'userScreens/login_page.dart';
-import 'userScreens/home_page.dart';
-import 'package:micro_pharma/adminScreens/admin_settings.dart';
+import 'package:theme_provider/theme_provider.dart';
+import 'View/adminScreens/admin_panel/add_product.dart';
+import 'View/adminScreens/admin_panel/admin_panel.dart';
+import 'View/userScreens/Daily Call Report Page/dailycall_report.dart';
+import 'components/constants.dart';
+import 'View/LoginPage/login_page.dart';
+import 'View/userScreens/User Home Page/home_page.dart';
+import 'package:micro_pharma/View/adminScreens/admin_settings.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +44,7 @@ void callBackDispatcher() async {
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final String? userId = preferences.getString('userId');
-    await LocationServices().getLocation(userId!);
+    await LocationServices().getBackgroundLocation(userId!);
 
     return Future.value(true);
   });
@@ -49,7 +57,19 @@ Future<void> main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<UserDataProvider>(
-          create: (_) => UserDataProvider())
+        create: (_) => UserDataProvider(),
+      ),
+      ChangeNotifierProvider<AreaProvider>(create: (_) => AreaProvider()),
+      ChangeNotifierProvider<DoctorDataProvider>(
+          create: (_) => DoctorDataProvider()),
+      ChangeNotifierProvider<ProductDataProvider>(
+          create: (_) => ProductDataProvider()),
+      ChangeNotifierProvider<DayPlanProvider>(create: (_) => DayPlanProvider()),
+      ChangeNotifierProvider<DailyCallReportProvider>(
+        create: (_) => DailyCallReportProvider(),
+      ),
+      ChangeNotifierProvider<OrderDataProvider>(
+          create: (_) => OrderDataProvider())
     ],
     child: const MicroPharma(),
   ));
@@ -60,105 +80,42 @@ class MicroPharma extends StatelessWidget {
   const MicroPharma({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      routes: {
-        'login': (context) => const LoginPage(),
-        'home': (context) => const HomePage(),
-        'user_dashboard': (context) => const Dashboard(),
-        'admin': (context) => const AdminPage(),
-        'dayplan': (context) => const DayPlan(),
-        'productorder': (context) => OrderPage(),
-        'callplanner': (context) => CallPlans(),
-        'addoctor': (context) => const DoctorsAreas(),
-        'dailycallreport': (context) => DailyCallReports(),
-        'user_profile': (context) => const UserProfilePage(),
-        'admin_profile': (context) => const AdminProfilePage(),
-        // 'map_page': (context) => GoogleMapPage(),
-        'location_screen': (context) => const LocationScreen(),
-        'add_employees': (context) => const AddEmployees(),
-        // 'doctors_areas_page': (context) => const DoctorsAreas(),
-        'doctors_areas': (context) => const DoctorsAreas(),
-      },
-      // home: const DoctorsAreas(),
-      home: const SplashPage(),
-      // home: const Dashboard(),
-    );
-  }
-}
-
-class SplashPage extends StatefulWidget {
-  const SplashPage({super.key});
-
-  @override
-  State<SplashPage> createState() => SplashPageState();
-}
-
-class SplashPageState extends State<SplashPage> {
-  static const String loginKey = 'Login';
-  static const String userKey = 'User';
-
-  @override
-  void initState() {
-    super.initState();
-    whereToGo();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Hero(
-          tag: 'micro-logo',
-          child: Image.asset('assets/images/micro_trans.png'),
+    return ThemeProvider(
+      onThemeChanged: (oldTheme, newTheme) {},
+      themes: [
+        AppTheme.light(),
+        AppTheme.dark(),
+      ],
+      saveThemesOnChange: true,
+      child: ThemeConsumer(
+        child: Builder(
+          builder: (themeContext) => MaterialApp(
+            theme: ThemeProvider.themeOf(themeContext).data,
+            debugShowCheckedModeBanner: false,
+            navigatorKey: navigatorKey,
+            routes: {
+              'login': (context) => const LoginPage(),
+              'home': (context) => const HomePage(),
+              'user_dashboard': (context) => const Dashboard(),
+              'admin': (context) => const AdminPage(),
+              'day_plans': (context) => const DayPlansScreen(),
+              'call_plans': (context) => const CallPlansForAdmin(),
+              'addproduct': (context) => const AddProduct(),
+              'call_planner': (context) => const CallPlanner(),
+              'addoctor': (context) => const AdminPanel(),
+              'dailycallreport': (context) => const DailyCallReportScreen(),
+              'user_profile': (context) => const UserProfilePage(),
+              'admin_profile': (context) => const AdminProfilePage(),
+              'location_screen': (context) => const LocationScreen(),
+              'add_employees': (context) => const AddEmployees(),
+              'doctors_areas': (context) => const AdminPanel(),
+              'submitted_orders': (context) => const SubmittedOrders(),
+              'view_dcr': (context) => const ViewDCRScreen(),
+            },
+            home: const SplashPage(),
+          ),
         ),
       ),
     );
-  }
-
-  void whereToGo() async {
-    //this function is for navigating either the user or admin without have to login again when the app starts up.
-    var sharedLogin = await SharedPreferences.getInstance();
-    var sharedUser = await SharedPreferences.getInstance();
-
-    var isLoggedIn = sharedLogin.getBool(loginKey);
-    var isUser = sharedUser.getBool(userKey);
-
-    Timer(const Duration(seconds: 1), () {
-      if (isLoggedIn != null && isUser != null) {
-        if (isLoggedIn && isUser) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomePage(),
-            ),
-          );
-        } else if (isLoggedIn && isUser == false) {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AdminPage(),
-              ));
-        } else {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginPage(),
-              ));
-        }
-      } else if (isLoggedIn == null && isUser == null) {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LoginPage(),
-            ));
-      } else {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LoginPage(),
-            ));
-      }
-    });
   }
 }

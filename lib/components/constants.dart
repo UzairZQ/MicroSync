@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 Color kappbarColor = const Color(0xff1FB7CC);
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 // ignore: must_be_immutable
 class MyButton extends StatelessWidget {
   MyButton(
@@ -56,23 +58,26 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
+final formKey = GlobalKey<FormState>();
+
 //I have added a comment
 TextStyle ktextstyle = const TextStyle(
     fontFamily: 'Poppins,', fontSize: 17.5, fontWeight: FontWeight.w400);
 
-class myTextwidget extends StatelessWidget {
-  myTextwidget({this.fontWeight, required this.fontSize, required this.text});
+class MyTextwidget extends StatelessWidget {
+  MyTextwidget({super.key, this.fontWeight, this.fontSize, required this.text, this.fontColor});
 
-  FontWeight? fontWeight;
-  double fontSize;
-  String text;
+  final FontWeight? fontWeight;
+  double? fontSize = 14.0;
+  final String text;
+  final Color? fontColor;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
       style: TextStyle(
-          fontFamily: 'Poppins', fontWeight: fontWeight, fontSize: fontSize),
+          fontFamily: 'Poppins', fontWeight: fontWeight, fontSize: fontSize, color: fontColor),
     );
   }
 }
@@ -97,5 +102,78 @@ String? validatePassword(String? password) {
     return 'Enter Password with min. 6 Characters';
   } else {
     return null;
+  }
+}
+
+Future<void> showCustomDialog({
+  required BuildContext context,
+  required String title,
+  required String content,
+  List<Widget>? actions,
+}) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: MyTextwidget(
+          text: title,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+        content: SingleChildScrollView(
+          child: MyTextwidget(
+            text: content,
+            fontSize: 14,
+          ),
+        ),
+        actions: actions ??
+            <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+      );
+    },
+  );
+}
+
+class MyTextFormField extends StatelessWidget {
+  const MyTextFormField({
+    super.key,
+    required this.hintext,
+    this.onSaved,
+    this.validator,
+    this.controller,
+    this.icon,
+  });
+
+  final String? hintext;
+  final Function(String?)? onSaved;
+  final String? Function(String?)? validator;
+  final TextEditingController? controller;
+  final Icon? icon;
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      onSaved: onSaved,
+      decoration: InputDecoration(
+        prefixIcon: icon,
+        filled: true,
+        fillColor: Colors.blue[50],
+        hintText: '$hintext',
+        hintStyle: const TextStyle(fontFamily: 'Poppins'),
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.0),
+          ),
+        ),
+      ),
+    );
   }
 }

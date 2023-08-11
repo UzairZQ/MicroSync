@@ -25,20 +25,32 @@ dependencies:
   
   cupertino_icons: ^1.0.2
   #Firebase Dependencies
-  firebase_core: 2.8.0
-  firebase_auth: 4.3.0
-  cloud_firestore: 4.4.5
+  firebase_core: ^2.8.0
+  firebase_auth: ^4.4.2
+  cloud_firestore: ^4.4.5
   pie_chart: ^5.3.2
-  google_maps_flutter: 2.2.5
+  google_maps_flutter: ^2.2.5
   geolocator: ^9.0.2
   provider: ^6.0.4
   shared_preferences: ^2.0.17
-  connectivity_plus: ^3.0.3
- 
+  connectivity_plus: ^4.0.1
   permission_handler: ^10.2.0
   workmanager: ^0.5.1
   geolocator_android: ^4.1.7
-  intl: ^0.17.0
+  intl: ^0.18.1
+  table_calendar: ^3.0.8
+  theme_provider: ^0.6.0
+  csv: ^5.0.2
+  pdf: ^3.10.4
+  path_provider: ^2.0.15
+  open_file: ^3.3.1
+  path: ^1.8.3
+  location: ^4.4.0
+  url_launcher: ^6.0.10
+  collection: ^1.17.1
+
+
+  # syncfusion_flutter_pdf: ^18.4.47-beta
   
 
 dev_dependencies:
@@ -66,6 +78,14 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/products.csv
+    - assets/Poppins/Poppins-Regular.ttf
+    # - assets/open-sans.ttf
+    # - assets/OpenSans-Regular.ttf
+    # - assets/OpenSans-Bold.ttf
+    # - assets/OpenSans-Italic.ttf
+    # - assets/OpenSans-BoldItalic.ttf
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -82,6 +102,7 @@ flutter:
      - family: Poppins
        fonts:
          - asset: assets/Poppins/Poppins-Regular.ttf
+         
   #      - asset: fonts/Schyler-Italic.ttf
   #        style: italic
   #   - family: Trajan Pro
