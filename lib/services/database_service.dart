@@ -16,7 +16,7 @@ class DatabaseService {
 
   
 
-  static Future<void> createUser(String email, String password, String name,
+  static Future<void> createUser(String email, String password, String name, String lname,
       String role, String phone) async {
     try {
       showDialog(
@@ -32,6 +32,7 @@ class DatabaseService {
           .then((UserCredential userCredential) {
         _firestore.collection('users').doc(userCredential.user!.uid).set({
           'displayName': name,
+          'lastname': lname,
           'email': email,
           'longitude': 43,
           'latitude': 73,
