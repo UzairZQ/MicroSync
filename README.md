@@ -23,31 +23,30 @@ Sajjad Ahmed (@github.com/i-sajjad)
 # Support
 If you have any questions or issues with the app, please contact me at uzairqureshi9@gmail.com
 
-# Screenshots
-![Login page for user and admin](screenshots/login_screen.png)
-![User Homescreen](screenshots/user_homescreen.png)
-![User Performance Dashboard (static)](screenshots/user_dashboard.png)
-![Call Planner for user](screenshots/call_planner.png)
-![List of added Call Plans](screenshots/call_plans.png)
-![Daily Call Report Screen](screenshots/daily_call_report.png)
-![Add visit details for DCR](screenshots/add_doctor_info_dcr.png)
-![Add details for doctor visits](screenshots/add_doctorinfo_dcr.png)
-![Submission of DCR](screenshots/dcr_submitted.png)
-![DCR Submitted](screenshots/dcr_submitted2.png)
-![Send product orders to admin](screenshots/submit_orders.png)
-![Order submitted](screenshots/order_submitted.png)
-![User Profile Page](screenshots/user_profile.png)
-![User Changepassword](screenshots/user_changepassword.png)
-![Admin Homescreen](screenshots/admin_homescreen.png)
-![Location of Users](screenshots/location_screen.png)
-![User Location on Google Maps](screenshots/user_location.png)
-![Admin Panel ](screenshots/admin_panel.png)
-![Add/Delete Doctors](screenshots/doctors.png)
-![Add/Delete/Edit Products](screenshots/products.png)
-![Add/Delete Areas](screenshots/areas.png)
-![Assign Products & Areas To Employees](screenshots/assign_work.png)
-![View/Remove assigned Areas/Products](screenshots/remove_assigned.png)
-![Booked Order View](screenshots/booked_orders.png)
-![Order Details](screenshots/order_details.png)
-![Add new Employee to the system](screenshots/add_employee.png)
-![Remove Employee from the system](screenshots/remove_employee.png)
+<img src="screenshots/login_screen.png" alt="Login page for user and admin" width="400"/>
+<img src="screenshots/user_homescreen.png" alt="User Homescreen" width="400"/>
+<img src="screenshots/user_dashboard.png" alt="User Performance Dashboard (static)" width="400"/>
+<img src="screenshots/call_planner.png" alt="Call Planner for user" width="400"/>
+<img src="screenshots/call_plans.png" alt="List of added Call Plans" width="400"/>
+<img src="screenshots/daily_call_report.png" alt="Daily Call Report Screen" width="400"/>
+<img src="screenshots/add_doctor_info_dcr.png" alt="Add visit details for DCR" width="400"/>
+<img src="screenshots/add_doctorinfo_dcr.png" alt="Add details for doctor visits" width="400"/>
+<img src="screenshots/dcr_submitted.png" alt="Submission of DCR" width="400"/>
+<img src="screenshots/dcr_submitted2.png" alt="DCR Submitted" width="400"/>
+<img src="screenshots/submit_orders.png" alt="Send product orders to admin" width="400"/>
+<img src="screenshots/order_submitted.png" alt="Order submitted" width="400"/>
+<img src="screenshots/user_profile.png" alt="User Profile Page" width="400"/>
+<img src="screenshots/user_changepassword.png" alt="User Changepassword" width="400"/>
+<img src="screenshots/admin_homescreen.png" alt="Admin Homescreen" width="400"/>
+<img src="screenshots/location_screen.png" alt="Location of Users" width="400"/>
+<img src="screenshots/user_location.png" alt="User Location on Google Maps" width="400"/>
+<img src="screenshots/admin_panel.png" alt="Admin Panel" width="400"/>
+<img src="screenshots/doctors.png" alt="Add/Delete Doctors" width="400"/>
+<img src="screenshots/products.png" alt="Add/Delete/Edit Products" width="400"/>
+<img src="screenshots/areas.png" alt="Add/Delete Areas" width="400"/>
+<img src="screenshots/assign_work.png" alt="Assign Products & Areas To Employees" width="400"/>
+<img src="screenshots/remove_assigned.png" alt="View/Remove assigned Areas/Products" width="400"/>
+<img src="screenshots/booked_orders.png" alt="Booked Order View" width="400"/>
+<img src="screenshots/order_details.png" alt="Order Details" width="400"/>
+<img src="screenshots/add_employee.png" alt="Add new Employee to the system" width="400"/>
+<img src="screenshots/remove_employee.png" alt="Remove Employee from the system" width="400"/>
