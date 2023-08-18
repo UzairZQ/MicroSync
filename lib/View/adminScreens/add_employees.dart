@@ -34,7 +34,6 @@ class _AddEmployeesState extends State<AddEmployees> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController confpasController = TextEditingController();
   TextEditingController areacontroller = TextEditingController();
-  TextEditingController lnameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +56,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                   },
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter First name';
+                      return 'Please Enter Name';
                     }
                     return null;
                   },
@@ -65,22 +64,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                 const SizedBox(
                   height: 20.0,
                 ),
-                MyTextFormField(
-                  icon: const Icon(Icons.person),
-                  hintext: 'Please Enter last Name',
-                  onSaved: (value) {
-                    lnameController.text = value!;
-                  },
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter last name';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
+            
                 MyTextFormField(
                     icon: const Icon(Icons.email_outlined),
                     hintext: 'Please Enter Email',
@@ -307,7 +291,6 @@ class _AddEmployeesState extends State<AddEmployees> {
         emailController.text,
         passwordController.text,
         nameController.text,
-        lnameController.text,
         roleController.text,
         phoneController.text);
     nameController.clear();
