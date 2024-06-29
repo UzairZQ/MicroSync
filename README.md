@@ -11,6 +11,28 @@ Medicine Orders: Sales representatives can place orders for medicines and other 
 
 Weekly Call Planning: Sales representatives can plan their weekly calls in advance, setting reminders for upcoming appointments and ensuring they stay on track to meet their sales targets.
 
+##How to Use
+#Admin (Employer/Manager) Module
+•	The admin role is created by the developer during system setup
+•	The admin has the authority to add new employees to the system and provide them with initial login credentials
+•	The admin can add new areas and products to the system
+•	The products and areas can be assigned to employees for their designated work
+•	The admin has the capability to add new doctors to the system, enabling employees to effectively manage their interactions and appointments
+•	Live location tracking allows admin to track employees’ movements and optimize their visit schedules
+•	The admin can view the tour plans of the employees and submitted daily call reports
+•	Products orders of medical stores submitted by sales reps or salesmen can also be view by the admin
+•	Admin has the authority to delete a user and block his access from the system
+
+##User (Employee) Module
+•	Sales representatives receive their initial login credentials from the admin and are requested to change their passwords for security purposes
+•	They can access their dedicated dashboard upon successful login
+•	Daily call reports can be created and submitted to admins, documenting interactions with doctors, samples provided to each doctor and remarks given by each doctor
+•	They can add new doctors to the system, expanding the database and facilitating future interactions
+•	Users can access doctor listings, areas of focus, call planner, and order booking functionalities to carry out their tasks efficiently
+•	The system allows employees to set future tour plans, which includes doctors to meet and areas to visit for the whole week
+•	The users can also submit orders of products to admin to ensure timely delivery of medicines to medical stores
+
+
 # Technologies Used
 Flutter: Flutter is an open-source mobile application development framework created by Google. It allows developers to build high-quality native interfaces for iOS and Android from a single codebase.
 
