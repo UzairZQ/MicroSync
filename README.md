@@ -11,8 +11,8 @@ Medicine Orders: Sales representatives can place orders for medicines and other 
 
 Weekly Call Planning: Sales representatives can plan their weekly calls in advance, setting reminders for upcoming appointments and ensuring they stay on track to meet their sales targets.
 
-##How to Use
-#Admin (Employer/Manager) Module
+## How to Use
+# Admin (Employer/Manager) Module
 •	The admin role is created by the developer during system setup
 •	The admin has the authority to add new employees to the system and provide them with initial login credentials
 •	The admin can add new areas and products to the system
@@ -23,7 +23,7 @@ Weekly Call Planning: Sales representatives can plan their weekly calls in advan
 •	Products orders of medical stores submitted by sales reps or salesmen can also be view by the admin
 •	Admin has the authority to delete a user and block his access from the system
 
-##User (Employee) Module
+## User (Employee) Module
 •	Sales representatives receive their initial login credentials from the admin and are requested to change their passwords for security purposes
 •	They can access their dedicated dashboard upon successful login
 •	Daily call reports can be created and submitted to admins, documenting interactions with doctors, samples provided to each doctor and remarks given by each doctor
