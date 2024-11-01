@@ -38,9 +38,6 @@ Flutter: Flutter is an open-source mobile application development framework crea
 
 Firebase Firestore: Firebase Firestore is a cloud-based NoSQL document database. It provides real-time synchronization, making it a great choice for mobile applications.
 
-# Todo
-Add your own google-services.json file for firebase,
-Add your own google maps api key in the androidmanifest.xml
 
 # Contributors
 Uzair Zia Qureshi (@github.com/UzairZQ)
