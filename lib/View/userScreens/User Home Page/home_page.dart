@@ -34,12 +34,13 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     showPrivacyConsentDialog(currentUser!.uid);
-    getBackgroundLocation(currentUser!.uid);
     Provider.of<UserDataProvider>(context, listen: false)
         .fetchUserData(currentUser!.uid);
     Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
     currentDayPlan = Provider.of<DayPlanProvider>(context, listen: false)
         .getCurrentDayPlan();
+
+    getBackgroundLocation(currentUser!.uid);
   }
 
   @override
