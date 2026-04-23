@@ -14,52 +14,26 @@ class DatabaseService {
         .snapshots();
   }
 
-  static Future<void> createUser(String email, String password, String name,
+  static Future<String> createUser(String email, String password, String name,
       String role, String phone) async {
     try {
-      showDialog(
-          context: navigatorKey.currentContext!,
-          builder: ((context) {
-            return Builder(builder: (context) {
-              return const Center(child: CircularProgressIndicator());
-            });
-          }));
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
 
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((UserCredential userCredential) {
-        _firestore.collection('users').doc(userCredential.user!.uid).set({
-          'displayName': name,
-          'email': email,
-          'longitude': 43,
-          'latitude': 73,
-          'role': role,
-          'uid': userCredential.user!.uid,
-          'phone': phone
-        });
-        Navigator.pop(navigatorKey.currentContext!);
-        userCreatedDialog();
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'displayName': name,
+        'email': email,
+        'longitude': 43,
+        'latitude': 73,
+        'role': role,
+        'uid': userCredential.user!.uid,
+        'phone': phone
       });
-    } on FirebaseException catch (e) {
-      showDialog(
-          context: navigatorKey.currentContext!,
-          builder: ((context) {
-            return Builder(builder: (context) {
-              return Center(
-                  child: AlertDialog(
-                title: const Text('Error'),
-                content: Text(
-                    'User creation was unsuccessfull, Please try again:::$e'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('OK'))
-                ],
-              ));
-            });
-          }));
+      return "Success";
+    } on FirebaseAuthException catch (e) {
+      return e.message ?? "An unknown error occurred.";
+    } catch (e) {
+      return "An unknown error occurred.";
     }
   }
 

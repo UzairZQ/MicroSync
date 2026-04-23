@@ -65,7 +65,7 @@ class UserDataProvider with ChangeNotifier {
       // Show a success message or perform any other necessary actions
     } catch (e) {
       _isLoading = false;
-      print('Error adding areas and products to employee: $e');
+      
       // Show an error message or handle the error in an appropriate way
     }
   }
@@ -79,7 +79,7 @@ class UserDataProvider with ChangeNotifier {
           .get();
       if (docSnapshot.exists) {
         final newUser = UserModel.fromMap(docSnapshot.data()!);
-        // print('User Data: ${docSnapshot.data()}');
+        // 
 
         _user = newUser;
         notifyListeners();
@@ -88,7 +88,7 @@ class UserDataProvider with ChangeNotifier {
       return;
     } catch (e) {
       _isLoading = false;
-      print('error in the fetch user function $e');
+      
 
       return;
     }
@@ -108,7 +108,7 @@ class UserDataProvider with ChangeNotifier {
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
-      print('Error in fetching users by role: $e');
+      
       return;
     }
   }
@@ -130,7 +130,7 @@ class UserDataProvider with ChangeNotifier {
       // Show a success message or perform any other necessary actions
     } catch (e) {
       _isLoading = false;
-      print('Error removing product from user: $e');
+      
       // Show an error message or handle the error in an appropriate way
     }
   }
@@ -152,7 +152,7 @@ class UserDataProvider with ChangeNotifier {
       // Show a success message or perform any other necessary actions
     } catch (e) {
       _isLoading = false;
-      print('Error removing area from user: $e');
+      
       // Show an error message or handle the error in an appropriate way
     }
   }
@@ -175,7 +175,7 @@ class UserDataProvider with ChangeNotifier {
   //     _user.assignedProducts?.add(product);
   //     notifyListeners();
   //   } catch (e) {
-  //     print('Error assigning product to employee: $e');
+  //     
   //   }
   // }
 
@@ -194,7 +194,7 @@ class UserDataProvider with ChangeNotifier {
   //     _user.assignedProducts?.remove(product);
   //     notifyListeners();
   //   } catch (e) {
-  //     print('Error removing product from employee: $e');
+  //     
   //   }
   // }
 
@@ -212,7 +212,7 @@ class UserDataProvider with ChangeNotifier {
   //     _user.assignedAreas?.add(area);
   //     notifyListeners();
   //   } catch (e) {
-  //     print('Error assigning area to employee: $e');
+  //     
   //   }
   // }
 
@@ -231,6 +231,6 @@ class UserDataProvider with ChangeNotifier {
   //     _user.assignedAreas?.remove(area);
   //     notifyListeners();
   //   } catch (e) {
-  //     print('Error removing area from employee: $e');
+  
   //   }
   // }

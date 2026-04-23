@@ -7,7 +7,7 @@ import 'package:micro_pharma/components/constants.dart';
 import '../../services/database_service.dart';
 
 class AddEmployees extends StatefulWidget {
-  static const String id = 'add_doctor';
+  static const String id = 'add_employees';
   const AddEmployees({super.key});
 
   @override
@@ -209,7 +209,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                   }
                   return Column(
                     children: [
-                      MyTextwidget(
+                      const MyTextwidget(
                         fontSize: 20,
                         text: 'Registered Users',
                         fontWeight: FontWeight.bold,
@@ -287,17 +287,56 @@ class _AddEmployeesState extends State<AddEmployees> {
   }
 
   void createUser() async {
-    await DatabaseService.createUser(
-        emailController.text,
-        passwordController.text,
-        nameController.text,
-        roleController.text,
-        phoneController.text);
-    nameController.clear();
-    emailController.clear();
-    passwordController.clear();
-    confpasController.clear();
-    roleController.clear();
-    phoneController.clear();
+    showDialog(
+      context: context,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
+    );
+
+    String result = await DatabaseService.createUser(
+      emailController.text,
+      passwordController.text,
+      nameController.text,
+      roleController.text,
+      phoneController.text,
+    );
+
+    Navigator.pop(context); // Dismiss the progress indicator
+
+    if (result == "Success") {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Success'),
+          content: const Text('New User Created Successfully!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+      nameController.clear();
+      emailController.clear();
+      passwordController.clear();
+      confpasController.clear();
+      roleController.clear();
+      phoneController.clear();
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(result),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

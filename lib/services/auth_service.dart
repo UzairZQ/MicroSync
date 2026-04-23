@@ -96,7 +96,7 @@ class AuthService {
             content: Text('Failed to sign in, please try again later'),
           ),
         );
-        // print('failed to sign in, error: ${e.code}');
+        
       }
     } on SocketException catch (_) {
       ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(

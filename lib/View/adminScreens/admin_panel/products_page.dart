@@ -139,7 +139,7 @@ class ProductListScreen extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, AddProduct.id);
         },
-        label: MyTextwidget(
+        label: const MyTextwidget(
           text: 'Add New Product',
           fontSize: 14,
         ),

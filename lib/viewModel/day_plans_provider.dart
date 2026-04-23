@@ -18,7 +18,7 @@ class DayPlanProvider extends ChangeNotifier {
           .toList();
       notifyListeners();
     } catch (e) {
-      print(e);
+      
     }
   }
 
@@ -32,7 +32,7 @@ class DayPlanProvider extends ChangeNotifier {
       _dayPlans.add(newDayPlan);
       notifyListeners();
     } catch (e) {
-      print(e);
+      
     }
   }
 
@@ -59,7 +59,7 @@ class DayPlanProvider extends ChangeNotifier {
       _dayPlans.remove(dayPlan);
       notifyListeners();
     } catch (e) {
-      print(e);
+      
     }
   }
 }

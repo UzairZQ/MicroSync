@@ -50,7 +50,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
           onPressed: () {
             addDoctorBottomSheet(context, areas);
           },
-          label: MyTextwidget(
+          label: const MyTextwidget(
             text: 'Add Doctor',
             fontSize: 16,
           )),
@@ -63,7 +63,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
             children: [
               const Padding(padding: EdgeInsets.all(10)),
               DropdownButton<AreaModel>(
-                  hint: MyTextwidget(text: 'Select Area to filter'),
+                  hint: const MyTextwidget(text: 'Select Area to filter'),
                   value: selectedArea,
                   items: areas.map((area) {
                     return DropdownMenuItem(
@@ -115,7 +115,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                         filteredDoctors[index].name!,
                                         filteredDoctors[index].area!);
                                   },
-                                  child: MyTextwidget(
+                                  child: const MyTextwidget(
                                     text: 'Delete',
                                   ),
                                 ),
@@ -124,7 +124,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                       Navigator.pop(context);
                                       return;
                                     },
-                                    child: MyTextwidget(text: 'Cancel'))
+                                    child: const MyTextwidget(text: 'Cancel'))
                               ],
                               context: context,
                               title: 'Delete this doctor?',

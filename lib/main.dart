@@ -22,6 +22,7 @@ import 'package:micro_pharma/View/userScreens/user_dashboard.dart';
 import 'package:micro_pharma/View/userScreens/day_plans.dart';
 import 'package:micro_pharma/View/userScreens/User%20Profile%20Page/user_profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:micro_pharma/components/theme.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'View/adminScreens/admin_panel/add_product.dart';
 import 'View/adminScreens/admin_panel/admin_panel.dart';
@@ -37,7 +38,7 @@ import 'package:provider/provider.dart';
 void callBackDispatcher() async {
   //This function is for getting the user location in the background
   WidgetsFlutterBinding.ensureInitialized();
-  DartPluginRegistrant.ensureInitialized;
+  DartPluginRegistrant.ensureInitialized();
 
   Workmanager().executeTask((taskName, inputData) async {
     await Firebase.initializeApp();
@@ -83,8 +84,16 @@ class MicroPharma extends StatelessWidget {
     return ThemeProvider(
       onThemeChanged: (oldTheme, newTheme) {},
       themes: [
-        AppTheme.light(),
-        AppTheme.dark(),
+        AppTheme(
+          id: "light_theme",
+          description: "Light Theme",
+          data: AppThemes.lightTheme,
+        ),
+        AppTheme(
+          id: "dark_theme",
+          description: "Dark Theme",
+          data: AppThemes.darkTheme,
+        ),
       ],
       saveThemesOnChange: true,
       child: ThemeConsumer(
@@ -94,23 +103,23 @@ class MicroPharma extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
             routes: {
-              'login': (context) => const LoginPage(),
-              'home': (context) => const HomePage(),
-              'user_dashboard': (context) => const Dashboard(),
-              'admin': (context) => const AdminPage(),
-              'day_plans': (context) => const DayPlansScreen(),
-              'call_plans': (context) => const CallPlansForAdmin(),
-              'addproduct': (context) => const AddProduct(),
-              'call_planner': (context) => const CallPlanner(),
-              'addoctor': (context) => const AdminPanel(),
-              'dailycallreport': (context) => const DailyCallReportScreen(),
-              'user_profile': (context) => const UserProfilePage(),
-              'admin_profile': (context) => const AdminProfilePage(),
-              'location_screen': (context) => const LocationScreen(),
-              'add_employees': (context) => const AddEmployees(),
-              'doctors_areas': (context) => const AdminPanel(),
-              'submitted_orders': (context) => const SubmittedOrders(),
-              'view_dcr': (context) => const ViewDCRScreen(),
+              LoginPage.id: (context) => const LoginPage(),
+              HomePage.id: (context) => const HomePage(),
+              Dashboard.id: (context) => const Dashboard(),
+              AdminPage.id: (context) => const AdminPage(),
+              DayPlansScreen.id: (context) => const DayPlansScreen(),
+              CallPlansForAdmin.id: (context) => const CallPlansForAdmin(),
+              AddProduct.id: (context) => const AddProduct(),
+              CallPlanner.id: (context) => const CallPlanner(),
+              AdminPanel.id: (context) => const AdminPanel(),
+              DailyCallReportScreen.id: (context) =>
+                  const DailyCallReportScreen(),
+              UserProfilePage.id: (context) => const UserProfilePage(),
+              AdminProfilePage.id: (context) => const AdminProfilePage(),
+              LocationScreen.id: (context) => const LocationScreen(),
+              AddEmployees.id: (context) => const AddEmployees(),
+              SubmittedOrders.id: (context) => const SubmittedOrders(),
+              ViewDCRScreen.id: (context) => const ViewDCRScreen(),
             },
             home: const SplashPage(),
           ),

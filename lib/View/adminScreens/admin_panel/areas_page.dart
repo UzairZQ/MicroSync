@@ -107,7 +107,7 @@ class _AreasState extends State<Areas> {
             },
           );
         },
-        label: MyTextwidget(
+        label: const MyTextwidget(
           text: 'Add Area',
           fontSize: 16,
         ),

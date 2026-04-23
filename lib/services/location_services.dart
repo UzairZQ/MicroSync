@@ -12,7 +12,6 @@ class LocationServices extends ChangeNotifier {
 
   Future<void> requestPermission() async {
     try {
-      print('requested permission');
       PermissionStatus locationPermission = await Permission.location.request();
       if (locationPermission.isGranted) {
         PermissionStatus locationAlwaysPermission =
@@ -25,15 +24,13 @@ class LocationServices extends ChangeNotifier {
           locationAlwaysPermission = PermissionStatus.granted;
           return; // Both permissions are already granted, no further action needed
         }
-      } else if (locationPermission.isDenied) {
-        await requestPermission();
       } else if (locationPermission.isPermanentlyDenied) {
         openAppSettings();
+      } else {
+        return;
       }
       notifyListeners();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   String dateTime() {
@@ -58,17 +55,13 @@ class LocationServices extends ChangeNotifier {
             'longitude': position.longitude,
             'update': time,
           }, SetOptions(merge: true));
-          print('Fetched the location and added it to the database');
         });
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<void> getLocation(String uid) async {
     try {
-      print('reached getLocation method');
       if (defaultTargetPlatform == TargetPlatform.android) {
         String time = dateTime();
         location.LocationData currentLocation =
@@ -78,10 +71,7 @@ class LocationServices extends ChangeNotifier {
           'longitude': currentLocation.longitude,
           'update': time,
         }, SetOptions(merge: true));
-        print('Fetched the location and added it to the database');
       }
-    } catch (e) {
-      print('error in the getLocation function ::: $e');
-    }
+    } catch (e) {}
   }
 }

@@ -53,13 +53,13 @@ class UserInfo extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            MyTextwidget(
+            const MyTextwidget(
               text: 'My Assigned Areas',
               fontSize: 20,
             ),
             UserAssignedAreas(user: user),
             const SizedBox(height: 20),
-            MyTextwidget(
+            const MyTextwidget(
               text: 'My Assigned Products',
               fontSize: 20,
             ),

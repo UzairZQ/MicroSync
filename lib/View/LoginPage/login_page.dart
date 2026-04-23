@@ -8,7 +8,7 @@ import '../../services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
-  static String id = 'login';
+  static const String id = 'login';
 
   @override
   State<LoginPage> createState() => LoginPageState();

@@ -13,8 +13,8 @@ Future<void> showPrivacyConsentDialog(String uid) async {
         context: navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: MyTextwidget(text: 'Privacy Consent'),
-            content: MyTextwidget(
+            title: const MyTextwidget(text: 'Privacy Consent'),
+            content: const MyTextwidget(
               text:
                   'By using this app, you consent to the collection and use of your location data for the purpose of sales force automation and tracking your work activities in the field. Your location data will be securely stored and used in accordance with our privacy policy.',
             ),

@@ -1,29 +1,35 @@
 import 'package:flutter/material.dart';
 
-Color kappbarColor = const Color(0xff1FB7CC);
+Color kappbarColor = const Color(0xFF0F766E);
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 // ignore: must_be_immutable
 class MyButton extends StatelessWidget {
   MyButton(
-      {super.key, this.color, required this.text, required this.onPressed});
+      {super.key,
+      this.color,
+      this.width,
+      required this.text,
+      required this.onPressed});
   Color? color = const Color(0xFFFFB800);
+  final double? width;
   final String text;
   final Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40.0,
-      width: 170.0,
+      height: 48.0,
+      width: width ?? 170.0,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: color,
-          elevation: 6.0,
+          backgroundColor: color ?? Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.circular(18.0),
           ),
         ),
         child: Text(
@@ -45,7 +51,24 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: kappbarColor,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.primary.withOpacity(0.95),
+              Theme.of(context).colorScheme.tertiary.withOpacity(0.9),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(24),
+          ),
+        ),
+      ),
       centerTitle: true,
       title: Text(
         appBartxt,
@@ -62,13 +85,18 @@ final formKey = GlobalKey<FormState>();
 
 //I have added a comment
 TextStyle ktextstyle = const TextStyle(
-    fontFamily: 'Poppins,', fontSize: 17.5, fontWeight: FontWeight.w400);
+    fontFamily: 'Poppins', fontSize: 17.5, fontWeight: FontWeight.w400);
 
 class MyTextwidget extends StatelessWidget {
-  MyTextwidget({super.key, this.fontWeight, this.fontSize, required this.text, this.fontColor});
+  const MyTextwidget(
+      {super.key,
+      this.fontWeight,
+      this.fontSize,
+      required this.text,
+      this.fontColor});
 
   final FontWeight? fontWeight;
-  double? fontSize = 14.0;
+  final double? fontSize;
   final String text;
   final Color? fontColor;
 
@@ -77,7 +105,10 @@ class MyTextwidget extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-          fontFamily: 'Poppins', fontWeight: fontWeight, fontSize: fontSize, color: fontColor),
+          fontFamily: 'Poppins',
+          fontWeight: fontWeight,
+          fontSize: fontSize,
+          color: fontColor),
     );
   }
 }
@@ -164,15 +195,8 @@ class MyTextFormField extends StatelessWidget {
       onSaved: onSaved,
       decoration: InputDecoration(
         prefixIcon: icon,
-        filled: true,
-        fillColor: Colors.blue[50],
         hintText: '$hintext',
         hintStyle: const TextStyle(fontFamily: 'Poppins'),
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10.0),
-          ),
-        ),
       ),
     );
   }

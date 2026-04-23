@@ -72,7 +72,7 @@ class SubmittedOrders extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
+                const Center(
                   child: MyTextwidget(
                     text: 'Order Details',
                     fontSize: 18,
@@ -91,7 +91,7 @@ class SubmittedOrders extends StatelessWidget {
                   fontSize: 16,
                 ),
                 const SizedBox(height: 10),
-                MyTextwidget(
+                const MyTextwidget(
                   text: 'Products:',
                   fontSize: 16,
                 ),

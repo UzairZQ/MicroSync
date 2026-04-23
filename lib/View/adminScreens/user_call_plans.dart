@@ -41,7 +41,7 @@ class CallPlansForAdminState extends State<CallPlansForAdmin> {
             onPressed: () {
               Navigator.pushNamed(context, CallPlanner.id);
             },
-            label: MyTextwidget(
+            label: const MyTextwidget(
               text: 'Add New Call Plan',
               fontSize: 14,
             )),

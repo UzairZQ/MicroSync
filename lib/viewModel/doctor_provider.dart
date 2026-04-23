@@ -20,7 +20,7 @@ class DoctorDataProvider with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('Error in the fetch doctor data function: $e');
+      
       return;
     }
   }
@@ -35,7 +35,7 @@ class DoctorDataProvider with ChangeNotifier {
         'speciality': special,
       });
 
-      print('Added to database');
+      
       showCustomDialog(
           context: navigatorKey.currentContext!,
           title: 'Success',
@@ -59,7 +59,7 @@ class DoctorDataProvider with ChangeNotifier {
                 },
                 child: const Text('Okay'))
           ]);
-      print('This is the error $a');
+      
     }
   }
 
@@ -84,7 +84,7 @@ class DoctorDataProvider with ChangeNotifier {
           title: 'Deleted',
           content: 'The doctor is removed from the database ');
     } catch (e) {
-      print('Error deleting doctor: $e');
+      
       // Handle any error that occurred during the deletion process
     }
   }

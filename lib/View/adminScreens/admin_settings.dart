@@ -155,8 +155,8 @@ class AdminProfilePageState extends State<AdminProfilePage> {
                                     ),
                                   );
                                 } catch (e) {
-                                  print(
-                                      'Error sending password reset email: $e');
+                                  
+                                  debugPrint('Error sending password reset email: $e');
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(

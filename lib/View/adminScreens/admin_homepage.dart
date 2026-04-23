@@ -5,6 +5,7 @@ import 'package:micro_pharma/View/adminScreens/admin_panel/admin_panel.dart';
 import 'package:micro_pharma/View/adminScreens/view_dcr.dart';
 import 'package:micro_pharma/View/adminScreens/location_screen.dart';
 import 'package:micro_pharma/View/adminScreens/submitted_orders.dart';
+import 'package:micro_pharma/components/widgets/my_container.dart';
 import 'package:micro_pharma/components/widgets/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/viewModel/user_data_provider.dart';
@@ -17,7 +18,7 @@ import '../../splash_page.dart';
 import './user_call_plans.dart';
 
 class AdminPage extends StatefulWidget {
-  static String id = 'admin';
+  static const String id = 'admin';
   const AdminPage({Key? key}) : super(key: key);
 
   @override
@@ -35,7 +36,6 @@ class _AdminPageState extends State<AdminPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(currentUser!.email);
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -58,43 +58,7 @@ class _AdminPageState extends State<AdminPage> {
               );
               break;
             case 2:
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Center(
-                      child: AlertDialog(
-                        title: const Text('Logout'),
-                        content: const Text('Do you really want to Logout?'),
-                        actions: [
-                          TextButton(
-                              onPressed: () async {
-                                FirebaseAuth.instance.signOut();
-
-                                var sharedLogin =
-                                    await SharedPreferences.getInstance();
-                                sharedLogin.setBool(
-                                    SplashPageState.loginKey, false);
-                                var sharedUser =
-                                    await SharedPreferences.getInstance();
-                                sharedUser.setBool(
-                                    SplashPageState.userKey, false);
-
-                                Navigator.pushNamedAndRemoveUntil(
-                                  navigatorKey.currentContext!,
-                                  LoginPage.id,
-                                  (route) => false,
-                                );
-                              },
-                              child: const Text('Logout')),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Cancel'))
-                        ],
-                      ),
-                    );
-                  });
+              _showLogoutDialog(context);
           }
         },
         items: const [
@@ -122,11 +86,13 @@ class _AdminPageState extends State<AdminPage> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: Column(
             children: [
               Container(
-                height: 230,
+                height: constraints.maxHeight * 0.3, // 30% of screen height
                 decoration: const BoxDecoration(
                   shape: BoxShape.rectangle,
                   color: Color(0xFF1FB7CC),
@@ -186,60 +152,113 @@ class _AdminPageState extends State<AdminPage> {
               ),
               const SizedBox(height: 20.0),
               ContainerRow(
-                container1Clr: const Color(0xFFF0DCFF),
-                container1Icon: Icons.place_outlined,
-                container1Text: 'Live Tracking',
-                container1Tap: () =>
-                    {Navigator.pushNamed(context, LocationScreen.id)},
-                container2Clr: const Color(0xFFFFC8C8),
-                container2Icon: Icons.calendar_month_outlined,
-                container2Text: 'Daily Call Report',
-                container2Tap: () {
-                  Navigator.pushNamed(context, ViewDCRScreen.id);
-                },
+                children: [
+                  MyContainer(
+                    containerclr: const Color(0xFFF0DCFF),
+                    containerIcon: Icons.place_outlined,
+                    containerText: 'Live Tracking',
+                    onTap: () =>
+                        {Navigator.pushNamed(context, LocationScreen.id)},
+                  ),
+                  MyContainer(
+                    containerclr: const Color(0xFFFFC8C8),
+                    containerIcon: Icons.calendar_month_outlined,
+                    containerText: 'Daily Call Report',
+                    onTap: () {
+                      Navigator.pushNamed(context, ViewDCRScreen.id);
+                    },
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 30.0,
               ),
               ContainerRow(
-                container1Clr: const Color.fromARGB(255, 133, 254, 226),
-                container1Icon: Icons.assignment_outlined,
-                container1Text: 'Orders',
-                container1Tap: () {
-                  Navigator.pushNamed(context, SubmittedOrders.id);
-                },
-                container2Clr: const Color(0xffFFE974),
-                container2Icon: Icons.assignment_turned_in_outlined,
-                container2Text: 'Call Plans',
-                container2Tap: () {
-                  Navigator.pushNamed(context, CallPlansForAdmin.id);
-                },
+                children: [
+                  MyContainer(
+                    containerclr: const Color.fromARGB(255, 133, 254, 226),
+                    containerIcon: Icons.assignment_outlined,
+                    containerText: 'Orders',
+                    onTap: () {
+                      Navigator.pushNamed(context, SubmittedOrders.id);
+                    },
+                  ),
+                  MyContainer(
+                    containerclr: const Color(0xffFFE974),
+                    containerIcon: Icons.assignment_turned_in_outlined,
+                    containerText: 'Call Plans',
+                    onTap: () {
+                      Navigator.pushNamed(context, CallPlansForAdmin.id);
+                    },
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 30.0,
               ),
               ContainerRow(
-                container1Clr: Colors.blue.shade200,
-                container1Icon: Icons.settings_applications_outlined,
-                container1Text: 'Admin Panel ',
-                container2Clr: Colors.orange.shade200,
-                container2Icon: Icons.add_box_outlined,
-                container2Text: 'Add Delete Users',
-                container1Tap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) => const AdminPanel())));
-                  // Navigator.pushNamed(context, 'doctors_areas_page');
-                },
-                container2Tap: () {
-                  Navigator.pushNamed(context, 'add_employees');
-                },
+                children: [
+                  MyContainer(
+                    containerclr: Colors.blue.shade200,
+                    containerIcon: Icons.settings_applications_outlined,
+                    containerText: 'Admin Panel ',
+                    onTap: () {
+                      Navigator.pushNamed(context, AdminPanel.id);
+                    },
+                  ),
+                  MyContainer(
+                    containerclr: Colors.orange.shade200,
+                    containerIcon: Icons.add_box_outlined,
+                    containerText: 'Add Delete Users',
+                    onTap: () {
+                      Navigator.pushNamed(context, 'add_employees');
+                    },
+                  ),
+                ],
               ),
             ],
           ),
-        ),
+        );
+      },
+    ),
       ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Logout'),
+          content: const Text('Do you really want to Logout?'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                FirebaseAuth.instance.signOut();
+
+                var sharedLogin = await SharedPreferences.getInstance();
+                sharedLogin.setBool(SplashPageState.loginKey, false);
+                var sharedUser = await SharedPreferences.getInstance();
+                sharedUser.setBool(SplashPageState.userKey, false);
+
+                Navigator.pushNamedAndRemoveUntil(
+                  navigatorKey.currentContext!,
+                  LoginPage.id,
+                  (route) => false,
+                );
+              },
+              child: const Text('Logout'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

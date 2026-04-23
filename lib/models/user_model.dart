@@ -16,19 +16,22 @@ class UserModel {
   });
 
   factory UserModel.fromMap(Map<String, dynamic>? data) {
+    final latitude = data?['latitude'];
+    final longitude = data?['longitude'];
+
     return UserModel(
-      displayName: data!['displayName'],
-      email: data['email'],
-      latitude: data['latitude'].toDouble(),
-      longitude: data['longitude'].toDouble(),
-      role: data['role'],
-      uid: data['uid'],
-      phone: data['phone'],
-      update: data['update'],
-      assignedAreas: (data['assignedAreas'] as List<dynamic>?)
+      displayName: data?['displayName'],
+      email: data?['email'],
+      latitude: latitude is num ? latitude.toDouble() : null,
+      longitude: longitude is num ? longitude.toDouble() : null,
+      role: data?['role'],
+      uid: data?['uid'],
+      phone: data?['phone'],
+      update: data?['update'],
+      assignedAreas: (data?['assignedAreas'] as List<dynamic>?)
           ?.map((areaData) => AreaModel.fromMap(areaData))
           .toList(),
-      assignedProducts: (data['assignedProducts'] as List<dynamic>?)
+      assignedProducts: (data?['assignedProducts'] as List<dynamic>?)
           ?.map((productData) => ProductModel.fromMap(productData))
           .toList(),
     );

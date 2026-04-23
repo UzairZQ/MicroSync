@@ -12,6 +12,8 @@ import 'package:micro_pharma/viewModel/user_data_provider.dart';
 import 'package:provider/provider.dart';
 
 class OrderScreen extends StatefulWidget {
+  const OrderScreen({super.key});
+
   @override
   OrderScreenState createState() => OrderScreenState();
 }
@@ -265,7 +267,7 @@ class OrderScreenState extends State<OrderScreen> {
             });
           }
         },
-        label: MyTextwidget(
+        label: const MyTextwidget(
           text: 'Place Order',
         ),
         icon: const Icon(Icons.shopping_cart_checkout));
@@ -274,7 +276,7 @@ class OrderScreenState extends State<OrderScreen> {
   Expanded addProductToList() {
     return Expanded(
       child: TextButton(
-        child: MyTextwidget(text: 'Add to List'),
+        child: const MyTextwidget(text: 'Add to List'),
         onPressed: () {
           setState(() {
             // Check if any of the required fields are empty

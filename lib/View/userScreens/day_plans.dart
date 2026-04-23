@@ -267,13 +267,7 @@ class DayPlansScreenState extends State<DayPlansScreen> {
       await file.writeAsBytes(await pdf.save());
       if (await file.exists()) {
         OpenFile.open(filePath);
-        print('PDF saved');
-      } else {
-        print('Error: PDF file not found');
-      }
-    } catch (e, stackTrace) {
-      print('Error generating PDF: $e');
-      print(stackTrace);
-    }
+      } else {}
+    } catch (e) {}
   }
 }

@@ -38,9 +38,9 @@ class ViewDCRScreen extends StatelessWidget {
 
           if (await file.exists()) {
             OpenFile.open(filePath);
-            print('PDF saved');
+            
           } else {
-            print('Error: PDF file not found');
+            
           }
         },
         child: const Icon(Icons.picture_as_pdf),
@@ -115,14 +115,14 @@ class ViewDCRScreen extends StatelessWidget {
                       const SizedBox(
                         height: 5,
                       ),
-                      MyTextwidget(
+                      const MyTextwidget(
                         text: 'Samples Provided:',
                         fontSize: 14,
                       ),
                       ListView.builder(
                         shrinkWrap: true,
                         physics:
-                            NeverScrollableScrollPhysics(), // Disable inner list's scrolling
+                            const NeverScrollableScrollPhysics(), // Disable inner list's scrolling
                         itemCount: doctorVisit.selectedProducts?.length,
                         itemBuilder: (ctx, index) {
                           final product = doctorVisit.selectedProducts?[index];

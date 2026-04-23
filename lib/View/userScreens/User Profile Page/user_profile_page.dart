@@ -127,9 +127,8 @@ class UserProfilePageState extends State<UserProfilePage> {
                               ),
                             );
                           } catch (e) {
-                            print(
-                              'Error sending password reset email: $e',
-                            );
+                            
+                            debugPrint('Error sending password reset email: $e');
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
@@ -148,7 +147,7 @@ class UserProfilePageState extends State<UserProfilePage> {
             },
           );
         },
-        label: MyTextwidget(text: 'Change Password'),
+        label: const MyTextwidget(text: 'Change Password'),
         icon: const Icon(Icons.lock_clock_outlined),
       ),
       body: SingleChildScrollView(
@@ -189,7 +188,7 @@ class UserProfilePageState extends State<UserProfilePage> {
                 ),
               ),
               const SizedBox(height: 20),
-              MyTextwidget(
+              const MyTextwidget(
                 text: 'My Assigned Areas',
                 fontSize: 20,
               ),
@@ -208,7 +207,7 @@ class UserProfilePageState extends State<UserProfilePage> {
                 },
               ),
               const SizedBox(height: 20),
-              MyTextwidget(
+              const MyTextwidget(
                 text: 'My Assigned Products',
                 fontSize: 20,
               ),

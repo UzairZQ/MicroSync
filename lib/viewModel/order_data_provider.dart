@@ -17,7 +17,6 @@ class OrderDataProvider with ChangeNotifier {
       }).toList();
       notifyListeners();
     } catch (e) {
-      print(e);
       throw Exception;
     }
   }
@@ -27,10 +26,9 @@ class OrderDataProvider with ChangeNotifier {
       final docRef = _ordersCollection.doc();
       final newOrder = order.copyWith(id: docRef.id);
       await docRef.set(newOrder.toMap());
+      orders.add(newOrder);
       notifyListeners();
-    } catch (e, stackTrace) {
-      print('Error in the addOrder method: $e');
-      print(stackTrace);
+    } catch (e) {
       throw Exception('Failed to add order: $e');
     }
   }

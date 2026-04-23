@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../models/doctor_visit_model.dart';
 
 class DailyCallReportScreen extends StatefulWidget {
+  static const String id = 'dailycallreport';
   const DailyCallReportScreen({Key? key}) : super(key: key);
 
   @override
@@ -112,8 +113,8 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
   @override
   Widget build(BuildContext context) {
     if (isReportSubmitted) {
-      return Scaffold(
-        appBar: const MyAppBar(appBartxt: 'Daily Call Report'),
+      return const Scaffold(
+        appBar:  MyAppBar(appBartxt: 'Daily Call Report'),
         body: Center(
           child: MyTextwidget(
             text: 'The report has been submitted for today.',
@@ -168,7 +169,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                     content: 'Today\'s Report has been successfully submitted',
                   );
                 },
-                label: MyTextwidget(text: 'Submit Report'),
+                label: const MyTextwidget(text: 'Submit Report'),
                 icon: const Icon(Icons.assignment_turned_in),
               ),
         appBar: const MyAppBar(appBartxt: 'Daily Call Report'),
@@ -189,7 +190,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    MyTextwidget(
+                    const MyTextwidget(
                       text:
                           'It seems like there\'s no Day Plan for today, please Proceed to Call Planner Screen and add a Day Plan for today.',
                       fontSize: 16,
@@ -222,7 +223,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                         ),
                         // subtitle: MyTextwidget(text:dayPlanDoctors[index] ,),
                         trailing: TextButton(
-                          child: MyTextwidget(text: 'Add Doctor Info'),
+                          child: const MyTextwidget(text: 'Add Doctor Info'),
                           onPressed: () {
                             doctorDetailsDialog(context, dayPlanDoctors, index);
                           },
@@ -269,7 +270,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                       const SizedBox(height: 16.0),
                       Row(
                         children: [
-                          MyTextwidget(text: 'Visited this doctor?'),
+                         const  MyTextwidget(text: 'Visited this doctor?'),
                           Checkbox(
                             value: visitedDoctor?[index] ?? false,
                             onChanged: (isVisited) {
@@ -282,7 +283,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                       ),
                       if (visitedDoctor![index])
                         Row(children: [
-                          MyTextwidget(text: 'Samples Provided?'),
+                         const MyTextwidget(text: 'Samples Provided?'),
                           Checkbox(
                             value: samplesProvided,
                             onChanged: (ifsamples) {
@@ -363,7 +364,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                                     });
                                   }
                                 },
-                                child: MyTextwidget(text: 'Add'),
+                                child: const MyTextwidget(text: 'Add'),
                               ),
                             ),
                           ],

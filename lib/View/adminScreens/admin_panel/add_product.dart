@@ -4,7 +4,7 @@ import 'package:micro_pharma/viewModel/product_data_provider.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
-  static String id = 'addproduct';
+  static const String id = 'addproduct';
   @override
   AddProductState createState() => AddProductState();
 }

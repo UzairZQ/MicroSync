@@ -9,7 +9,6 @@ class DailyCallReportProvider extends ChangeNotifier {
 
 //flutter install  --debug --profile --apk build/app/outputs/flutter-apk/app-x86_64-release.apk
 
-
   Future<void> fetchReports() async {
     try {
       final snapshot = await _reportsCollection.get();
@@ -18,9 +17,7 @@ class DailyCallReportProvider extends ChangeNotifier {
               doc.data() as Map<String, dynamic>, doc.id))
           .toList();
       notifyListeners();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   void saveReport(DailyCallReportModel report) async {
@@ -32,20 +29,19 @@ class DailyCallReportProvider extends ChangeNotifier {
       await docRef.set(newReport.toMap()); // add the report to the database
       _reports.add(newReport);
       notifyListeners();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   DailyCallReportModel? getReportForCurrentDate() {
     DateTime currentDate = DateTime.now();
-    return _reports.firstWhere(
-      (report) =>
-          report.date.year == currentDate.year &&
+    for (final report in _reports) {
+      if (report.date.year == currentDate.year &&
           report.date.month == currentDate.month &&
-          report.date.day == currentDate.day,
-      //orElse: () => null,
-    );
+          report.date.day == currentDate.day) {
+        return report;
+      }
+    }
+    return null;
   }
 
   void updateReport(DailyCallReportModel report) async {
@@ -57,9 +53,7 @@ class DailyCallReportProvider extends ChangeNotifier {
         _reports[index] = report;
         notifyListeners();
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   List<DailyCallReportModel> getAllReports() {
@@ -77,8 +71,6 @@ class DailyCallReportProvider extends ChangeNotifier {
       await _reportsCollection.doc(reportToDelete.reportId).delete();
       _reports.remove(reportToDelete);
       notifyListeners();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 }

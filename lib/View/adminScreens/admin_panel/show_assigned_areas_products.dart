@@ -57,7 +57,7 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
                     selectedEmployee = employeesList[selectedEmployeeIndex];
                     return Center(
                       child: DropdownButton<int>(
-                        hint: MyTextwidget(text: 'Select Employee'),
+                        hint: const MyTextwidget(text: 'Select Employee'),
                         value: selectedEmployeeIndex,
                         onChanged: (selectedIndex) {
                           setState(() {
@@ -122,7 +122,7 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
                         showCustomDialog(
                             actions: [
                               TextButton(
-                                child: MyTextwidget(
+                                child: const MyTextwidget(
                                   text: 'Cancel',
                                 ),
                                 onPressed: () {
@@ -130,7 +130,7 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
                                 },
                               ),
                               TextButton(
-                                child: MyTextwidget(text: 'Yes'),
+                                child: const MyTextwidget(text: 'Yes'),
                                 onPressed: () {
                                   userDataProvider
                                       .removeProductFromUser(product!);
@@ -200,13 +200,13 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
                               content: 'Do you want to un-assign this area?',
                               actions: [
                                 TextButton(
-                                  child: MyTextwidget(text: 'Cancel'),
+                                  child: const MyTextwidget(text: 'Cancel'),
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
                                 ),
                                 TextButton(
-                                  child: MyTextwidget(text: 'Yes'),
+                                  child: const MyTextwidget(text: 'Yes'),
                                   onPressed: () {
                                     Provider.of<UserDataProvider>(context,
                                             listen: false)

@@ -59,7 +59,7 @@ class AssignAreasProductsToEmployeesState
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        label: MyTextwidget(text: 'Assign Products & Areas'),
+        label: const MyTextwidget(text: 'Assign Products & Areas'),
         icon: const Icon(Icons.save),
         onPressed: () {
           try {
@@ -88,7 +88,7 @@ class AssignAreasProductsToEmployeesState
                 context: context,
                 title: 'Failure',
                 content: 'An error occured, please try again');
-            print(e);
+            
           }
         },
       ),
@@ -111,14 +111,14 @@ class AssignAreasProductsToEmployeesState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  MyTextwidget(
+                  const MyTextwidget(
                     text: 'Select Employee:',
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
                   const SizedBox(height: 16),
                   DropdownButton<int>(
-                    hint: MyTextwidget(text: 'Select From Here '),
+                    hint: const MyTextwidget(text: 'Select From Here '),
                     value: selectedEmployeeIndex,
                     onChanged: (selectedIndex) {
                       setState(() {
@@ -142,7 +142,7 @@ class AssignAreasProductsToEmployeesState
                     }).toList(),
                   ),
                   const SizedBox(height: 32),
-                  MyTextwidget(
+                  const MyTextwidget(
                     text: 'Assign Areas:',
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -167,7 +167,7 @@ class AssignAreasProductsToEmployeesState
                         [],
                   ),
                   const SizedBox(height: 32),
-                  MyTextwidget(
+                  const MyTextwidget(
                     text: 'Assign Products:',
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

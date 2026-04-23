@@ -26,5 +26,5 @@
 
   //     await collectionRef.add(productData);
   //   }
-  //   print('added products to database');
+  
   // }

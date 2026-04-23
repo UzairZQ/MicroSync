@@ -28,7 +28,7 @@ class ProductDataProvider with ChangeNotifier {
       }
     } catch (e) {
       _isLoading = false;
-      print('Error in the fetch products function $e');
+
       return;
     }
   }
@@ -63,10 +63,7 @@ class ProductDataProvider with ChangeNotifier {
             context: navigatorKey.currentContext!,
             title: 'Success',
             content: 'Product added successfully');
-
-        print('product added to database');
-      } on FirebaseException catch (e) {
-        print('Error in the add product function $e');
+      } on FirebaseException {
         showCustomDialog(
             context: navigatorKey.currentContext!,
             title: 'Failure',
@@ -98,7 +95,6 @@ class ProductDataProvider with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('Error in updating product: $e');
       return;
     }
   }
@@ -114,13 +110,11 @@ class ProductDataProvider with ChangeNotifier {
         final productDoc = querySnapshot.docs.first;
         await productDoc.reference.delete();
       } else {
-        print('Product not found with code: $productCode');
         return;
       }
 
       notifyListeners();
     } catch (e) {
-      print('Error in deleting product: $e');
       return;
     }
   }
