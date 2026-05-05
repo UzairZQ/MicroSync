@@ -8,7 +8,7 @@ import '../../../models/product_model.dart';
 import '../../../models/user_model.dart';
 
 class ShowAssignedAreasProducts extends StatefulWidget {
-  const ShowAssignedAreasProducts({Key? key}) : super(key: key);
+  const ShowAssignedAreasProducts({super.key});
 
   @override
   State<ShowAssignedAreasProducts> createState() =>

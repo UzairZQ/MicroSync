@@ -22,7 +22,7 @@ import 'bottom_navigation_bar.dart';
 
 class HomePage extends StatefulWidget {
   static const String id = 'home';
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -279,16 +279,16 @@ class _HomeHero extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF0F766E), Color(0xFF0F766E), Color(0xFF134E4A)],
+          colors: [Color(0xFF14B8A6), Color(0xFF0D9488), Color(0xFF0F766E)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0F766E).withOpacity(0.24),
-            blurRadius: 30,
-            offset: const Offset(0, 18),
+            color: const Color(0xFF0D9488).withOpacity(0.3),
+            blurRadius: 32,
+            offset: const Offset(0, 16),
           ),
         ],
       ),
@@ -394,19 +394,57 @@ class _HomeHero extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 18),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
+            Row(
               children: [
-                MyButton(
-                  onPressed: onStartDay,
-                  color: const Color(0xFFF59E0B),
-                  text: 'Start your day',
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: onStartDay,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF0F766E),
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      elevation: 0,
+                    ),
+                    icon: const Icon(Icons.play_arrow_rounded, size: 22),
+                    label: const Text(
+                      'Start day',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                  ),
                 ),
-                MyButton(
-                  onPressed: onChangePlan,
-                  color: const Color(0xFF1D4ED8),
-                  text: 'Change plan',
+                const SizedBox(width: 14),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: onChangePlan,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white.withOpacity(0.15),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: BorderSide(
+                          color: Colors.white.withOpacity(0.2),
+                          width: 1,
+                        ),
+                      ),
+                      elevation: 0,
+                    ),
+                    icon: const Icon(Icons.edit_calendar_outlined, size: 20),
+                    label: const Text(
+                      'Change plan',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

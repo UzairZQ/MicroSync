@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'firebase_options.dart';
 import 'package:micro_pharma/View/adminScreens/add_employees.dart';
 import 'package:micro_pharma/View/adminScreens/admin_homepage.dart';
 import 'package:micro_pharma/View/adminScreens/view_dcr.dart';
@@ -41,7 +42,9 @@ void callBackDispatcher() async {
   DartPluginRegistrant.ensureInitialized();
 
   Workmanager().executeTask((taskName, inputData) async {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final String? userId = preferences.getString('userId');
@@ -54,7 +57,9 @@ void callBackDispatcher() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<UserDataProvider>(
@@ -78,7 +83,7 @@ Future<void> main() async {
 }
 
 class MicroPharma extends StatelessWidget {
-  const MicroPharma({Key? key}) : super(key: key);
+  const MicroPharma({super.key});
   @override
   Widget build(BuildContext context) {
     return ThemeProvider(

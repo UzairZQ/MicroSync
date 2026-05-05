@@ -10,7 +10,7 @@ import 'package:micro_pharma/models/user_model.dart';
 import '../../../components/constants.dart';
 
 class AssignAreasProductsToEmployees extends StatefulWidget {
-  const AssignAreasProductsToEmployees({Key? key}) : super(key: key);
+  const AssignAreasProductsToEmployees({super.key});
 
   @override
   AssignAreasProductsToEmployeesState createState() =>
@@ -88,7 +88,6 @@ class AssignAreasProductsToEmployeesState
                 context: context,
                 title: 'Failure',
                 content: 'An error occured, please try again');
-            
           }
         },
       ),

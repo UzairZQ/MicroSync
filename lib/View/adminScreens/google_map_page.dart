@@ -13,7 +13,7 @@ class GoogleMapPage extends StatefulWidget {
 
   final String userId;
 
-  const GoogleMapPage({Key? key, required this.userId}) : super(key: key);
+  const GoogleMapPage({super.key, required this.userId});
 
   @override
   State<GoogleMapPage> createState() => _GoogleMapPageState();

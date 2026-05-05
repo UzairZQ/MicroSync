@@ -4,20 +4,15 @@ class OrderSelectedProduct extends ProductModel {
   String? discount;
 
   OrderSelectedProduct(
-      {required String name,
-      required double tradePrice,
+      {required super.name,
+      required super.tradePrice,
       double? retailPrice,
-      dynamic packing,
+      super.packing,
       required this.quantity,
       this.bonus,
       this.discount,
       int? code})
-      : super(
-            name: name,
-            tradePrice: tradePrice,
-            code: code!,
-            packing: packing,
-            retailPrice: retailPrice!);
+      : super(code: code!, retailPrice: retailPrice!);
 
   factory OrderSelectedProduct.fromMap(Map<String, dynamic> json) {
     return OrderSelectedProduct(

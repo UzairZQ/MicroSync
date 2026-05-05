@@ -19,7 +19,7 @@ import './user_call_plans.dart';
 
 class AdminPage extends StatefulWidget {
   static const String id = 'admin';
-  const AdminPage({Key? key}) : super(key: key);
+  const AdminPage({super.key});
 
   @override
   State<AdminPage> createState() => _AdminPageState();
@@ -90,137 +90,137 @@ class _AdminPageState extends State<AdminPage> {
           builder: (context, constraints) {
             return SingleChildScrollView(
               child: Column(
-            children: [
-              Container(
-                height: constraints.maxHeight * 0.3, // 30% of screen height
-                decoration: const BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Color(0xFF1FB7CC),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(40.0),
-                    bottomRight: Radius.circular(40.0),
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Consumer<UserDataProvider>(
-                      builder: (context, dataProvider, child) {
-                        //dataProvider.fetchUserData(currentUser!.uid);
-                        UserModel? userData = dataProvider.getUserData;
-                        if (userData.displayName == null ||
-                            userData.displayName!.isEmpty) {
-                          return const CircularProgressIndicator();
-                        } else {
-                          return Text(
-                            'Welcome ${userData.displayName} !',
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
+                children: [
+                  Container(
+                    height: constraints.maxHeight * 0.3, // 30% of screen height
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      color: Color(0xFF1FB7CC),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(40.0),
+                        bottomRight: Radius.circular(40.0),
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Consumer<UserDataProvider>(
+                          builder: (context, dataProvider, child) {
+                            //dataProvider.fetchUserData(currentUser!.uid);
+                            UserModel? userData = dataProvider.getUserData;
+                            if (userData.displayName == null ||
+                                userData.displayName!.isEmpty) {
+                              return const CircularProgressIndicator();
+                            } else {
+                              return Text(
+                                'Welcome ${userData.displayName} !',
+                                style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0,
+                                  color: Colors.white,
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 17.0),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.calendar_month,
                               color: Colors.white,
                             ),
-                          );
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 17.0),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.calendar_month,
-                          color: Colors.white,
+                            Text(
+                              'Employees on Work:',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          'Employees on Work:',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
-                            color: Colors.white,
-                          ),
+                        const SizedBox(
+                          height: 15.0,
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              ContainerRow(
-                children: [
-                  MyContainer(
-                    containerclr: const Color(0xFFF0DCFF),
-                    containerIcon: Icons.place_outlined,
-                    containerText: 'Live Tracking',
-                    onTap: () =>
-                        {Navigator.pushNamed(context, LocationScreen.id)},
                   ),
-                  MyContainer(
-                    containerclr: const Color(0xFFFFC8C8),
-                    containerIcon: Icons.calendar_month_outlined,
-                    containerText: 'Daily Call Report',
-                    onTap: () {
-                      Navigator.pushNamed(context, ViewDCRScreen.id);
-                    },
+                  const SizedBox(height: 20.0),
+                  ContainerRow(
+                    children: [
+                      MyContainer(
+                        containerclr: const Color(0xFFF0DCFF),
+                        containerIcon: Icons.place_outlined,
+                        containerText: 'Live Tracking',
+                        onTap: () =>
+                            {Navigator.pushNamed(context, LocationScreen.id)},
+                      ),
+                      MyContainer(
+                        containerclr: const Color(0xFFFFC8C8),
+                        containerIcon: Icons.calendar_month_outlined,
+                        containerText: 'Daily Call Report',
+                        onTap: () {
+                          Navigator.pushNamed(context, ViewDCRScreen.id);
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              ContainerRow(
-                children: [
-                  MyContainer(
-                    containerclr: const Color.fromARGB(255, 133, 254, 226),
-                    containerIcon: Icons.assignment_outlined,
-                    containerText: 'Orders',
-                    onTap: () {
-                      Navigator.pushNamed(context, SubmittedOrders.id);
-                    },
+                  const SizedBox(
+                    height: 30.0,
                   ),
-                  MyContainer(
-                    containerclr: const Color(0xffFFE974),
-                    containerIcon: Icons.assignment_turned_in_outlined,
-                    containerText: 'Call Plans',
-                    onTap: () {
-                      Navigator.pushNamed(context, CallPlansForAdmin.id);
-                    },
+                  ContainerRow(
+                    children: [
+                      MyContainer(
+                        containerclr: const Color.fromARGB(255, 133, 254, 226),
+                        containerIcon: Icons.assignment_outlined,
+                        containerText: 'Orders',
+                        onTap: () {
+                          Navigator.pushNamed(context, SubmittedOrders.id);
+                        },
+                      ),
+                      MyContainer(
+                        containerclr: const Color(0xffFFE974),
+                        containerIcon: Icons.assignment_turned_in_outlined,
+                        containerText: 'Call Plans',
+                        onTap: () {
+                          Navigator.pushNamed(context, CallPlansForAdmin.id);
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              ContainerRow(
-                children: [
-                  MyContainer(
-                    containerclr: Colors.blue.shade200,
-                    containerIcon: Icons.settings_applications_outlined,
-                    containerText: 'Admin Panel ',
-                    onTap: () {
-                      Navigator.pushNamed(context, AdminPanel.id);
-                    },
+                  const SizedBox(
+                    height: 30.0,
                   ),
-                  MyContainer(
-                    containerclr: Colors.orange.shade200,
-                    containerIcon: Icons.add_box_outlined,
-                    containerText: 'Add Delete Users',
-                    onTap: () {
-                      Navigator.pushNamed(context, 'add_employees');
-                    },
+                  ContainerRow(
+                    children: [
+                      MyContainer(
+                        containerclr: Colors.blue.shade200,
+                        containerIcon: Icons.settings_applications_outlined,
+                        containerText: 'Admin Panel ',
+                        onTap: () {
+                          Navigator.pushNamed(context, AdminPanel.id);
+                        },
+                      ),
+                      MyContainer(
+                        containerclr: Colors.orange.shade200,
+                        containerIcon: Icons.add_box_outlined,
+                        containerText: 'Add Delete Users',
+                        onTap: () {
+                          Navigator.pushNamed(context, 'add_employees');
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
-        );
-      },
-    ),
+            );
+          },
+        ),
       ),
     );
   }

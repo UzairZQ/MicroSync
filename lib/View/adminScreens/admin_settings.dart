@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class AdminProfilePage extends StatefulWidget {
   static const String id = 'admin_profile';
-  const AdminProfilePage({Key? key}) : super(key: key);
+  const AdminProfilePage({super.key});
 
   @override
   AdminProfilePageState createState() => AdminProfilePageState();
@@ -155,8 +155,8 @@ class AdminProfilePageState extends State<AdminProfilePage> {
                                     ),
                                   );
                                 } catch (e) {
-                                  
-                                  debugPrint('Error sending password reset email: $e');
+                                  debugPrint(
+                                      'Error sending password reset email: $e');
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(

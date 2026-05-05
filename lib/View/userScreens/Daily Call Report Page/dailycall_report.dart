@@ -18,7 +18,7 @@ import '../../../models/doctor_visit_model.dart';
 
 class DailyCallReportScreen extends StatefulWidget {
   static const String id = 'dailycallreport';
-  const DailyCallReportScreen({Key? key}) : super(key: key);
+  const DailyCallReportScreen({super.key});
 
   @override
   State<DailyCallReportScreen> createState() => _DailyCallReportScreenState();
@@ -114,7 +114,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
   Widget build(BuildContext context) {
     if (isReportSubmitted) {
       return const Scaffold(
-        appBar:  MyAppBar(appBartxt: 'Daily Call Report'),
+        appBar: MyAppBar(appBartxt: 'Daily Call Report'),
         body: Center(
           child: MyTextwidget(
             text: 'The report has been submitted for today.',
@@ -270,7 +270,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                       const SizedBox(height: 16.0),
                       Row(
                         children: [
-                         const  MyTextwidget(text: 'Visited this doctor?'),
+                          const MyTextwidget(text: 'Visited this doctor?'),
                           Checkbox(
                             value: visitedDoctor?[index] ?? false,
                             onChanged: (isVisited) {
@@ -283,7 +283,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                       ),
                       if (visitedDoctor![index])
                         Row(children: [
-                         const MyTextwidget(text: 'Samples Provided?'),
+                          const MyTextwidget(text: 'Samples Provided?'),
                           Checkbox(
                             value: samplesProvided,
                             onChanged: (ifsamples) {
@@ -320,7 +320,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                                     });
                                   }
                                 },
-                                value: selectedProduct,
+                                initialValue: selectedProduct,
                                 decoration: const InputDecoration(
                                   labelText: 'Select Product',
                                   border: OutlineInputBorder(),
@@ -343,7 +343,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                                     });
                                   }
                                 },
-                                value: selectedQuantity,
+                                initialValue: selectedQuantity,
                                 decoration: const InputDecoration(
                                   labelText: 'Quantity',
                                   border: OutlineInputBorder(),

@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
   static const String id = 'user_dashboard';
-  const Dashboard({Key? key}) : super(key: key);
+  const Dashboard({super.key});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -76,8 +76,6 @@ class _DashboardState extends State<Dashboard> {
                 final horizontalPadding =
                     constraints.maxWidth < 380 ? 16.0 : 20.0;
                 final isCompact = constraints.maxWidth < 680;
-                final heroHeight = isCompact ? 230.0 : 250.0;
-
                 return ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.fromLTRB(
@@ -88,7 +86,6 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   children: [
                     _DashboardHero(
-                      height: heroHeight,
                       metrics: metrics,
                       isLoading: _isLoading,
                       onRefresh: _refreshDashboard,
@@ -229,13 +226,11 @@ class _DashboardState extends State<Dashboard> {
 
 class _DashboardHero extends StatelessWidget {
   const _DashboardHero({
-    required this.height,
     required this.metrics,
     required this.isLoading,
     required this.onRefresh,
   });
 
-  final double height;
   final _DashboardMetrics metrics;
   final bool isLoading;
   final Future<void> Function() onRefresh;
@@ -246,7 +241,6 @@ class _DashboardHero extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      height: height,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF0F766E), Color(0xFF155E75), Color(0xFF1D4ED8)],
@@ -263,6 +257,7 @@ class _DashboardHero extends StatelessWidget {
         ],
       ),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           Positioned(
             right: -10,
@@ -292,6 +287,7 @@ class _DashboardHero extends StatelessWidget {
             padding: const EdgeInsets.all(22),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   children: [
@@ -337,7 +333,7 @@ class _DashboardHero extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Spacer(),
+                const SizedBox(height: 32),
                 Text(
                   metrics.heroHeadline,
                   style: theme.textTheme.headlineMedium?.copyWith(

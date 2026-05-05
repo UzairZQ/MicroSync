@@ -7,7 +7,7 @@ import '../../../models/product_model.dart';
 import 'add_product.dart';
 
 class ProductListScreen extends StatelessWidget {
-  const ProductListScreen({Key? key}) : super(key: key);
+  const ProductListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +152,7 @@ class ProductListScreen extends StatelessWidget {
 class EditProductBottomSheet extends StatefulWidget {
   final ProductModel product;
 
-  const EditProductBottomSheet({Key? key, required this.product})
-      : super(key: key);
+  const EditProductBottomSheet({super.key, required this.product});
 
   @override
   State<EditProductBottomSheet> createState() => _EditProductBottomSheetState();

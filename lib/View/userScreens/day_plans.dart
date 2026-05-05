@@ -15,7 +15,7 @@ import 'package:pdf/widgets.dart' as pw;
 class DayPlansScreen extends StatefulWidget {
   static const String id = 'day_plans';
 
-  const DayPlansScreen({Key? key}) : super(key: key);
+  const DayPlansScreen({super.key});
 
   @override
   DayPlansScreenState createState() => DayPlansScreenState();
@@ -93,102 +93,175 @@ class DayPlansScreenState extends State<DayPlansScreen> {
         onRefresh: () => _refreshDayPlans(context),
         child: Column(
           children: [
-            DropdownButton<String>(
-              value: selectedArea,
-              items: areas.map((area) {
-                return DropdownMenuItem<String>(
-                  value: area,
-                  child: Text(area),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    selectedArea = newValue;
-                  });
-                }
-              },
+            Container(
+              margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: selectedArea,
+                  icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.blueGrey),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                  items: areas.map((area) {
+                    return DropdownMenuItem<String>(
+                      value: area,
+                      child: Text(area),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      setState(() {
+                        selectedArea = newValue;
+                      });
+                    }
+                  },
+                ),
+              ),
             ),
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 itemCount: dayPlans.length,
                 itemBuilder: (context, index) {
                   final dayPlan = dayPlans[index];
                   if (dayPlan.area != selectedArea) {
-                    return const SizedBox
-                        .shrink(); // Skip rendering if the area doesn't match the selected area
+                    return const SizedBox.shrink();
                   }
-                  String dayPlanTime() {
-                    DateFormat dateFormat =
-                        DateFormat('EEEE dd/MM/yyyy'); // create date format
-                    String formattedDate =
-                        dateFormat.format(dayPlan.date); // format current date
-                    return formattedDate;
-                  }
+                  
+                  final dateFormat = DateFormat('EEEE, MMM d, yyyy');
+                  final formattedDate = dateFormat.format(dayPlan.date);
 
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(
-                              blurRadius: 5,
-                              blurStyle: BlurStyle.outer,
-                              color: Colors.grey)
-                        ],
-                        borderRadius: BorderRadius.circular(15.0),
-                        color: Colors.blue.shade100,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.date_range),
-                                MyTextwidget(
-                                  text: 'Date : ${dayPlanTime()}',
-                                  fontSize: 14,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8.0),
-                            Row(
-                              children: [
-                                const Icon(Icons.place),
-                                MyTextwidget(
-                                  text: 'Area: ${dayPlan.area}',
-                                  fontSize: 14,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8.0),
-                            Row(
-                              children: [
-                                const Icon(Icons.person_pin_rounded),
-                                Flexible(
-                                  child: MyTextwidget(
-                                    text:
-                                        'Doctors: ${dayPlan.doctors.join(' , ')}',
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8.0),
-                            Row(
-                              children: [
-                                const Icon(Icons.event_outlined),
-                                MyTextwidget(
-                                  text: 'Shift: ${dayPlan.shift}',
-                                  fontSize: 14,
-                                ),
-                              ],
-                            ),
-                          ],
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
-                      ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        // Left accent line
+                        Container(
+                          width: 5,
+                          height: 120, // Approximate height
+                          decoration: BoxDecoration(
+                            color: kappbarColor,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              bottomLeft: Radius.circular(16),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      formattedDate,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: kappbarColor.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        dayPlan.shift,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: kappbarColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                        color: Colors.orange.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Icon(Icons.place_outlined, color: Colors.orange, size: 18),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        dayPlan.area,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Icon(Icons.medical_services_outlined, color: Colors.blue, size: 18),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        dayPlan.doctors.join(', '),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          height: 1.4,
+                                          color: Colors.grey.shade800,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },

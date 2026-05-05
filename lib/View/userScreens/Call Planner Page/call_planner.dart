@@ -16,7 +16,7 @@ import '../../../viewModel/day_plans_provider.dart';
 class CallPlanner extends StatefulWidget {
   static const String id = 'call_planner';
 
-  const CallPlanner({Key? key}) : super(key: key);
+  const CallPlanner({super.key});
 
   @override
   State<CallPlanner> createState() => _CallPlannerState();
@@ -74,190 +74,263 @@ class _CallPlannerState extends State<CallPlanner> {
       appBar: const MyAppBar(
         appBartxt: 'Call Planner',
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TableCalendar(
-              firstDay: DateTime.utc(2010, 1, 1),
-              lastDay: DateTime.utc(2030, 12, 31),
-              focusedDay: _selectedDate,
-              calendarFormat: CalendarFormat.week,
-              selectedDayPredicate: (day) => isSameDay(_selectedDate, day),
-              onDaySelected: _onDateSelected,
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.08),
+                    blurRadius: 15,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: TableCalendar(
+                firstDay: DateTime.utc(2010, 1, 1),
+                lastDay: DateTime.utc(2030, 12, 31),
+                focusedDay: _selectedDate,
+                calendarFormat: CalendarFormat.week,
+                selectedDayPredicate: (day) => isSameDay(_selectedDate, day),
+                onDaySelected: _onDateSelected,
+                headerStyle: const HeaderStyle(
+                  formatButtonVisible: false,
+                  titleCentered: true,
+                  titleTextStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                calendarStyle: CalendarStyle(
+                  selectedDecoration: BoxDecoration(
+                    color: kappbarColor,
+                    shape: BoxShape.circle,
+                  ),
+                  todayDecoration: BoxDecoration(
+                    color: kappbarColor.withOpacity(0.3),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
             ),
-            const SizedBox(height: 16),
-            Flexible(
-              child: Row(
+            const SizedBox(height: 24),
+            Form(
+              key: formKey,
+              child: Column(
                 children: [
-                  Expanded(
-                    child: Form(
-                      key: formKey,
-                      child: DropdownButtonFormField<String?>(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Select Area';
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                          hintText: 'Select Area',
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                        ),
-                        value: _selectedArea?.areaName,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedArea = assignedAreas?.firstWhere(
-                                    (area) => area.areaName == value) ??
-                                areaList.firstWhere(
-                                  (area) => area.areaName == value,
-                                );
-                          });
-                        },
-                        items: assignedAreas
-                                ?.map((area) => DropdownMenuItem(
-                                      value: area.areaName,
-                                      child: Text(area.areaName),
-                                    ))
-                                .toList() ??
-                            areaList
-                                .map(
-                                  (area) => DropdownMenuItem(
-                                    value: area.areaName,
-                                    child: Text(area.areaName),
-                                  ),
-                                )
-                                .toList(),
+                  DropdownButtonFormField<String?>(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select an area';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Select Area',
+                      prefixIcon: const Icon(Icons.place_outlined),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
                       ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey.shade50,
                     ),
+                    initialValue: _selectedArea?.areaName,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedArea = assignedAreas?.firstWhere(
+                                (area) => area.areaName == value) ??
+                            areaList.firstWhere(
+                              (area) => area.areaName == value,
+                            );
+                      });
+                    },
+                    items: (assignedAreas?.isNotEmpty == true ? assignedAreas : areaList)!
+                        .map((area) => DropdownMenuItem(
+                              value: area.areaName,
+                              child: Text(area.areaName),
+                            ))
+                        .toList(),
                   ),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Expanded(
-                    child: DropdownButton<String>(
-                      value: _selectedShift,
-                      hint: const Text('Select Shift'),
-                      items: <String>['Morning', 'Evening'].map((String shift) {
-                        return DropdownMenuItem<String>(
-                          value: shift,
-                          child: Text(shift),
-                        );
-                      }).toList(),
-                      onChanged: (String? value) {
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    value: _selectedShift,
+                    decoration: InputDecoration(
+                      labelText: 'Select Shift',
+                      prefixIcon: const Icon(Icons.access_time_outlined),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey.shade50,
+                    ),
+                    items: <String>['Morning', 'Evening'].map((String shift) {
+                      return DropdownMenuItem<String>(
+                        value: shift,
+                        child: Text(shift),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      if (value != null) {
                         setState(() {
-                          _selectedShift = value!;
+                          _selectedShift = value;
                         });
-                      },
-                    ),
+                      }
+                    },
                   ),
                 ],
               ),
             ),
-            Row(
-              children: [
-                Checkbox(
-                  value: _isDayPlanEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _isDayPlanEnabled = value ?? false;
-                    });
-                  },
-                ),
-                const Text('Add Day Plan'),
-              ],
-            ),
-            if (_isDayPlanEnabled)
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: _doctorController,
-                      decoration: const InputDecoration(
-                        hintText: 'Select Doctors',
-                        border: OutlineInputBorder(),
-                      ),
-                      readOnly: true,
-                      onTap: () async {
-                        // Show doctors selection dialog
-                        final filteredDoctors = _selectedArea != null
-                            ? doctors
-                                .where((doctor) =>
-                                    doctor.area == _selectedArea!.areaName)
-                                .toList()
-                            : doctors;
-                        final selectedDoctors = await showDialog<List<String>>(
-                          context: context,
-                          builder: (_) {
-                            final allDoctors = filteredDoctors
-                                .map((doctor) => doctor.name)
-                                .toSet();
-                            return SelectDoctorsDialog(
-                                allDoctors: allDoctors,
-                                selectedDoctors: _selectedDoctors);
-                          },
-                        );
-                        if (selectedDoctors != null) {
-                          setState(() {
-                            _selectedDoctors = selectedDoctors;
-                          });
-                        }
-                      },
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _selectedDoctors.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          tileColor: Colors.amber[100],
-                          title: Text(_selectedDoctors.elementAt(index)),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    MyButton(
-                      text: 'Submit Day Plan',
-                      color: Colors.teal,
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          formKey.currentState!.save();
-                          final userData = Provider.of<UserDataProvider>(
-                                  context,
-                                  listen: false)
-                              .getUserData;
-                          if (_selectedDoctors.isNotEmpty) {
-                            final newDayPlan = DayPlanModel(
-                              shift: _selectedShift,
-                              userName: userData.displayName!,
-                              date: _selectedDate,
-                              area: _selectedArea!.areaName,
-                              doctors: _selectedDoctors.toList(),
-                            );
-                            await Provider.of<DayPlanProvider>(context,
-                                    listen: false)
-                                .addDayPlan(newDayPlan);
-
-                            showCustomDialog(
-                                context: navigatorKey.currentContext!,
-                                title: 'Success',
-                                content: 'Day Plan Added');
-
-                            _clearDayPlanSelection();
-                          }
-                        }
-                      },
-                    ),
-                  ],
+            const SizedBox(height: 24),
+            Container(
+              decoration: BoxDecoration(
+                color: _isDayPlanEnabled ? kappbarColor.withOpacity(0.05) : Colors.transparent,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: _isDayPlanEnabled ? kappbarColor.withOpacity(0.3) : Colors.transparent,
                 ),
               ),
+              child: SwitchListTile(
+                title: const Text(
+                  'Add Day Plan Details',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: const Text('Assign doctors to this call plan.'),
+                value: _isDayPlanEnabled,
+                activeColor: kappbarColor,
+                onChanged: (value) {
+                  setState(() {
+                    _isDayPlanEnabled = value;
+                  });
+                },
+              ),
+            ),
+            if (_isDayPlanEnabled) ...[
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _doctorController,
+                decoration: InputDecoration(
+                  labelText: 'Select Doctors',
+                  prefixIcon: const Icon(Icons.medical_services_outlined),
+                  suffixIcon: const Icon(Icons.arrow_drop_down),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+                readOnly: true,
+                onTap: () async {
+                  final filteredDoctors = _selectedArea != null
+                      ? doctors
+                          .where((doctor) => doctor.area == _selectedArea!.areaName)
+                          .toList()
+                      : doctors;
+                  final selectedDoctors = await showDialog<List<String>>(
+                    context: context,
+                    builder: (_) {
+                      final allDoctors = filteredDoctors.map((doctor) => doctor.name).toSet();
+                      return SelectDoctorsDialog(
+                        allDoctors: allDoctors,
+                        selectedDoctors: _selectedDoctors,
+                      );
+                    },
+                  );
+                  if (selectedDoctors != null) {
+                    setState(() {
+                      _selectedDoctors = selectedDoctors;
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              if (_selectedDoctors.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Selected Doctors (${_selectedDoctors.length})',
+                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: _selectedDoctors.map((doc) => Chip(
+                          label: Text(doc),
+                          backgroundColor: Colors.white,
+                          side: BorderSide(color: Colors.grey.shade300),
+                        )).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kappbarColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0,
+                  ),
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
+                      final userData = Provider.of<UserDataProvider>(context, listen: false).getUserData;
+                      if (_selectedDoctors.isNotEmpty) {
+                        final newDayPlan = DayPlanModel(
+                          shift: _selectedShift,
+                          userName: userData.displayName!,
+                          date: _selectedDate,
+                          area: _selectedArea!.areaName,
+                          doctors: _selectedDoctors.toList(),
+                        );
+                        await Provider.of<DayPlanProvider>(context, listen: false).addDayPlan(newDayPlan);
+
+                        showCustomDialog(
+                          context: navigatorKey.currentContext!,
+                          title: 'Success',
+                          content: 'Day Plan Added Successfully!',
+                        );
+
+                        _clearDayPlanSelection();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Please select at least one doctor.')),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text(
+                    'Submit Day Plan',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

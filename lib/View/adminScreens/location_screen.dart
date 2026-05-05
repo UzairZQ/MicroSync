@@ -4,7 +4,7 @@ import 'package:micro_pharma/services/database_service.dart';
 import 'google_map_page.dart';
 
 class LocationScreen extends StatefulWidget {
-  const LocationScreen({Key? key}) : super(key: key);
+  const LocationScreen({super.key});
   static const String id = 'location_screen';
 
   @override

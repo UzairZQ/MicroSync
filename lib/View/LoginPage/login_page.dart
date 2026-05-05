@@ -7,7 +7,7 @@ import 'package:micro_pharma/components/constants.dart';
 import '../../services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
   static const String id = 'login';
 
   @override
@@ -112,7 +112,7 @@ class LoginPageState extends State<LoginPage> {
                       //   }
                       //   return null;
                       // },
-                       validator: validatePassword,
+                      validator: validatePassword,
                     ),
                   ],
                 ),
@@ -125,15 +125,17 @@ class LoginPageState extends State<LoginPage> {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
 
-                       AuthService().signIn(
-                      emailController.text,
-                      passwordController.text,
-                    );
+                      AuthService().signIn(
+                        emailController.text,
+                        passwordController.text,
+                      );
                     }
-                   
                   }),
               const SizedBox(height: 10.0),
-              ForgotPasswordBottomSheet(changePassController: changePassController, formKey: _formKey, auth: _auth)
+              ForgotPasswordBottomSheet(
+                  changePassController: changePassController,
+                  formKey: _formKey,
+                  auth: _auth)
             ],
           ),
         ),
@@ -141,4 +143,3 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 }
-

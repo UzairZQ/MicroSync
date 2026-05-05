@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,7 +44,11 @@ class HomeNavigationBar extends StatelessWidget {
                     TextButton(
                       onPressed: () async {
                         FirebaseAuth.instance.signOut();
-                        Workmanager().cancelByTag('location');
+                        if (Platform.isAndroid) {
+                          Workmanager().cancelByTag('location');
+                        } else {
+                          Workmanager().cancelAll();
+                        }
 
                         final sharedLogin =
                             await SharedPreferences.getInstance();

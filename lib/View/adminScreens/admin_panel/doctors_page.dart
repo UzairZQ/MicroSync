@@ -195,7 +195,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
                           ),
                         ),
                         DropdownButtonFormField<AreaModel>(
-                          value: selectedArea,
+                          initialValue: selectedArea,
                           validator: (value) {
                             if (value == null) {
                               return 'Please Select Area';

@@ -90,7 +90,7 @@ class OrderScreenState extends State<OrderScreen> {
                 ),
                 const SizedBox(height: 16.0),
                 DropdownButtonFormField<AreaModel>(
-                  value: selectedArea,
+                  initialValue: selectedArea,
                   onChanged: (newValue) {
                     setState(() {
                       selectedArea = newValue!;

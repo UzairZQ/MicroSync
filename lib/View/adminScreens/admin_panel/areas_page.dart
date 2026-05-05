@@ -4,7 +4,7 @@ import 'package:micro_pharma/viewModel/area_provider.dart';
 import 'package:provider/provider.dart';
 
 class Areas extends StatefulWidget {
-  const Areas({Key? key}) : super(key: key);
+  const Areas({super.key});
 
   @override
   State<Areas> createState() => _AreasState();
