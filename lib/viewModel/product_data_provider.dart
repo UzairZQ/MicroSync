@@ -16,24 +16,26 @@ class ProductDataProvider with ChangeNotifier {
   Future<void> fetchProductsList() async {
     try {
       _isLoading = true;
+      notifyListeners();
       final querySnapshot =
           await FirebaseFirestore.instance.collection('products').get();
       final productsList = querySnapshot.docs
           .map((doc) => ProductModel.fromMap(doc.data()))
           .toList();
-      if (productsList != _productsList) {
-        _productsList = productsList;
-        notifyListeners();
-        _isLoading = false;
-      }
+      productsList.sort(
+        (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      );
+      _productsList = productsList;
+      _isLoading = false;
+      notifyListeners();
     } catch (e) {
       _isLoading = false;
-
-      return;
+      notifyListeners();
+      rethrow;
     }
   }
 
-  static Future<void> addProduct({
+  static Future<bool> addProduct({
     required String name,
     required int code,
     required double mrp,
@@ -63,16 +65,22 @@ class ProductDataProvider with ChangeNotifier {
             context: navigatorKey.currentContext!,
             title: 'Success',
             content: 'Product added successfully');
-      } on FirebaseException {
+        return true;
+      } on FirebaseException catch (error) {
+        if (Navigator.canPop(navigatorKey.currentContext!)) {
+          Navigator.pop(navigatorKey.currentContext!);
+        }
         showCustomDialog(
             context: navigatorKey.currentContext!,
             title: 'Failure',
-            content: 'An Error Occurred, Please Try again');
+            content: error.message ?? 'An error occurred. Please try again.');
+        return false;
       }
     }
+    return false;
   }
 
-  void editProduct(int productCode, ProductModel? newProduct) async {
+  Future<bool> editProduct(int productCode, ProductModel? newProduct) async {
     try {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('products')
@@ -92,14 +100,17 @@ class ProductDataProvider with ChangeNotifier {
         );
 
         await productDoc.reference.update(updatedProduct.toMap());
+        await fetchProductsList();
         notifyListeners();
+        return true;
       }
+      return false;
     } catch (e) {
-      return;
+      return false;
     }
   }
 
-  void deleteProduct(int productCode) async {
+  Future<bool> deleteProduct(int productCode) async {
     try {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('products')
@@ -110,12 +121,14 @@ class ProductDataProvider with ChangeNotifier {
         final productDoc = querySnapshot.docs.first;
         await productDoc.reference.delete();
       } else {
-        return;
+        return false;
       }
 
+      await fetchProductsList();
       notifyListeners();
+      return true;
     } catch (e) {
-      return;
+      return false;
     }
   }
 }

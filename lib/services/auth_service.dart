@@ -56,7 +56,7 @@ class AuthService {
 
   Future<void> signIn(String email, String password) async {
     final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
         const SnackBar(
           content: Text('Please check your internet connection'),
@@ -96,7 +96,6 @@ class AuthService {
             content: Text('Failed to sign in, please try again later'),
           ),
         );
-        
       }
     } on SocketException catch (_) {
       ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(

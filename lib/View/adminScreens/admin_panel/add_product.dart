@@ -17,17 +17,29 @@ class AddProductState extends State<AddProduct> {
   final _packingController = TextEditingController();
 
   void _submitProduct() async {
-    final tradePrice = double.parse(_tradePriceController.text);
-    final retailPrice = double.parse(_retailPriceController.text);
-    final code = int.parse(_codeController.text);
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+    final tradePrice = double.tryParse(_tradePriceController.text.trim());
+    final retailPrice = double.tryParse(_retailPriceController.text.trim());
+    final code = int.tryParse(_codeController.text.trim());
+    if (tradePrice == null || retailPrice == null || code == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Enter valid code and price values')),
+      );
+      return;
+    }
 
-    await ProductDataProvider.addProduct(
-      name: _productController.text,
+    final added = await ProductDataProvider.addProduct(
+      name: _productController.text.trim(),
       code: code,
       trp: tradePrice,
       mrp: retailPrice,
-      packing: _packingController.text,
+      packing: _packingController.text.trim(),
     );
+    if (!added) {
+      return;
+    }
     _codeController.clear();
     _productController.clear();
     _packingController.clear();
@@ -37,7 +49,11 @@ class AddProductState extends State<AddProduct> {
 
   void _updateTradePrice(String value) {
     if (value.isNotEmpty) {
-      double retailPrice = double.parse(value);
+      final retailPrice = double.tryParse(value);
+      if (retailPrice == null) {
+        _tradePriceController.text = '';
+        return;
+      }
       double tradePrice = retailPrice * 0.85;
       _tradePriceController.text = tradePrice.toStringAsFixed(2);
     } else {
@@ -89,6 +105,9 @@ class AddProductState extends State<AddProduct> {
                     if (value!.isEmpty) {
                       return 'Please enter code';
                     }
+                    if (int.tryParse(value) == null) {
+                      return 'Please enter a valid product code';
+                    }
                     return null;
                   },
                 ),
@@ -111,6 +130,9 @@ class AddProductState extends State<AddProduct> {
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Pleas enter retail price';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid retail price';
                     }
                     return null;
                   },

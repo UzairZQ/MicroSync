@@ -37,8 +37,6 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
   TextEditingController doctorRemarksController = TextEditingController();
   List<SelectedProduct> selectedProducts = [];
   bool isReportSubmitted = false;
-  bool _isSharedPrefsInitialized = false;
-
   late SharedPreferences _sharedPrefs;
 
   void submitReport() async {
@@ -56,7 +54,6 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
     super.initState();
 
     _initializeSharedPrefs().then((_) {
-      _isSharedPrefsInitialized = true;
       _checkReportSubmission();
     });
     Provider.of<ProductDataProvider>(context, listen: false)

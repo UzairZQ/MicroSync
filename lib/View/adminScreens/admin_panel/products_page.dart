@@ -6,8 +6,23 @@ import 'package:micro_pharma/viewModel/product_data_provider.dart';
 import '../../../models/product_model.dart';
 import 'add_product.dart';
 
-class ProductListScreen extends StatelessWidget {
+class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
+
+  @override
+  State<ProductListScreen> createState() => _ProductListScreenState();
+}
+
+class _ProductListScreenState extends State<ProductListScreen> {
+  String _query = '';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProductDataProvider>().fetchProductsList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,121 +32,119 @@ class ProductListScreen extends StatelessWidget {
       ),
       body: Consumer<ProductDataProvider>(
         builder: (context, provider, child) {
-          provider.fetchProductsList();
+          final productsList = provider.productsList
+              .where((product) =>
+                  product.name.toLowerCase().contains(_query.toLowerCase()) ||
+                  product.code.toString().contains(_query))
+              .toList();
 
-          final productsList = provider.productsList;
+          if (provider.isLoadin && provider.productsList.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: productsList.length,
-            itemBuilder: (context, index) {
-              final product = productsList[index];
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blue[100],
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 3,
-                        offset: Offset(0, 2),
+          return RefreshIndicator(
+            onRefresh: provider.fetchProductsList,
+            child: ListView.builder(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 96),
+              itemCount: productsList.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        hintText: 'Search medicines by name or code',
                       ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              MyTextwidget(
-                                text: product.name,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              const SizedBox(height: 8.0),
-                              MyTextwidget(
-                                text: 'Packing: ${product.packing}',
-                                fontSize: 14.0,
-                              ),
-                              const SizedBox(height: 8.0),
-                              MyTextwidget(
-                                text: 'Retail Price: ${product.retailPrice}',
-                                fontSize: 14.0,
-                              ),
-                              const SizedBox(height: 8.0),
-                              MyTextwidget(
-                                text: 'Trade Price: ${product.tradePrice}',
-                                fontSize: 14.0,
-                              ),
-                            ],
-                          ),
+                      onChanged: (value) => setState(() => _query = value),
+                    ),
+                  );
+                }
+
+                final product = productsList[index - 1];
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+                    title: MyTextwidget(
+                      text: product.name,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Text(
+                        'Code ${product.code} • ${product.packing}\nRetail ${product.retailPrice.toStringAsFixed(2)} • Trade ${product.tradePrice.toStringAsFixed(2)}',
+                      ),
+                    ),
+                    trailing: Wrap(
+                      spacing: 2,
+                      children: [
+                        IconButton(
+                          tooltip: 'Edit medicine',
+                          icon: const Icon(Icons.edit_outlined),
+                          color: Colors.green,
+                          onPressed: () {
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              constraints: BoxConstraints.loose(
+                                  const Size.fromHeight(600)),
+                              context: context,
+                              builder: (BuildContext context) {
+                                return EditProductBottomSheet(product: product);
+                              },
+                            );
+                          },
                         ),
-                      ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                constraints: BoxConstraints.loose(
-                                    const Size.fromHeight(600)),
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return EditProductBottomSheet(
-                                      product: product);
-                                },
-                              );
-                            },
-                            child: const Icon(
-                              (Icons.edit),
-                              color: Colors.green,
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            color: Colors.red,
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('Delete Product?'),
-                                    content: const Text(
-                                        'Are you sure you want to delete this product?'),
-                                    actions: [
-                                      TextButton(
-                                        child: const Text('Cancel'),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                      TextButton(
-                                        child: const Text('Delete'),
-                                        onPressed: () {
-                                          provider.deleteProduct(product.code);
-                                          provider.fetchProductsList();
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                        IconButton(
+                          tooltip: 'Delete medicine',
+                          icon: const Icon(Icons.delete_outline),
+                          color: Colors.red,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Delete Product?'),
+                                  content: Text(
+                                      'Delete ${product.name} from medicines?'),
+                                  actions: [
+                                    TextButton(
+                                      child: const Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: const Text('Delete'),
+                                      onPressed: () async {
+                                        final navigator = Navigator.of(context);
+                                        final messenger =
+                                            ScaffoldMessenger.of(context);
+                                        final deleted = await provider
+                                            .deleteProduct(product.code);
+                                        navigator.pop();
+                                        messenger.showSnackBar(
+                                          SnackBar(
+                                            content: Text(deleted
+                                                ? 'Product deleted'
+                                                : 'Could not delete product'),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         },
       ),
@@ -183,22 +196,43 @@ class _EditProductBottomSheetState extends State<EditProductBottomSheet> {
     super.dispose();
   }
 
-  void saveChanges() {
+  Future<void> saveChanges() async {
+    final retailPrice = double.tryParse(_retailPriceController.text.trim());
+    final tradePrice = double.tryParse(_tradePriceController.text.trim());
+    if (_nameController.text.trim().isEmpty ||
+        _packingController.text.trim().isEmpty ||
+        retailPrice == null ||
+        tradePrice == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Enter valid medicine details and prices')),
+      );
+      return;
+    }
+
     // Create a new ProductModel object with the updated details
     ProductModel updatedProduct = ProductModel(
       code: widget.product.code,
-      name: _nameController.text,
-      packing: _packingController.text,
-      retailPrice: double.parse(_retailPriceController.text),
-      tradePrice: double.parse(_tradePriceController.text),
+      name: _nameController.text.trim(),
+      packing: _packingController.text.trim(),
+      retailPrice: retailPrice,
+      tradePrice: tradePrice,
     );
 
     // Call the editProduct method to update the product in Firestore
-    Provider.of<ProductDataProvider>(context, listen: false)
+    final saved = await Provider.of<ProductDataProvider>(context, listen: false)
         .editProduct(widget.product.code, updatedProduct);
 
     // Close the bottom sheet
+    if (!mounted) {
+      return;
+    }
     Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(saved ? 'Product updated' : 'Could not update product'),
+      ),
+    );
   }
 
   @override

@@ -25,10 +25,10 @@ class AppThemes {
 
     final bool isDark = brightness == Brightness.dark;
     final background =
-        isDark ? const Color(0xFF07151A) : const Color(0xFFF4F8F7);
-    final surface = isDark ? const Color(0xFF102229) : Colors.white;
+        isDark ? const Color(0xFF0B1115) : const Color(0xFFF6F8FA);
+    final surface = isDark ? const Color(0xFF121B21) : Colors.white;
     final surfaceVariant =
-        isDark ? const Color(0xFF16313A) : const Color(0xFFE4F1EE);
+        isDark ? const Color(0xFF1D2A31) : const Color(0xFFEAF0F2);
 
     return ThemeData(
       useMaterial3: true,
@@ -58,7 +58,7 @@ class AppThemes {
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(28),
+          borderRadius: BorderRadius.circular(16),
           side: BorderSide(
             color: colorScheme.outlineVariant.withOpacity(isDark ? 0.24 : 0.4),
           ),
@@ -71,17 +71,17 @@ class AppThemes {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(
             color: colorScheme.outlineVariant.withOpacity(0.35),
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(color: colorScheme.primary, width: 1.4),
         ),
       ),
@@ -93,7 +93,7 @@ class AppThemes {
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(14),
           ),
           textStyle: const TextStyle(
             fontFamily: 'Poppins',

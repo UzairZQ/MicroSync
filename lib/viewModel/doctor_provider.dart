@@ -13,19 +13,21 @@ class DoctorDataProvider with ChangeNotifier {
     try {
       final querySnapshot =
           await FirebaseFirestore.instance.collection('doctors').get();
-      if (querySnapshot.docs.isNotEmpty) {
-        _doctors = querySnapshot.docs
-            .map((doc) => DoctorModel.fromMap(doc.data()))
-            .toList();
-        notifyListeners();
-      }
+      _doctors = querySnapshot.docs
+          .map((doc) => DoctorModel.fromMap(doc.data()))
+          .toList();
+      _doctors.sort(
+        (a, b) => (a.name ?? '').toLowerCase().compareTo(
+              (b.name ?? '').toLowerCase(),
+            ),
+      );
+      notifyListeners();
     } catch (e) {
-      
-      return;
+      rethrow;
     }
   }
 
-  static Future<void> addDoctor(
+  Future<bool> addDoctor(
       String docname, String docarea, String address, String special) async {
     try {
       await _firestore.collection('doctors').add({
@@ -35,7 +37,7 @@ class DoctorDataProvider with ChangeNotifier {
         'speciality': special,
       });
 
-      
+      await fetchDoctors();
       showCustomDialog(
           context: navigatorKey.currentContext!,
           title: 'Success',
@@ -47,6 +49,7 @@ class DoctorDataProvider with ChangeNotifier {
                 },
                 child: const Text('Okay'))
           ]);
+      return true;
     } catch (a) {
       showCustomDialog(
           context: navigatorKey.currentContext!,
@@ -59,11 +62,11 @@ class DoctorDataProvider with ChangeNotifier {
                 },
                 child: const Text('Okay'))
           ]);
-      
+      return false;
     }
   }
 
-  static Future<void> deleteDoctor(String doctorName, String doctorArea) async {
+  Future<bool> deleteDoctor(String doctorName, String doctorArea) async {
     // Get the reference to the Firestore collection 'doctors'
     CollectionReference doctorsCollection =
         FirebaseFirestore.instance.collection('doctors');
@@ -79,13 +82,39 @@ class DoctorDataProvider with ChangeNotifier {
       for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
         await docSnapshot.reference.delete();
       }
+      await fetchDoctors();
       showCustomDialog(
           context: navigatorKey.currentContext!,
           title: 'Deleted',
           content: 'The doctor is removed from the database ');
+      return true;
     } catch (e) {
-      
-      // Handle any error that occurred during the deletion process
+      return false;
+    }
+  }
+
+  Future<bool> editDoctor(
+    String originalName,
+    String originalArea,
+    DoctorModel doctor,
+  ) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('doctors')
+          .where('name', isEqualTo: originalName)
+          .where('area', isEqualTo: originalArea)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        return false;
+      }
+
+      await querySnapshot.docs.first.reference.update(doctor.toMap());
+      await fetchDoctors();
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

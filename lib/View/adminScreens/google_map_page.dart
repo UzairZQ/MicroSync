@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -20,88 +18,133 @@ class GoogleMapPage extends StatefulWidget {
 }
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
-  late GoogleMapController _controller;
+  GoogleMapController? _controller;
   bool isSatellite = false;
-  late StreamSubscription<QuerySnapshot> _subscription;
-  LatLng _lastKnownLocation = const LatLng(0, 0);
-
-  @override
-  void initState() {
-    super.initState();
-    _subscription = DatabaseService.streamUser().listen(_onLocationUpdate);
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-
-  void _onLocationUpdate(QuerySnapshot snapshot) {
-    final userData = snapshot.docs.singleWhere(
-      (element) => element.id == widget.userId,
-    );
-    setState(() {
-      _lastKnownLocation = LatLng(
-        userData['latitude'] as double,
-        userData['longitude'] as double,
-      );
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyAppBar(appBartxt: 'User Location'),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: StreamBuilder(
-          stream: DatabaseService.streamUser(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return GoogleMap(
-              mapType: isSatellite ? MapType.satellite : MapType.normal,
-              markers: {
-                Marker(
-                  markerId: const MarkerId('Current User Location'),
-                  icon: BitmapDescriptor.defaultMarker,
-                  position: _lastKnownLocation,
-                ),
-              },
-              initialCameraPosition: CameraPosition(
-                target: _lastKnownLocation,
-                zoom: 15.00,
+      body: StreamBuilder<QuerySnapshot>(
+        stream: DatabaseService.streamUser(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final docs = snapshot.data!.docs
+              .where((element) => element.id == widget.userId)
+              .toList();
+          if (docs.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(24),
+                child: Text('This employee could not be found.'),
               ),
-              onMapCreated: (GoogleMapController controller) {
-                setState(() {
-                  _controller = controller;
-                });
-              },
             );
-          },
-        ),
+          }
+
+          final data = docs.first.data() as Map<String, dynamic>;
+          final latitude = (data['latitude'] as num?)?.toDouble();
+          final longitude = (data['longitude'] as num?)?.toDouble();
+          if (latitude == null || longitude == null) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(24),
+                child: Text('No location has been recorded for this employee.'),
+              ),
+            );
+          }
+
+          final location = LatLng(latitude, longitude);
+          final name = data['displayName']?.toString() ?? 'Employee';
+          final updated = data['update']?.toString() ?? 'No update time';
+
+          return Stack(
+            children: [
+              GoogleMap(
+                mapType: isSatellite ? MapType.satellite : MapType.normal,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: false,
+                markers: {
+                  Marker(
+                    markerId: MarkerId(widget.userId),
+                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueAzure,
+                    ),
+                    position: location,
+                    infoWindow: InfoWindow(
+                      title: name,
+                      snippet: 'Updated $updated',
+                    ),
+                  ),
+                },
+                initialCameraPosition: CameraPosition(
+                  target: location,
+                  zoom: 15,
+                ),
+                onMapCreated: (GoogleMapController controller) {
+                  _controller = controller;
+                },
+              ),
+              Positioned(
+                left: 16,
+                right: 16,
+                top: 16,
+                child: Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.person_pin_circle_outlined),
+                    title: Text(name),
+                    subtitle: Text('Location updated $updated'),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 24.0, right: 30.0),
-        child: FloatingActionButton.extended(
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.small(
+            heroTag: 'mapType',
+            tooltip: 'Change map type',
             onPressed: () {
               setState(() {
                 isSatellite = !isSatellite;
               });
             },
-            label: const Text(
-              'Change Map Type',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            icon: const Icon(Icons.map_outlined),
-            backgroundColor: Colors.deepPurple),
+            child: const Icon(Icons.layers_outlined),
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton.small(
+            heroTag: 'recenter',
+            tooltip: 'Recenter',
+            onPressed: () async {
+              final controller = _controller;
+              if (controller == null) {
+                return;
+              }
+              final snapshot = await DatabaseService.streamUser().first;
+              final docs = snapshot.docs
+                  .where((element) => element.id == widget.userId)
+                  .toList();
+              if (docs.isEmpty) {
+                return;
+              }
+              final data = docs.first.data() as Map<String, dynamic>;
+              final latitude = (data['latitude'] as num?)?.toDouble();
+              final longitude = (data['longitude'] as num?)?.toDouble();
+              if (latitude == null || longitude == null) {
+                return;
+              }
+              controller.animateCamera(
+                CameraUpdate.newLatLngZoom(LatLng(latitude, longitude), 15),
+              );
+            },
+            child: const Icon(Icons.my_location_outlined),
+          ),
+        ],
       ),
     );
   }

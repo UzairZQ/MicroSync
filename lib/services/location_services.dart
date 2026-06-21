@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -10,7 +11,7 @@ import 'package:location/location.dart' as location;
 class LocationServices extends ChangeNotifier {
   // Declare permission status variables
 
-  Future<void> requestPermission() async {
+  Future<bool> requestPermission() async {
     try {
       PermissionStatus locationPermission = await Permission.location.request();
       if (locationPermission.isGranted) {
@@ -22,15 +23,19 @@ class LocationServices extends ChangeNotifier {
         } else {
           locationPermission = PermissionStatus.granted;
           locationAlwaysPermission = PermissionStatus.granted;
-          return; // Both permissions are already granted, no further action needed
+          return true; // Both permissions are already granted, no further action needed
         }
       } else if (locationPermission.isPermanentlyDenied) {
         openAppSettings();
       } else {
-        return;
+        return false;
       }
       notifyListeners();
-    } catch (e) {}
+      return locationPermission.isGranted;
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack);
+      return false;
+    }
   }
 
   String dateTime() {
@@ -41,8 +46,11 @@ class LocationServices extends ChangeNotifier {
     return formattedDate;
   }
 
-  Future<void> getBackgroundLocation(String uid) async {
+  Future<bool> getBackgroundLocation(String uid) async {
     try {
+      if (uid.isEmpty) {
+        return false;
+      }
       if (defaultTargetPlatform == TargetPlatform.android) {
         String time = dateTime();
         GeolocatorAndroid.registerWith();
@@ -57,11 +65,18 @@ class LocationServices extends ChangeNotifier {
           }, SetOptions(merge: true));
         });
       }
-    } catch (e) {}
+      return true;
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack);
+      return false;
+    }
   }
 
-  Future<void> getLocation(String uid) async {
+  Future<bool> getLocation(String uid) async {
     try {
+      if (uid.isEmpty) {
+        return false;
+      }
       if (defaultTargetPlatform == TargetPlatform.android) {
         String time = dateTime();
         location.LocationData currentLocation =
@@ -72,6 +87,10 @@ class LocationServices extends ChangeNotifier {
           'update': time,
         }, SetOptions(merge: true));
       }
-    } catch (e) {}
+      return true;
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack);
+      return false;
+    }
   }
 }

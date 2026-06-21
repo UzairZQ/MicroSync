@@ -55,6 +55,10 @@ class _AreasState extends State<Areas> {
                           children: [
                             TextFormField(
                               controller: areaNameController,
+                              validator: (value) =>
+                                  value == null || value.trim().isEmpty
+                                      ? 'Please enter area name'
+                                      : null,
                               onSaved: (name) {
                                 areaNameController.text = name!;
                               },
@@ -67,6 +71,15 @@ class _AreasState extends State<Areas> {
                             ),
                             TextFormField(
                               controller: areaCodeController,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Please enter area code';
+                                }
+                                if (int.tryParse(value) == null) {
+                                  return 'Please enter a valid code';
+                                }
+                                return null;
+                              },
                               onSaved: (newValue) {
                                 areaCodeController.text = newValue!;
                               },
@@ -90,13 +103,24 @@ class _AreasState extends State<Areas> {
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState!.save();
-                            await AreaProvider().addAreatoDatabase(
+                            final messenger = ScaffoldMessenger.of(context);
+                            final navigator = Navigator.of(context);
+                            final added = await areasProvider.addAreatoDatabase(
                               areaNameController.text,
                               areaCodeController.text,
                             );
-                            areaCodeController.clear();
-                            areaNameController.clear();
-                            areasProvider.fetchAreas();
+                            if (added) {
+                              areaCodeController.clear();
+                              areaNameController.clear();
+                              navigator.pop();
+                            }
+                            messenger.showSnackBar(
+                              SnackBar(
+                                content: Text(added
+                                    ? 'Area added'
+                                    : 'Could not add area'),
+                              ),
+                            );
                           }
                         },
                       ),
@@ -142,10 +166,16 @@ class _AreasState extends State<Areas> {
                           style:
                               TextButton.styleFrom(foregroundColor: Colors.red),
                           onPressed: () async {
-                            await AreaProvider()
+                            final deleted = await areasProvider
                                 .deleteAreaFromDatabase(area.areaId);
-                            areasProvider.fetchAreas();
                             Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(deleted
+                                    ? 'Area deleted'
+                                    : 'Could not delete area'),
+                              ),
+                            );
                           },
                           child: const Text('Delete'),
                         ),

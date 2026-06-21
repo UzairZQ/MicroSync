@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/View/userScreens/User%20Home%20Page/privacy_consent_dialog.dart';
-import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/day_plan_model.dart';
 import 'package:micro_pharma/models/user_model.dart';
 import 'package:micro_pharma/services/location_services.dart';
@@ -10,6 +9,7 @@ import 'package:micro_pharma/viewModel/user_data_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../adminScreens/admin_panel/doctors_page.dart';
+import '../../../components/widgets/production_widgets.dart';
 import '../../../components/widgets/container_row.dart';
 import '../../../components/widgets/my_container.dart';
 import '../Call Planner Page/call_planner.dart';
@@ -129,16 +129,8 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                       const SizedBox(height: 22),
-                      Text(
-                        'Workspace',
-                        style: theme.textTheme.titleLarge,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Everything you need for today, arranged for quick access on any Android screen.',
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                      const SizedBox(height: 18),
+                      const SectionTitle(title: 'Workspace'),
+                      const SizedBox(height: 12),
                       ContainerRow(
                         children: [
                           MyContainer(
@@ -278,122 +270,111 @@ class _HomeHero extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF14B8A6), Color(0xFF0D9488), Color(0xFF0F766E)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(32),
+        color: theme.colorScheme.primary,
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0D9488).withOpacity(0.3),
-            blurRadius: 32,
-            offset: const Offset(0, 16),
+            color: theme.colorScheme.primary.withOpacity(0.18),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(22),
+        padding: const EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              crossAxisAlignment: WrapCrossAlignment.center,
+            Row(
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  height: 46,
+                  width: 46,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.14),
-                    borderRadius: BorderRadius.circular(999),
+                    borderRadius: BorderRadius.circular(14),
                   ),
-                  child: const Text(
-                    'MicroSync',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  child: const Icon(
+                    Icons.medical_services_outlined,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'MicroSync',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.white.withOpacity(0.76),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Welcome${(user.displayName ?? '').isNotEmpty ? ', ${user.displayName}' : ''}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 if ((user.update ?? '').isNotEmpty)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      'Last sync ${user.update}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  Text(
+                    user.update!,
+                    textAlign: TextAlign.end,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.white.withOpacity(0.76),
                     ),
                   ),
               ],
             ),
-            const SizedBox(height: 18),
-            Text(
-              'Welcome back${(user.displayName ?? '').isNotEmpty ? ', ${user.displayName}' : ''}',
-              style: theme.textTheme.headlineMedium?.copyWith(
-                color: Colors.white,
-                fontSize: 30,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              plan == null
-                  ? 'No route is locked in for today yet. Use the tools below to review plans and stay ready.'
-                  : 'Today\'s route is ${plan.area} with ${plan.doctors.length} doctor visits planned.',
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: Colors.white.withOpacity(0.86),
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 14),
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.13),
-                borderRadius: BorderRadius.circular(22),
+                color: Colors.white.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(14),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  const Text(
-                    'Today\'s plan',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
+                  const Icon(Icons.route_outlined, color: Colors.white),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Today\'s route',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          plan == null
+                              ? 'No day plan found for today'
+                              : '${plan.area} • ${plan.doctors.length} doctors',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.8),
+                            height: 1.35,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    plan?.area ?? 'No day plan found for today',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  if (plan != null) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      plan.doctors.join(', '),
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.78),
-                        height: 1.45,
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 14),
             Row(
               children: [
                 Expanded(
@@ -402,9 +383,9 @@ class _HomeHero extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: const Color(0xFF0F766E),
-                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       elevation: 0,
                     ),
@@ -414,7 +395,6 @@ class _HomeHero extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3,
                       ),
                     ),
                   ),
@@ -426,9 +406,9 @@ class _HomeHero extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white.withOpacity(0.15),
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(14),
                         side: BorderSide(
                           color: Colors.white.withOpacity(0.2),
                           width: 1,

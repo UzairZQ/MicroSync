@@ -22,11 +22,11 @@ class MyContainer extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(16),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 152, minWidth: 165),
+          constraints: const BoxConstraints(minHeight: 132, minWidth: 156),
           child: Ink(
-            width: 165,
+            width: 156,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -37,10 +37,10 @@ class MyContainer extends StatelessWidget {
                 ),
               ],
               color: containerclr,
-              borderRadius: BorderRadius.circular(24.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,21 +50,21 @@ class MyContainer extends StatelessWidget {
                     width: 48,
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.45),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       containerIcon,
                       size: 26.0,
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 14),
                   Text(
                     containerText,
                     textAlign: TextAlign.start,
                     style: const TextStyle(
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w600,
-                      fontSize: 15.0,
+                      fontSize: 14.0,
                       height: 1.3,
                     ),
                   ),
@@ -112,7 +112,7 @@ class ContainerwithButtons extends StatelessWidget {
           ),
         ],
         color: containerclr,
-        borderRadius: BorderRadius.circular(24.0),
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

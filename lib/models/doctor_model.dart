@@ -24,7 +24,7 @@ class DoctorModel {
       'name': name,
       'area': area,
       'address': address,
-      'specialty': speciality,
+      'speciality': speciality,
     };
   }
 }

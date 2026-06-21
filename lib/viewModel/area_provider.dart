@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:micro_pharma/models/area_model.dart';
 
-
 class AreaProvider with ChangeNotifier {
   List<AreaModel> _areas = [];
 
@@ -15,6 +14,7 @@ class AreaProvider with ChangeNotifier {
   Future<void> fetchAreas() async {
     try {
       _isLoading = true;
+      notifyListeners();
       final snapshot =
           await FirebaseFirestore.instance.collection('areas').get();
       final List<AreaModel> loadedAreas = [];
@@ -24,43 +24,49 @@ class AreaProvider with ChangeNotifier {
           areaName: doc.data()['name'],
         ));
       }
+      loadedAreas.sort((a, b) => a.areaName.compareTo(b.areaName));
       _areas = loadedAreas;
       notifyListeners();
       _isLoading = false;
     } catch (error) {
       _isLoading = false;
-      //
+      notifyListeners();
       rethrow;
     }
   }
 
-  Future<void> addAreatoDatabase(String areaName, String code) async {
-    int areaCode = int.parse(code);
+  Future<bool> addAreatoDatabase(String areaName, String code) async {
+    final areaCode = int.tryParse(code);
+    if (areaCode == null) {
+      return false;
+    }
     try {
       await _firestore
           .collection('areas')
           .add({'id': areaCode, 'name': areaName});
+      await fetchAreas();
       notifyListeners();
-
-      //
+      return true;
     } catch (e) {
-      //
+      return false;
     }
   }
 
-  Future<void> deleteAreaFromDatabase(int areaId) async {
+  Future<bool> deleteAreaFromDatabase(int areaId) async {
     try {
-      await _firestore
+      final querySnapshot = await _firestore
           .collection('areas')
           .where('id', isEqualTo: areaId)
-          .get()
-          .then((querySnapshot) {
-        querySnapshot.docs.first.reference.delete();
-        notifyListeners();
-      });
+          .get();
+      if (querySnapshot.docs.isEmpty) {
+        return false;
+      }
+      await querySnapshot.docs.first.reference.delete();
+      await fetchAreas();
+      notifyListeners();
+      return true;
     } catch (error) {
-      
-      rethrow;
+      return false;
     }
   }
 }

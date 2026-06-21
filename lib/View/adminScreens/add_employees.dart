@@ -64,7 +64,6 @@ class _AddEmployeesState extends State<AddEmployees> {
                 const SizedBox(
                   height: 20.0,
                 ),
-            
                 MyTextFormField(
                     icon: const Icon(Icons.email_outlined),
                     hintext: 'Please Enter Email',
@@ -88,7 +87,7 @@ class _AddEmployeesState extends State<AddEmployees> {
                     } else if (role!.isEmpty) {
                       return 'Please Enter role';
                     }
-                    return null;
+                    return 'Role must be user or admin';
                   },
                 ),
                 const SizedBox(

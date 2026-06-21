@@ -4,10 +4,10 @@ import 'package:micro_pharma/View/adminScreens/admin_panel/show_assigned_areas_p
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/components/widgets/container_row.dart';
 
-
 import 'package:micro_pharma/View/adminScreens/admin_panel/doctors_page.dart';
 import 'package:micro_pharma/components/widgets/my_container.dart';
 import 'areas_page.dart';
+import 'employee_targets.dart';
 import 'assign_areas_products.dart';
 
 class AdminPanel extends StatelessWidget {
@@ -63,7 +63,8 @@ class AdminPanel extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: ((context) => const ProductListScreen())));
+                                builder: ((context) =>
+                                    const ProductListScreen())));
                       },
                     ),
                     MyContainer(
@@ -88,7 +89,8 @@ class AdminPanel extends StatelessWidget {
                     MyContainer(
                       containerclr: Colors.green[100]!,
                       containerIcon: Icons.assignment_ind_outlined,
-                      containerText: 'Show Assigned Areas/Products to Employees',
+                      containerText:
+                          'Show Assigned Areas/Products to Employees',
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
@@ -100,7 +102,13 @@ class AdminPanel extends StatelessWidget {
                       containerclr: Colors.purple[100]!,
                       containerIcon: Icons.add_chart_outlined,
                       containerText: 'Monthly Targets',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) =>
+                                    const EmployeeTargets())));
+                      },
                     ),
                   ],
                 )
