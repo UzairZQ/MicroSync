@@ -16,13 +16,17 @@ class MyContainer extends StatelessWidget {
   Function() onTap;
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
     final colorScheme = Theme.of(context).colorScheme;
+    final highlightColor = brightness == Brightness.dark
+        ? Colors.white.withOpacity(0.03)
+        : Colors.white.withOpacity(0.55);
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 132, minWidth: 156),
           child: Ink(
@@ -30,14 +34,19 @@ class MyContainer extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.shadow.withOpacity(0.08),
+                  color: colorScheme.shadow.withOpacity(0.16),
                   spreadRadius: 1,
-                  blurRadius: 16,
-                  offset: const Offset(0, 8),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+                BoxShadow(
+                  color: highlightColor,
+                  blurRadius: 12,
+                  offset: const Offset(-3, -3),
                 ),
               ],
               color: containerclr,
-              borderRadius: BorderRadius.circular(16.0),
+              borderRadius: BorderRadius.circular(24.0),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
@@ -50,7 +59,7 @@ class MyContainer extends StatelessWidget {
                     width: 48,
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.45),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: Icon(
                       containerIcon,
@@ -60,6 +69,8 @@ class MyContainer extends StatelessWidget {
                   const SizedBox(height: 14),
                   Text(
                     containerText,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,
                     style: const TextStyle(
                       fontFamily: 'Poppins',

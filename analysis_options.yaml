@@ -10,6 +10,11 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  exclude:
+    - build/**
+    - .dart_tool/**
+    - ios/Pods/**
+    - macos/Pods/**
   errors:
     deprecated_member_use: ignore
     empty_catches: ignore

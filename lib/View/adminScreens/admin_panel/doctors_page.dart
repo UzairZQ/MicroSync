@@ -29,9 +29,11 @@ class _DoctorsPageState extends State<DoctorsPage> {
 
   @override
   void initState() {
-    Provider.of<AreaProvider>(context, listen: false).fetchAreas();
-    Provider.of<DoctorDataProvider>(context, listen: false).fetchDoctors();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AreaProvider>().fetchAreas();
+      context.read<DoctorDataProvider>().fetchDoctors();
+    });
   }
 
   Future<void> _refreshDoctors(BuildContext context) async {

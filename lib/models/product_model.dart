@@ -6,20 +6,19 @@ class OrderSelectedProduct extends ProductModel {
   OrderSelectedProduct(
       {required super.name,
       required super.tradePrice,
-      double? retailPrice,
+      required super.retailPrice,
       super.packing,
       required this.quantity,
       this.bonus,
       this.discount,
-      int? code})
-      : super(code: code!, retailPrice: retailPrice!);
+      required super.code});
 
   factory OrderSelectedProduct.fromMap(Map<String, dynamic> json) {
     return OrderSelectedProduct(
       code: json['code'] as int,
       name: json['name'] as String,
-      retailPrice: json['mrp'] as double,
-      tradePrice: json['trp'] as double,
+      retailPrice: (json['mrp'] as num).toDouble(),
+      tradePrice: (json['trp'] as num).toDouble(),
       packing: json['packing'] as dynamic,
       quantity: json['quantity'] as String,
       bonus: json['bonus'] as String?,
@@ -54,10 +53,10 @@ class ProductModel {
 
   factory ProductModel.fromMap(Map<String, dynamic> json) {
     return ProductModel(
-      code: json['code'],
-      name: json['name'],
-      retailPrice: json['mrp'].toDouble(),
-      tradePrice: json['trp'].toDouble(),
+      code: json['code'] as int,
+      name: json['name'] as String,
+      retailPrice: (json['mrp'] as num).toDouble(),
+      tradePrice: (json['trp'] as num).toDouble(),
       packing: json['packing'],
     );
   }

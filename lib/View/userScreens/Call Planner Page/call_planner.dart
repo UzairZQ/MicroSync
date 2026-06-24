@@ -36,13 +36,29 @@ class _CallPlannerState extends State<CallPlanner> {
 
   @override
   void initState() {
-    final user = FirebaseAuth.instance.currentUser;
-    Provider.of<AreaProvider>(context, listen: false).fetchAreas();
-    Provider.of<DoctorDataProvider>(context, listen: false).fetchDoctors();
-    Provider.of<UserDataProvider>(context, listen: false)
-        .fetchUserData(user!.uid);
-
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadPlannerData();
+    });
+  }
+
+  Future<void> _loadPlannerData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (!mounted || user == null) {
+      return;
+    }
+
+    await Future.wait([
+      context.read<AreaProvider>().fetchAreas(),
+      context.read<DoctorDataProvider>().fetchDoctors(),
+      context.read<UserDataProvider>().fetchUserData(user.uid),
+    ]);
+  }
+
+  @override
+  void dispose() {
+    _doctorController.dispose();
+    super.dispose();
   }
 
   void _onDateSelected(DateTime date, DateTime day) {
@@ -101,7 +117,8 @@ class _CallPlannerState extends State<CallPlanner> {
                 headerStyle: const HeaderStyle(
                   formatButtonVisible: false,
                   titleCentered: true,
-                  titleTextStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  titleTextStyle:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 calendarStyle: CalendarStyle(
                   selectedDecoration: BoxDecoration(
@@ -143,15 +160,29 @@ class _CallPlannerState extends State<CallPlanner> {
                     ),
                     initialValue: _selectedArea?.areaName,
                     onChanged: (value) {
+                      if (value == null) {
+                        return;
+                      }
+                      final availableAreas = assignedAreas?.isNotEmpty == true
+                          ? assignedAreas!
+                          : areaList;
+                      AreaModel? selectedArea;
+                      for (final area in availableAreas) {
+                        if (area.areaName == value) {
+                          selectedArea = area;
+                          break;
+                        }
+                      }
+                      if (selectedArea == null) {
+                        return;
+                      }
                       setState(() {
-                        _selectedArea = assignedAreas?.firstWhere(
-                                (area) => area.areaName == value) ??
-                            areaList.firstWhere(
-                              (area) => area.areaName == value,
-                            );
+                        _selectedArea = selectedArea;
                       });
                     },
-                    items: (assignedAreas?.isNotEmpty == true ? assignedAreas : areaList)!
+                    items: (assignedAreas?.isNotEmpty == true
+                            ? assignedAreas
+                            : areaList)!
                         .map((area) => DropdownMenuItem(
                               value: area.areaName,
                               child: Text(area.areaName),
@@ -195,10 +226,14 @@ class _CallPlannerState extends State<CallPlanner> {
             const SizedBox(height: 24),
             Container(
               decoration: BoxDecoration(
-                color: _isDayPlanEnabled ? kappbarColor.withOpacity(0.05) : Colors.transparent,
+                color: _isDayPlanEnabled
+                    ? kappbarColor.withOpacity(0.05)
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: _isDayPlanEnabled ? kappbarColor.withOpacity(0.3) : Colors.transparent,
+                  color: _isDayPlanEnabled
+                      ? kappbarColor.withOpacity(0.3)
+                      : Colors.transparent,
                 ),
               ),
               child: SwitchListTile(
@@ -234,13 +269,15 @@ class _CallPlannerState extends State<CallPlanner> {
                 onTap: () async {
                   final filteredDoctors = _selectedArea != null
                       ? doctors
-                          .where((doctor) => doctor.area == _selectedArea!.areaName)
+                          .where((doctor) =>
+                              doctor.area == _selectedArea!.areaName)
                           .toList()
                       : doctors;
                   final selectedDoctors = await showDialog<List<String>>(
                     context: context,
                     builder: (_) {
-                      final allDoctors = filteredDoctors.map((doctor) => doctor.name).toSet();
+                      final allDoctors =
+                          filteredDoctors.map((doctor) => doctor.name).toSet();
                       return SelectDoctorsDialog(
                         allDoctors: allDoctors,
                         selectedDoctors: _selectedDoctors,
@@ -268,17 +305,20 @@ class _CallPlannerState extends State<CallPlanner> {
                     children: [
                       Text(
                         'Selected Doctors (${_selectedDoctors.length})',
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.grey),
                       ),
                       const SizedBox(height: 12),
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
-                        children: _selectedDoctors.map((doc) => Chip(
-                          label: Text(doc),
-                          backgroundColor: Colors.white,
-                          side: BorderSide(color: Colors.grey.shade300),
-                        )).toList(),
+                        children: _selectedDoctors
+                            .map((doc) => Chip(
+                                  label: Text(doc),
+                                  backgroundColor: Colors.white,
+                                  side: BorderSide(color: Colors.grey.shade300),
+                                ))
+                            .toList(),
                       ),
                     ],
                   ),
@@ -299,7 +339,9 @@ class _CallPlannerState extends State<CallPlanner> {
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
                       formKey.currentState!.save();
-                      final userData = Provider.of<UserDataProvider>(context, listen: false).getUserData;
+                      final userData =
+                          Provider.of<UserDataProvider>(context, listen: false)
+                              .getUserData;
                       if (_selectedDoctors.isNotEmpty) {
                         final newDayPlan = DayPlanModel(
                           shift: _selectedShift,
@@ -308,7 +350,9 @@ class _CallPlannerState extends State<CallPlanner> {
                           area: _selectedArea!.areaName,
                           doctors: _selectedDoctors.toList(),
                         );
-                        await Provider.of<DayPlanProvider>(context, listen: false).addDayPlan(newDayPlan);
+                        await Provider.of<DayPlanProvider>(context,
+                                listen: false)
+                            .addDayPlan(newDayPlan);
 
                         showCustomDialog(
                           context: navigatorKey.currentContext!,
@@ -319,7 +363,9 @@ class _CallPlannerState extends State<CallPlanner> {
                         _clearDayPlanSelection();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please select at least one doctor.')),
+                          const SnackBar(
+                              content:
+                                  Text('Please select at least one doctor.')),
                         );
                       }
                     }

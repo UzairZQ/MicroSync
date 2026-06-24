@@ -40,10 +40,11 @@ class UserDataProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addAreasAndProductsToEmployee(List<AreaModel> areas,
+  Future<bool> addAreasAndProductsToEmployee(List<AreaModel> areas,
       List<ProductModel> products, UserModel employee) async {
     try {
       _isLoading = true;
+      notifyListeners();
       // Get the document reference for the employee
       final employeeDocRef =
           FirebaseFirestore.instance.collection('users').doc(employee.uid);
@@ -61,12 +62,18 @@ class UserDataProvider with ChangeNotifier {
         'assignedAreas': areaObjects,
         'assignedProducts': productObjects,
       });
+      selectedUser = employee
+        ..assignedAreas = areas
+        ..assignedProducts = products;
+      selectedAreas = [];
+      selectedProducts = [];
       _isLoading = false;
-      // Show a success message or perform any other necessary actions
+      notifyListeners();
+      return true;
     } catch (e) {
       _isLoading = false;
-      
-      // Show an error message or handle the error in an appropriate way
+      notifyListeners();
+      return false;
     }
   }
 
@@ -79,17 +86,15 @@ class UserDataProvider with ChangeNotifier {
           .get();
       if (docSnapshot.exists) {
         final newUser = UserModel.fromMap(docSnapshot.data()!);
-        // 
 
         _user = newUser;
-        notifyListeners();
       }
       _isLoading = false;
+      notifyListeners();
       return;
     } catch (e) {
       _isLoading = false;
-      
-
+      notifyListeners();
       return;
     }
   }
@@ -104,133 +109,151 @@ class UserDataProvider with ChangeNotifier {
       _users = querySnapshot.docs
           .map((doc) => UserModel.fromMap(doc.data()))
           .toList();
-      notifyListeners();
       _isLoading = false;
+      notifyListeners();
     } catch (e) {
       _isLoading = false;
-      
+      notifyListeners();
       return;
     }
   }
 
-  Future<void> removeProductFromUser(ProductModel product) async {
+  Future<bool> removeProductFromUser(ProductModel product) async {
     try {
       _isLoading = true;
+      notifyListeners();
+      final user = selectedUser;
+      if (user?.uid == null) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
       final userDocRef =
-          FirebaseFirestore.instance.collection('users').doc(selectedUser!.uid);
+          FirebaseFirestore.instance.collection('users').doc(user!.uid);
 
-      final List<Map<String, dynamic>> updatedProducts = selectedUser!
-          .assignedProducts!
+      final updatedProductModels = (user.assignedProducts ?? [])
           .where((assignedProduct) => assignedProduct.code != product.code)
+          .toList();
+      final List<Map<String, dynamic>> updatedProducts = updatedProductModels
           .map((assignedProduct) => assignedProduct.toMap())
           .toList();
 
       await userDocRef.update({'assignedProducts': updatedProducts});
+      selectedUser = user..assignedProducts = updatedProductModels;
       _isLoading = false;
-      // Show a success message or perform any other necessary actions
+      notifyListeners();
+      return true;
     } catch (e) {
       _isLoading = false;
-      
-      // Show an error message or handle the error in an appropriate way
+      notifyListeners();
+      return false;
     }
   }
 
-  Future<void> removeAreaFromUser(AreaModel area) async {
+  Future<bool> removeAreaFromUser(AreaModel area) async {
     try {
       _isLoading = true;
+      notifyListeners();
+      final user = selectedUser;
+      if (user?.uid == null) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
       final userDocRef =
-          FirebaseFirestore.instance.collection('users').doc(selectedUser!.uid);
+          FirebaseFirestore.instance.collection('users').doc(user!.uid);
 
-      final List<Map<String, dynamic>> updatedAreas = selectedUser!
-          .assignedAreas!
+      final updatedAreaModels = (user.assignedAreas ?? [])
           .where((assignedArea) => assignedArea.areaId != area.areaId)
+          .toList();
+      final List<Map<String, dynamic>> updatedAreas = updatedAreaModels
           .map((assignedArea) => assignedArea.toMap())
           .toList();
 
       await userDocRef.update({'assignedAreas': updatedAreas});
+      selectedUser = user..assignedAreas = updatedAreaModels;
       _isLoading = false;
-      // Show a success message or perform any other necessary actions
+      notifyListeners();
+      return true;
     } catch (e) {
       _isLoading = false;
-      
-      // Show an error message or handle the error in an appropriate way
+      notifyListeners();
+      return false;
     }
   }
 }
 
+// Future<void> assignProductToEmployee(
+//     ProductModel product, UserModel employee) async {
+//   try {
+//     // Assign the product to the employee in the database
+//     await FirebaseFirestore.instance
+//         .collection('users')
+//         .doc(employee.uid)
+//         .update({
+//       'assignedProducts': FieldValue.arrayUnion([product.toMap()])
+//     });
 
+//     // Update the local user data
+//     _user.assignedProducts?.add(product);
+//     notifyListeners();
+//   } catch (e) {
+//
+//   }
+// }
 
- // Future<void> assignProductToEmployee(
-  //     ProductModel product, UserModel employee) async {
-  //   try {
-  //     // Assign the product to the employee in the database
-  //     await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(employee.uid)
-  //         .update({
-  //       'assignedProducts': FieldValue.arrayUnion([product.toMap()])
-  //     });
+// Future<void> removeProductFromEmployee(
+//     ProductModel product, UserModel employee) async {
+//   try {
+//     // Remove the product from the employee in the database
+//     await FirebaseFirestore.instance
+//         .collection('users')
+//         .doc(employee.uid)
+//         .update({
+//       'assignedProducts': FieldValue.arrayRemove([product.toMap()])
+//     });
 
-  //     // Update the local user data
-  //     _user.assignedProducts?.add(product);
-  //     notifyListeners();
-  //   } catch (e) {
-  //     
-  //   }
-  // }
+//     // Update the local user data
+//     _user.assignedProducts?.remove(product);
+//     notifyListeners();
+//   } catch (e) {
+//
+//   }
+// }
 
-  // Future<void> removeProductFromEmployee(
-  //     ProductModel product, UserModel employee) async {
-  //   try {
-  //     // Remove the product from the employee in the database
-  //     await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(employee.uid)
-  //         .update({
-  //       'assignedProducts': FieldValue.arrayRemove([product.toMap()])
-  //     });
+// Future<void> assignAreaToEmployee(AreaModel area, UserModel employee) async {
+//   try {
+//     // Assign the area to the employee in the database
+//     await FirebaseFirestore.instance
+//         .collection('users')
+//         .doc(employee.uid)
+//         .update({
+//       'assignedAreas': FieldValue.arrayUnion([area.toMap()])
+//     });
 
-  //     // Update the local user data
-  //     _user.assignedProducts?.remove(product);
-  //     notifyListeners();
-  //   } catch (e) {
-  //     
-  //   }
-  // }
+//     // Update the local user data
+//     _user.assignedAreas?.add(area);
+//     notifyListeners();
+//   } catch (e) {
+//
+//   }
+// }
 
-  // Future<void> assignAreaToEmployee(AreaModel area, UserModel employee) async {
-  //   try {
-  //     // Assign the area to the employee in the database
-  //     await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(employee.uid)
-  //         .update({
-  //       'assignedAreas': FieldValue.arrayUnion([area.toMap()])
-  //     });
+// Future<void> removeAreaFromEmployee(
+//     AreaModel area, UserModel employee) async {
+//   try {
+//     // Remove the area from the employee in the database
+//     await FirebaseFirestore.instance
+//         .collection('users')
+//         .doc(employee.uid)
+//         .update({
+//       'assignedAreas': FieldValue.arrayRemove([area.toMap()])
+//     });
 
-  //     // Update the local user data
-  //     _user.assignedAreas?.add(area);
-  //     notifyListeners();
-  //   } catch (e) {
-  //     
-  //   }
-  // }
+//     // Update the local user data
+//     _user.assignedAreas?.remove(area);
+//     notifyListeners();
+//   } catch (e) {
 
-  // Future<void> removeAreaFromEmployee(
-  //     AreaModel area, UserModel employee) async {
-  //   try {
-  //     // Remove the area from the employee in the database
-  //     await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(employee.uid)
-  //         .update({
-  //       'assignedAreas': FieldValue.arrayRemove([area.toMap()])
-  //     });
-
-  //     // Update the local user data
-  //     _user.assignedAreas?.remove(area);
-  //     notifyListeners();
-  //   } catch (e) {
-  
-  //   }
-  // }
+//   }
+// }

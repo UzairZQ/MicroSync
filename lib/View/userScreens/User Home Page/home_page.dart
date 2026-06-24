@@ -74,6 +74,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       bottomNavigationBar: const HomeNavigationBar(),
       body: SafeArea(
+        top: false,
         child: RefreshIndicator(
           onRefresh: _refreshHome,
           child: Consumer2<UserDataProvider, DayPlanProvider>(
@@ -90,12 +91,7 @@ class _HomePageState extends State<HomePage> {
 
                   return ListView(
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.fromLTRB(
-                      horizontalPadding,
-                      12,
-                      horizontalPadding,
-                      24,
-                    ),
+                    padding: const EdgeInsets.only(bottom: 24),
                     children: [
                       _HomeHero(
                         user: user,
@@ -109,133 +105,161 @@ class _HomePageState extends State<HomePage> {
                           Navigator.pushNamed(context, DayPlansScreen.id);
                         },
                       ),
-                      const SizedBox(height: 18),
-                      isCompact
-                          ? Column(
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          horizontalPadding,
+                          18,
+                          horizontalPadding,
+                          0,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            isCompact
+                                ? Column(
+                                    children: [
+                                      _QuickStatsCard(todayPlan: todayPlan),
+                                      const SizedBox(height: 14),
+                                      _AssignedAreasCard(user: user),
+                                    ],
+                                  )
+                                : Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: _QuickStatsCard(
+                                          todayPlan: todayPlan,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      Expanded(
+                                        child: _AssignedAreasCard(user: user),
+                                      ),
+                                    ],
+                                  ),
+                            const SizedBox(height: 22),
+                            const SectionTitle(title: 'Workspace'),
+                            const SizedBox(height: 12),
+                            ContainerRow(
                               children: [
-                                _QuickStatsCard(todayPlan: todayPlan),
-                                const SizedBox(height: 14),
-                                _AssignedAreasCard(user: user),
-                              ],
-                            )
-                          : Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: _QuickStatsCard(todayPlan: todayPlan),
+                                MyContainer(
+                                  containerclr: const Color(0xFFD9F4EC),
+                                  containerIcon: Icons.space_dashboard_outlined,
+                                  containerText: 'Live dashboard',
+                                  onTap: () => Navigator.pushNamed(
+                                      context, Dashboard.id),
                                 ),
-                                const SizedBox(width: 14),
-                                Expanded(child: _AssignedAreasCard(user: user)),
-                              ],
-                            ),
-                      const SizedBox(height: 22),
-                      const SectionTitle(title: 'Workspace'),
-                      const SizedBox(height: 12),
-                      ContainerRow(
-                        children: [
-                          MyContainer(
-                            containerclr: const Color(0xFFD9F4EC),
-                            containerIcon: Icons.space_dashboard_outlined,
-                            containerText: 'Live dashboard',
-                            onTap: () =>
-                                Navigator.pushNamed(context, Dashboard.id),
-                          ),
-                          MyContainer(
-                            containerclr: const Color(0xFFFDE7D5),
-                            containerIcon: Icons.calendar_month_outlined,
-                            containerText: 'Call planner',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: ((context) => const CallPlanner()),
+                                MyContainer(
+                                  containerclr: const Color(0xFFFDE7D5),
+                                  containerIcon: Icons.calendar_month_outlined,
+                                  containerText: 'Call planner',
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: ((context) =>
+                                            const CallPlanner()),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                          MyContainer(
-                            containerclr: const Color(0xFFE2E8FF),
-                            containerIcon: Icons.route_outlined,
-                            containerText: 'My call plans',
-                            onTap: () =>
-                                Navigator.pushNamed(context, DayPlansScreen.id),
-                          ),
-                          MyContainer(
-                            containerclr: const Color(0xFFFFF0B8),
-                            containerIcon: Icons.assignment_turned_in_outlined,
-                            containerText: 'Daily call reports',
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: ((context) =>
-                                    const DailyCallReportScreen()),
-                              ),
-                            ),
-                          ),
-                          MyContainer(
-                            containerclr: const Color(0xFFD8F2FF),
-                            containerIcon: Icons.medical_services_outlined,
-                            containerText: 'Doctors',
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: ((context) => const DoctorsPage()),
-                              ),
-                            ),
-                          ),
-                          MyContainer(
-                            containerclr: const Color(0xFFFFE1DB),
-                            containerIcon: Icons.add_shopping_cart_outlined,
-                            containerText: 'Send orders',
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: ((context) => const OrderScreen()),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 22),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(18),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: colorScheme.primaryContainer,
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Icon(
-                                      Icons.tips_and_updates_outlined,
-                                      color: colorScheme.onPrimaryContainer,
+                                MyContainer(
+                                  containerclr: const Color(0xFFE2E8FF),
+                                  containerIcon: Icons.route_outlined,
+                                  containerText: 'My call plans',
+                                  onTap: () => Navigator.pushNamed(
+                                    context,
+                                    DayPlansScreen.id,
+                                  ),
+                                ),
+                                MyContainer(
+                                  containerclr: const Color(0xFFFFF0B8),
+                                  containerIcon:
+                                      Icons.assignment_turned_in_outlined,
+                                  containerText: 'Daily call reports',
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const DailyCallReportScreen()),
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      'Field note',
-                                      style: theme.textTheme.titleLarge,
+                                ),
+                                MyContainer(
+                                  containerclr: const Color(0xFFD8F2FF),
+                                  containerIcon:
+                                      Icons.medical_services_outlined,
+                                  containerText: 'Doctors',
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const DoctorsPage()),
                                     ),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(height: 14),
-                              Text(
-                                todayPlan == null
-                                    ? 'No route is assigned for today yet. Pull to refresh after your manager updates the schedule.'
-                                    : 'Your route is centered on ${todayPlan.area}. Start the day once you are on the move so location and activity logs stay current.',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  height: 1.5,
+                                ),
+                                MyContainer(
+                                  containerclr: const Color(0xFFFFE1DB),
+                                  containerIcon:
+                                      Icons.add_shopping_cart_outlined,
+                                  containerText: 'Send orders',
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const OrderScreen()),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 22),
+                            _DashboardInfoCard(
+                              child: Padding(
+                                padding: const EdgeInsets.all(18),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: colorScheme.primaryContainer,
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                          ),
+                                          child: Icon(
+                                            Icons.tips_and_updates_outlined,
+                                            color:
+                                                colorScheme.onPrimaryContainer,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Text(
+                                            'Field note',
+                                            style: theme.textTheme.titleLarge,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 14),
+                                    Text(
+                                      todayPlan == null
+                                          ? 'No route is assigned for today yet. Pull to refresh after your manager updates the schedule.'
+                                          : 'Your route is centered on ${todayPlan.area}. Start the day once you are on the move so location and activity logs stay current.',
+                                      style:
+                                          theme.textTheme.bodyMedium?.copyWith(
+                                        height: 1.5,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -267,21 +291,24 @@ class _HomeHero extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final plan = todayPlan;
+    final topInset = MediaQuery.paddingOf(context).top;
 
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.primary,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: const BorderRadius.vertical(
+          bottom: Radius.circular(34),
+        ),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withOpacity(0.18),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+            color: theme.colorScheme.primary.withOpacity(0.24),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(18),
+        padding: EdgeInsets.fromLTRB(20, topInset + 18, 20, 22),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -314,11 +341,12 @@ class _HomeHero extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         'Welcome${(user.displayName ?? '').isNotEmpty ? ', ${user.displayName}' : ''}',
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.titleLarge?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
+                          height: 1.14,
                         ),
                       ),
                     ],
@@ -444,7 +472,7 @@ class _QuickStatsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Card(
+    return _DashboardInfoCard(
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Column(
@@ -484,7 +512,7 @@ class _AssignedAreasCard extends StatelessWidget {
     final areas = user.assignedAreas ?? [];
     final products = user.assignedProducts ?? [];
 
-    return Card(
+    return _DashboardInfoCard(
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Column(
@@ -538,6 +566,29 @@ class _MiniStat extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _DashboardInfoCard extends StatelessWidget {
+  const _DashboardInfoCard({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      elevation: 3,
+      shadowColor: theme.colorScheme.shadow.withOpacity(0.14),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(22),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.34),
+        ),
+      ),
+      child: child,
     );
   }
 }

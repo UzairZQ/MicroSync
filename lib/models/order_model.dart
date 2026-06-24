@@ -30,8 +30,8 @@ class OrderModel {
           .toList(),
       customerName: json['customerName'] as String,
       area: json['area'] as String,
-      total: json['total'] != null ? json['total'] as double : 0.0,
-      subTotal: json['subTotal'] != null ? json['subTotal'] as double : 0.0,
+      total: (json['total'] as num?)?.toDouble() ?? 0.0,
+      subTotal: (json['subTotal'] as num?)?.toDouble() ?? 0.0,
     );
   }
 

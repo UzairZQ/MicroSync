@@ -22,15 +22,16 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
   List<ProductModel>? assignedProducts;
   List<AreaModel>? assignedAreas;
   int selectedEmployeeIndex = 0;
+  late Future<void> _employeesFuture;
 
   @override
   void initState() {
     super.initState();
-    fetchData();
+    userDataProvider = context.read<UserDataProvider>();
+    _employeesFuture = fetchData();
   }
 
   Future<void> fetchData() async {
-    userDataProvider = Provider.of<UserDataProvider>(context, listen: false);
     await userDataProvider.fetchAllEmployees();
   }
 
@@ -44,7 +45,7 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
           child: Column(
             children: [
               FutureBuilder(
-                future: fetchData(),
+                future: _employeesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
@@ -54,27 +55,40 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
                     return Text('Error: ${snapshot.error}');
                   } else {
                     final employeesList = userDataProvider.getUsers;
-                    selectedEmployee = employeesList[selectedEmployeeIndex];
+                    if (employeesList.isEmpty) {
+                      return const MyTextwidget(
+                        text: 'No employees found.',
+                        fontSize: 16,
+                      );
+                    }
+                    final safeEmployeeIndex = selectedEmployeeIndex
+                        .clamp(0, employeesList.length - 1)
+                        .toInt();
+                    selectedEmployee = employeesList[safeEmployeeIndex];
+                    assignedAreas ??= selectedEmployee?.assignedAreas;
+                    assignedProducts ??= selectedEmployee?.assignedProducts;
                     return Center(
                       child: DropdownButton<int>(
                         hint: const MyTextwidget(text: 'Select Employee'),
-                        value: selectedEmployeeIndex,
+                        value: safeEmployeeIndex,
                         onChanged: (selectedIndex) {
-                          setState(() {
-                            selectedEmployeeIndex = selectedIndex!;
-                          });
-                          if (selectedIndex != null && selectedIndex >= 0) {
-                            selectedEmployee = employeesList[selectedIndex];
-                            if (selectedEmployee != null) {
-                              userDataProvider
-                                  .fetchUserData(selectedEmployee!.uid!);
-                              userDataProvider
-                                  .setSelectedUser(selectedEmployee!);
-                              assignedAreas = selectedEmployee?.assignedAreas;
-                              assignedProducts =
-                                  selectedEmployee?.assignedProducts;
-                            }
+                          if (selectedIndex == null) {
+                            return;
                           }
+                          setState(() {
+                            selectedEmployeeIndex = selectedIndex;
+                            selectedEmployee = employeesList[selectedIndex];
+                            final employee = selectedEmployee;
+                            final uid = employee?.uid;
+                            if (employee != null) {
+                              if (uid != null) {
+                                userDataProvider.fetchUserData(uid);
+                              }
+                              userDataProvider.setSelectedUser(employee);
+                              assignedAreas = employee.assignedAreas;
+                              assignedProducts = employee.assignedProducts;
+                            }
+                          });
                         },
                         items: employeesList.asMap().entries.map((entry) {
                           final index = entry.key;
@@ -82,7 +96,8 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
 
                           return DropdownMenuItem<int>(
                             value: index,
-                            child: Text(employee.displayName!),
+                            child: Text(
+                                employee.displayName ?? 'Unnamed employee'),
                           );
                         }).toList(),
                       ),
@@ -131,13 +146,24 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
                               ),
                               TextButton(
                                 child: const MyTextwidget(text: 'Yes'),
-                                onPressed: () {
-                                  userDataProvider
-                                      .removeProductFromUser(product!);
+                                onPressed: () async {
+                                  final employee = selectedEmployee;
+                                  if (employee == null || product == null) {
+                                    Navigator.pop(context);
+                                    return;
+                                  }
+                                  userDataProvider.setSelectedUser(employee);
+                                  final removed = await userDataProvider
+                                      .removeProductFromUser(product);
+                                  if (!context.mounted) {
+                                    return;
+                                  }
                                   Navigator.pop(context);
-                                  setState(() {
-                                    assignedProducts?.removeAt(index);
-                                  });
+                                  if (removed) {
+                                    setState(() {
+                                      assignedProducts?.removeAt(index);
+                                    });
+                                  }
                                 },
                               ),
                             ],
@@ -207,14 +233,26 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
                                 ),
                                 TextButton(
                                   child: const MyTextwidget(text: 'Yes'),
-                                  onPressed: () {
-                                    Provider.of<UserDataProvider>(context,
-                                            listen: false)
-                                        .removeAreaFromUser(area!);
+                                  onPressed: () async {
+                                    final employee = selectedEmployee;
+                                    if (employee == null || area == null) {
+                                      Navigator.pop(context);
+                                      return;
+                                    }
+                                    userDataProvider.setSelectedUser(employee);
+                                    final removed = await userDataProvider
+                                        .removeAreaFromUser(
+                                      area,
+                                    );
+                                    if (!context.mounted) {
+                                      return;
+                                    }
                                     Navigator.pop(context);
-                                    setState(() {
-                                      assignedAreas?.removeAt(index);
-                                    });
+                                    if (removed) {
+                                      setState(() {
+                                        assignedAreas?.removeAt(index);
+                                      });
+                                    }
                                   },
                                 ),
                               ],

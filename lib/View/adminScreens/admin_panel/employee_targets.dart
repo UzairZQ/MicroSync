@@ -111,17 +111,21 @@ class _EmployeeTargetsState extends State<EmployeeTargets> {
                     );
                   }).toList(),
                   onChanged: (value) {
-                    final selectedDoc = users.firstWhere(
-                      (doc) =>
-                          (doc.data() as Map<String, dynamic>)['uid']
-                              ?.toString() ==
-                          value,
-                    );
-                    final data = selectedDoc.data() as Map<String, dynamic>;
+                    Map<String, dynamic>? selectedData;
+                    for (final doc in users) {
+                      final data = doc.data() as Map<String, dynamic>;
+                      if (data['uid']?.toString() == value) {
+                        selectedData = data;
+                        break;
+                      }
+                    }
+                    if (selectedData == null) {
+                      return;
+                    }
                     setState(() {
                       _selectedUserId = value;
                       _selectedUserName =
-                          data['displayName']?.toString() ?? 'User';
+                          selectedData?['displayName']?.toString() ?? 'User';
                     });
                   },
                 );

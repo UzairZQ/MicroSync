@@ -1,50 +1,70 @@
-# MICRO PHARMA
-# MicroSync Mobile Application
-This project is a mobile application built using Flutter and Firebase Firestore, designed for pharmaceutical companies to manage their sales force. The app includes features such as employee location tracking, daily call reporting, medicine orders, and weekly call planning. This is a final year project for the degree BS Computer Science.
+# MicroSync
 
-# Features
-Employee Location Tracking: The app allows managers to track the location of their sales representatives in real-time, ensuring they are visiting the right locations and making the most of their time.
+MicroSync is a Flutter and Firebase based sales force automation application for pharmaceutical companies. It helps pharma managers and field sales representatives manage daily field operations such as employee tracking, daily call reporting, medicine orders, doctor visits, product assignments, area assignments, and weekly call planning.
 
-Daily Call Reporting: Sales representatives can submit daily reports on their calls with doctors and other healthcare professionals, including details such as the name of the healthcare provider, the products discussed, and any feedback received.
+This project was developed as a final year BS Computer Science project. The requirements were inspired by a real pharmaceutical sales workflow, using Micro Pharma as a case study, while keeping the system adaptable for other small and mid-sized pharmaceutical companies with similar sales-force operations.
 
-Medicine Orders: Sales representatives can place orders for medicines and other products directly from the app, ensuring they have the supplies they need to meet their sales targets.
+## Project Scope
 
-Weekly Call Planning: Sales representatives can plan their weekly calls in advance, setting reminders for upcoming appointments and ensuring they stay on track to meet their sales targets.
+MicroSync is not limited to one company only. It is designed as a reusable pharma sales-force management system, with Micro Pharma used as the practical case study for understanding real business requirements.
+
+- Domain: Pharmaceutical sales force automation
+- Case study: Micro Pharma
+- Target users: Admins, managers, and field sales representatives
+- Adaptability: Other pharma companies can customize employees, products, doctors, areas, targets, reports, and order workflows according to their own structure
+
+## Features
+
+**Employee Location Tracking:** Managers can track field representatives in real time to monitor visits, field coverage, and daily movement.
+
+**Daily Call Reporting:** Sales representatives can submit daily call reports for doctor visits, product discussions, samples, remarks, and follow-up information.
+
+**Medicine Orders:** Sales representatives can submit product orders from medical stores so managers can review and process them efficiently.
+
+**Weekly Call Planning:** Sales representatives can plan upcoming doctor visits and area coverage for the week.
+
+**Product and Area Assignment:** Admins can assign specific products and work areas to individual employees.
+
+**Doctor Management:** Admins and users can maintain doctor records for future visits, reporting, and planning.
 
 ## How to Use
-# Admin (Employer/Manager) Module
-•	The admin role is created by the developer during system setup
-•	The admin has the authority to add new employees to the system and provide them with initial login credentials
-•	The admin can add new areas and products to the system
-•	The products and areas can be assigned to employees for their designated work
-•	The admin has the capability to add new doctors to the system, enabling employees to effectively manage their interactions and appointments
-•	Live location tracking allows admin to track employees’ movements and optimize their visit schedules
-•	The admin can view the tour plans of the employees and submitted daily call reports
-•	Products orders of medical stores submitted by sales reps or salesmen can also be view by the admin
-•	Admin has the authority to delete a user and block his access from the system
 
-## User (Employee) Module
-•	Sales representatives receive their initial login credentials from the admin and are requested to change their passwords for security purposes
-•	They can access their dedicated dashboard upon successful login
-•	Daily call reports can be created and submitted to admins, documenting interactions with doctors, samples provided to each doctor and remarks given by each doctor
-•	They can add new doctors to the system, expanding the database and facilitating future interactions
-•	Users can access doctor listings, areas of focus, call planner, and order booking functionalities to carry out their tasks efficiently
-•	The system allows employees to set future tour plans, which includes doctors to meet and areas to visit for the whole week
-•	The users can also submit orders of products to admin to ensure timely delivery of medicines to medical stores
+### Admin / Manager Module
 
+- The admin role is created during system setup.
+- Admins can add employees and provide initial login credentials.
+- Admins can add areas, products, and doctors.
+- Products and areas can be assigned to employees for their designated work.
+- Admins can view employee locations, tour plans, submitted daily call reports, and product orders.
+- Admins can manage employee access when a user leaves the organization or should no longer use the system.
 
-# Technologies Used
-Flutter: Flutter is an open-source mobile application development framework created by Google. It allows developers to build high-quality native interfaces for iOS and Android from a single codebase.
+### User / Employee Module
 
-Firebase Firestore: Firebase Firestore is a cloud-based NoSQL document database. It provides real-time synchronization, making it a great choice for mobile applications.
+- Sales representatives receive initial login credentials and are expected to change their password after first login.
+- Employees can access their dashboard after successful login.
+- Employees can create and submit daily call reports.
+- Employees can add doctor information when needed.
+- Employees can view assigned products, assigned areas, doctor listings, call planner, and order booking features.
+- Employees can prepare weekly tour plans for doctor visits and area coverage.
+- Employees can submit medicine/product orders to the admin.
 
+## Technologies Used
 
-# Contributors
-Uzair Zia Qureshi (@github.com/UzairZQ)
-Sajjad Ahmed (@github.com/i-sajjad)
+- **Flutter:** Cross-platform mobile app development framework for Android and iOS.
+- **Firebase Authentication:** User login and authentication.
+- **Cloud Firestore:** Cloud-hosted NoSQL database for app data.
+- **Firebase Crashlytics:** Runtime crash reporting and diagnostics.
+- **Provider:** State management for Flutter screens and data flows.
+- **Google Maps:** Employee location visualization and field tracking.
 
-# Support
-If you have any questions or issues with the app, please contact me at uzairqureshi9@gmail.com
+## Contributors
+
+- Uzair Zia Qureshi (@github.com/UzairZQ)
+- Sajjad Ahmed (@github.com/i-sajjad)
+
+## Support
+
+For questions or issues, contact: uzairqureshi9@gmail.com
 
 <img src="screenshots/login_screen.png" alt="Login page for user and admin" width="400"/>
 <img src="screenshots/user_homescreen.png" alt="User Homescreen" width="400"/>

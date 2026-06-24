@@ -32,16 +32,4 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
-    toolchainManagement {
-        jvm {
-            javaRepositories {
-                repository("jcenter") {
-                    url = uri("https://jcenter.bintray.com")
-                }
-                repository("graalvm") {
-                    url = uri("https://www.graalvm.org/docs/reference-manual/embed-languages/")
-                }
-            }
-        }
-    }
 }

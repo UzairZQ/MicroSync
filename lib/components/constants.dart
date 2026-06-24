@@ -114,11 +114,12 @@ class MyTextwidget extends StatelessWidget {
 }
 
 String? validateEmail(String? email) {
-  if (email!.isEmpty) {
+  final value = email?.trim() ?? '';
+  if (value.isEmpty) {
     return 'Please Enter Email Address';
   } else if (!RegExp(
           r'^[a-zA-Z0-9._%+-]+@(gmail|email|yahoo|outlook|hotmail|live|aol)\.[a-zA-Z]{2,}$')
-      .hasMatch(email)) {
+      .hasMatch(value)) {
     return ("Please enter a valid Email Address ");
   } else {
     return null;
@@ -127,9 +128,10 @@ String? validateEmail(String? email) {
 
 String? validatePassword(String? password) {
   RegExp regex = RegExp(r'^.{6,}$');
-  if (password!.isEmpty) {
+  final value = password ?? '';
+  if (value.isEmpty) {
     return 'Please Enter Password';
-  } else if (!regex.hasMatch(password)) {
+  } else if (!regex.hasMatch(value)) {
     return 'Enter Password with min. 6 Characters';
   } else {
     return null;

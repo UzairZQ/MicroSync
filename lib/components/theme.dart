@@ -38,7 +38,7 @@ class AppThemes {
       scaffoldBackgroundColor: background,
       canvasColor: background,
       cardColor: surface,
-      splashFactory: InkSparkle.splashFactory,
+      splashFactory: InkRipple.splashFactory,
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         foregroundColor: colorScheme.onSurface,

@@ -20,7 +20,9 @@ class CallPlansForAdminState extends State<CallPlansForAdmin> {
   @override
   void initState() {
     super.initState();
-    Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DayPlanProvider>().fetchDayPlans();
+    });
   }
 
   Future<void> _refreshDayPlans(BuildContext context) async {

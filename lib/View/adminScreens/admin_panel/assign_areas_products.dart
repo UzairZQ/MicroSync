@@ -23,34 +23,46 @@ class AssignAreasProductsToEmployeesState
   List<AreaModel>? areasList; // List of available areas
   List<ProductModel>? productsList; // List of available products
   List<UserModel>? employeesList; // List of employees
-  late UserDataProvider userDataProvider;
-  late ProductDataProvider productDataProvider;
-  late AreaProvider areaProvider;
+  UserDataProvider? userDataProvider;
+  ProductDataProvider? productDataProvider;
+  AreaProvider? areaProvider;
   List<AreaModel> selectedAreas = [];
   List<ProductModel> selectedProducts = [];
+  bool _isLoadingData = true;
 
   int? selectedEmployeeIndex; // Add this variable
 
   @override
   void initState() {
     super.initState();
-
-    fetchData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchData();
+    });
   }
 
   Future<void> fetchData() async {
-    userDataProvider = Provider.of<UserDataProvider>(context, listen: false);
-    productDataProvider =
-        Provider.of<ProductDataProvider>(context, listen: false);
-    areaProvider = Provider.of<AreaProvider>(context, listen: false);
-    await productDataProvider.fetchProductsList();
-    await areaProvider.fetchAreas();
-    await userDataProvider.fetchAllEmployees();
+    final userProvider = context.read<UserDataProvider>();
+    final productProvider = context.read<ProductDataProvider>();
+    final areasProvider = context.read<AreaProvider>();
+    userDataProvider = userProvider;
+    productDataProvider = productProvider;
+    areaProvider = areasProvider;
+
+    await Future.wait([
+      productProvider.fetchProductsList(),
+      areasProvider.fetchAreas(),
+      userProvider.fetchAllEmployees(),
+    ]);
+
+    if (!mounted) {
+      return;
+    }
 
     setState(() {
-      areasList = areaProvider.getAreas;
-      productsList = productDataProvider.productsList;
-      employeesList = userDataProvider.getUsers;
+      areasList = areasProvider.getAreas;
+      productsList = productProvider.productsList;
+      employeesList = userProvider.getUsers;
+      _isLoadingData = false;
     });
   }
 
@@ -61,28 +73,42 @@ class AssignAreasProductsToEmployeesState
       floatingActionButton: FloatingActionButton.extended(
         label: const MyTextwidget(text: 'Assign Products & Areas'),
         icon: const Icon(Icons.save),
-        onPressed: () {
+        onPressed: () async {
           try {
-            if (userDataProvider.selectedUser != null) {
+            final userProvider = userDataProvider;
+            if (userProvider == null) {
+              return;
+            }
+            var saved = false;
+            if (userProvider.selectedUser != null) {
               // Perform the database update with the selected areas and products
               // using the chosen user
-              userDataProvider.addAreasAndProductsToEmployee(
-                userDataProvider.selectedAreas,
-                userDataProvider.selectedProducts,
-                userDataProvider.selectedUser!,
+              saved = await userProvider.addAreasAndProductsToEmployee(
+                userProvider.selectedAreas,
+                userProvider.selectedProducts,
+                userProvider.selectedUser!,
               );
+            }
+            if (!mounted) {
+              return;
             }
             setState(() {
               selectedAreas = [];
               selectedProducts = [];
             });
 
-            // Force the page to rebuild
-            showCustomDialog(
-                context: context,
-                title: 'Success',
-                content:
-                    'Products and Areas Assigned to the selected Employee');
+            if (saved) {
+              showCustomDialog(
+                  context: context,
+                  title: 'Success',
+                  content:
+                      'Products and Areas Assigned to the selected Employee');
+            } else {
+              showCustomDialog(
+                  context: context,
+                  title: 'No employee selected',
+                  content: 'Select an employee before saving assignments.');
+            }
           } catch (e) {
             showCustomDialog(
                 context: context,
@@ -97,9 +123,10 @@ class AssignAreasProductsToEmployeesState
       body: Consumer<UserDataProvider>(builder: (context, userDataProvider, _) {
         selectedAreas = userDataProvider.selectedAreas;
         selectedProducts = userDataProvider.selectedProducts;
-        if (userDataProvider.isLoading ||
-            areaProvider.isLoadin ||
-            productDataProvider.isLoadin) {
+        if (_isLoadingData ||
+            userDataProvider.isLoading ||
+            (areaProvider?.isLoadin ?? false) ||
+            (productDataProvider?.isLoadin ?? false)) {
           return const Center(
             child: CircularProgressIndicator(),
           );
@@ -120,12 +147,18 @@ class AssignAreasProductsToEmployeesState
                     hint: const MyTextwidget(text: 'Select From Here '),
                     value: selectedEmployeeIndex,
                     onChanged: (selectedIndex) {
+                      if (selectedIndex == null) {
+                        return;
+                      }
                       setState(() {
                         selectedEmployeeIndex = selectedIndex;
                       });
-                      final selectedEmployee = employeesList?[selectedIndex!];
+                      final selectedEmployee = employeesList?[selectedIndex];
                       if (selectedEmployee != null) {
-                        userDataProvider.fetchUserData(selectedEmployee.uid!);
+                        final uid = selectedEmployee.uid;
+                        if (uid != null) {
+                          userDataProvider.fetchUserData(uid);
+                        }
                         userDataProvider
                             .setSelectedUser(selectedEmployee); // Add this line
                       }
@@ -136,7 +169,7 @@ class AssignAreasProductsToEmployeesState
 
                       return DropdownMenuItem<int>(
                         value: index, // Use the index as the value
-                        child: Text(employee.displayName!),
+                        child: Text(employee.displayName ?? 'Unnamed employee'),
                       );
                     }).toList(),
                   ),
@@ -181,7 +214,7 @@ class AssignAreasProductsToEmployeesState
                     onChanged: (value) {
                       // Filter products based on search input
                       setState(() {
-                        productsList = productDataProvider.productsList
+                        productsList = (productDataProvider?.productsList ?? [])
                             .where((product) => product.name
                                 .toLowerCase()
                                 .contains(value.toLowerCase()))
@@ -197,12 +230,14 @@ class AssignAreasProductsToEmployeesState
                       child: ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: (productsList!.length / 2).ceil(),
+                        itemCount: ((productsList ?? []).length / 2).ceil(),
                         itemBuilder: (context, index) {
                           final startIndex = index * 2;
                           final endIndex = startIndex + 2;
-                          final rowProducts = productsList!.sublist(startIndex,
-                              endIndex.clamp(0, productsList!.length));
+                          final currentProducts = productsList ?? [];
+                          final rowProducts = currentProducts.sublist(
+                              startIndex,
+                              endIndex.clamp(0, currentProducts.length));
 
                           return Wrap(
                             spacing: 8,

@@ -27,18 +27,27 @@ class DayPlansScreenState extends State<DayPlansScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadDayPlans();
+    });
+  }
 
-    Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
+  Future<void> _loadDayPlans() async {
+    await context.read<DayPlanProvider>().fetchDayPlans();
+    if (!mounted) {
+      return;
+    }
 
-    final dayPlans =
-        Provider.of<DayPlanProvider>(context, listen: false).dayPlans;
+    final dayPlans = context.read<DayPlanProvider>().dayPlans;
     dayPlans.sort((a, b) => b.date.compareTo(a.date));
 
     final List<String> areas =
         dayPlans.map((dayPlan) => dayPlan.area).toSet().toList();
 
     if (areas.isNotEmpty) {
-      selectedArea = areas[0];
+      setState(() {
+        selectedArea = areas[0];
+      });
     }
   }
 
@@ -112,7 +121,8 @@ class DayPlansScreenState extends State<DayPlansScreen> {
                 child: DropdownButton<String>(
                   isExpanded: true,
                   value: selectedArea,
-                  icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.blueGrey),
+                  icon: const Icon(Icons.keyboard_arrow_down_rounded,
+                      color: Colors.blueGrey),
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -136,14 +146,15 @@ class DayPlansScreenState extends State<DayPlansScreen> {
             ),
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 itemCount: dayPlans.length,
                 itemBuilder: (context, index) {
                   final dayPlan = dayPlans[index];
                   if (dayPlan.area != selectedArea) {
                     return const SizedBox.shrink();
                   }
-                  
+
                   final dateFormat = DateFormat('EEEE, MMM d, yyyy');
                   final formattedDate = dateFormat.format(dayPlan.date);
 
@@ -182,7 +193,8 @@ class DayPlansScreenState extends State<DayPlansScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       formattedDate,
@@ -193,7 +205,8 @@ class DayPlansScreenState extends State<DayPlansScreen> {
                                       ),
                                     ),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
                                       decoration: BoxDecoration(
                                         color: kappbarColor.withOpacity(0.1),
                                         borderRadius: BorderRadius.circular(20),
@@ -218,7 +231,8 @@ class DayPlansScreenState extends State<DayPlansScreen> {
                                         color: Colors.orange.withOpacity(0.1),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
-                                      child: const Icon(Icons.place_outlined, color: Colors.orange, size: 18),
+                                      child: const Icon(Icons.place_outlined,
+                                          color: Colors.orange, size: 18),
                                     ),
                                     const SizedBox(width: 12),
                                     Expanded(
@@ -242,7 +256,10 @@ class DayPlansScreenState extends State<DayPlansScreen> {
                                         color: Colors.blue.withOpacity(0.1),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
-                                      child: const Icon(Icons.medical_services_outlined, color: Colors.blue, size: 18),
+                                      child: const Icon(
+                                          Icons.medical_services_outlined,
+                                          color: Colors.blue,
+                                          size: 18),
                                     ),
                                     const SizedBox(width: 12),
                                     Expanded(

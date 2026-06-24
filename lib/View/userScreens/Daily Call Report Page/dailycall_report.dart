@@ -25,10 +25,10 @@ class DailyCallReportScreen extends StatefulWidget {
 }
 
 class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-  late List<ProductModel> products;
-  late List<ProductModel>? userAssignedProducts;
-  late UserModel? userData;
+  final String? userId = FirebaseAuth.instance.currentUser?.uid;
+  List<ProductModel> products = [];
+  List<ProductModel> userAssignedProducts = [];
+  UserModel? userData;
   DayPlanModel? currentDayPlan;
   List<DoctorVisitModel>? doctorVisitDetailsList = [];
   List<bool>? visitedDoctor = [];
@@ -37,7 +37,8 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
   TextEditingController doctorRemarksController = TextEditingController();
   List<SelectedProduct> selectedProducts = [];
   bool isReportSubmitted = false;
-  late SharedPreferences _sharedPrefs;
+  bool _isLoadingReportData = true;
+  SharedPreferences? _sharedPrefs;
 
   void submitReport() async {
     setState(() {
@@ -46,33 +47,67 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
 
     // Store the current date as the last submitted date
     final now = DateTime.now();
-    await _sharedPrefs.setString('lastSubmittedDate', now.toString());
+    final sharedPrefs = _sharedPrefs ?? await SharedPreferences.getInstance();
+    await sharedPrefs.setString('lastSubmittedDate', now.toString());
   }
 
   @override
   void initState() {
     super.initState();
-
-    _initializeSharedPrefs().then((_) {
-      _checkReportSubmission();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadReportData();
     });
-    Provider.of<ProductDataProvider>(context, listen: false)
-        .fetchProductsList();
-    Provider.of<DayPlanProvider>(context, listen: false).fetchDayPlans();
-    currentDayPlan = Provider.of<DayPlanProvider>(context, listen: false)
-        .getCurrentDayPlan();
-    Provider.of<UserDataProvider>(context, listen: false).fetchUserData(userId);
-    userData =
-        Provider.of<UserDataProvider>(context, listen: false).getUserData;
-    userAssignedProducts = userData?.assignedProducts;
-    products =
-        Provider.of<ProductDataProvider>(context, listen: false).productsList;
-    visitedDoctor =
-        initializeVisitedDoctorList(currentDayPlan?.doctors.length ?? 5);
   }
 
-  Future<void> _initializeSharedPrefs() async {
-    _sharedPrefs = await SharedPreferences.getInstance();
+  Future<void> _loadReportData() async {
+    final currentUserId = userId;
+    if (currentUserId == null) {
+      if (!mounted) {
+        return;
+      }
+      setState(() => _isLoadingReportData = false);
+      return;
+    }
+
+    try {
+      _sharedPrefs = await SharedPreferences.getInstance();
+      await Future.wait([
+        context.read<ProductDataProvider>().fetchProductsList(),
+        context.read<DayPlanProvider>().fetchDayPlans(),
+        context.read<UserDataProvider>().fetchUserData(currentUserId),
+      ]);
+
+      if (!mounted) {
+        return;
+      }
+
+      final dayPlanProvider = context.read<DayPlanProvider>();
+      final productProvider = context.read<ProductDataProvider>();
+      final loadedUserData = context.read<UserDataProvider>().getUserData;
+      final loadedDayPlan = dayPlanProvider.getCurrentDayPlan();
+
+      setState(() {
+        currentDayPlan = loadedDayPlan;
+        userData = loadedUserData;
+        userAssignedProducts = loadedUserData.assignedProducts ?? [];
+        products = productProvider.productsList;
+        visitedDoctor = initializeVisitedDoctorList(
+          loadedDayPlan?.doctors.length ?? 0,
+        );
+        isReportSubmitted = _hasSubmittedReportToday();
+        _isLoadingReportData = false;
+      });
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _isLoadingReportData = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to load daily report data.')),
+      );
+    }
   }
 
   List<bool> initializeVisitedDoctorList(int length) {
@@ -80,25 +115,25 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
         length, (index) => false); // Initialize with false for all doctors
   }
 
-  void _checkReportSubmission() {
-    final lastSubmittedDate = _sharedPrefs.getString('lastSubmittedDate');
+  bool _hasSubmittedReportToday() {
+    final lastSubmittedDate = _sharedPrefs?.getString('lastSubmittedDate');
 
     if (lastSubmittedDate != null) {
       final lastSubmittedDateTime = DateTime.parse(lastSubmittedDate);
       final currentDateTime = DateTime.now();
 
-      if (lastSubmittedDateTime.day != currentDateTime.day ||
-          lastSubmittedDateTime.month != currentDateTime.month ||
-          lastSubmittedDateTime.year != currentDateTime.year) {
-        setState(() {
-          isReportSubmitted = false;
-        });
-      } else {
-        setState(() {
-          isReportSubmitted = true;
-        });
-      }
+      return lastSubmittedDateTime.day == currentDateTime.day &&
+          lastSubmittedDateTime.month == currentDateTime.month &&
+          lastSubmittedDateTime.year == currentDateTime.year;
     }
+
+    return false;
+  }
+
+  @override
+  void dispose() {
+    doctorRemarksController.dispose();
+    super.dispose();
   }
 
   String dayPlanTime() {
@@ -109,6 +144,13 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoadingReportData) {
+      return const Scaffold(
+        appBar: MyAppBar(appBartxt: 'Daily Call Report'),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     if (isReportSubmitted) {
       return const Scaffold(
         appBar: MyAppBar(appBartxt: 'Daily Call Report'),
@@ -153,7 +195,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                     area: currentDayPlan!.area,
                     date: currentDayPlan!.date,
                     doctorVisits: allDoctorVisitDetails,
-                    submittedBy: userData!.displayName!,
+                    submittedBy: userData?.displayName ?? 'Unknown user',
                   );
 
                   Provider.of<DailyCallReportProvider>(context, listen: false)
@@ -244,10 +286,13 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
       context: context,
       builder: (context) {
         int selectedQuantity = 1;
-        // Default quantity
-        selectedProduct = userAssignedProducts!.isNotEmpty
-            ? userAssignedProducts?.first
-            : products.first;
+        final availableProducts =
+            userAssignedProducts.isNotEmpty ? userAssignedProducts : products;
+        samplesProvided = false;
+        selectedProducts = [];
+        doctorRemarksController.clear();
+        selectedProduct =
+            availableProducts.isNotEmpty ? availableProducts.first : null;
 
         return StatefulBuilder(
           builder: (context, setState) {
@@ -291,25 +336,26 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                           ),
                         ]),
                       const SizedBox(height: 16.0),
-                      if (samplesProvided)
+                      if (samplesProvided && availableProducts.isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 16.0),
+                          child: MyTextwidget(
+                            text: 'No products available for samples yet.',
+                          ),
+                        ),
+                      if (samplesProvided && availableProducts.isNotEmpty)
                         Row(
                           children: [
                             Expanded(
                               flex: 2,
                               child: DropdownButtonFormField<ProductModel>(
                                 isExpanded: true,
-                                items: userAssignedProducts?.map((product) {
-                                      return DropdownMenuItem<ProductModel>(
-                                        value: product,
-                                        child: Text(product.name),
-                                      );
-                                    }).toList() ??
-                                    products.map((product) {
-                                      return DropdownMenuItem<ProductModel>(
-                                        value: product,
-                                        child: Text(product.name),
-                                      );
-                                    }).toList(),
+                                items: availableProducts.map((product) {
+                                  return DropdownMenuItem<ProductModel>(
+                                    value: product,
+                                    child: Text(product.name),
+                                  );
+                                }).toList(),
                                 onChanged: (selectedproduct) {
                                   if (selectedproduct != null) {
                                     setState(() {
@@ -431,7 +477,18 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                                   doctorRemarks: doctorRemarksController.text,
                                   visited: visitedDoctor?[index] ?? false,
                                 );
-                                doctorVisitDetailsList!.add(doctorVisitDetails);
+                                final existingVisitIndex =
+                                    doctorVisitDetailsList!.indexWhere(
+                                  (visit) =>
+                                      visit.name == doctorVisitDetails.name,
+                                );
+                                if (existingVisitIndex == -1) {
+                                  doctorVisitDetailsList!
+                                      .add(doctorVisitDetails);
+                                } else {
+                                  doctorVisitDetailsList![existingVisitIndex] =
+                                      doctorVisitDetails;
+                                }
                                 // for (DoctorVisitModel doctorvisits
                                 //     in doctorVisitDetailsList!) {
                                 //   print(doctorvisits.name);

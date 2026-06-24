@@ -17,8 +17,9 @@ class _AreasState extends State<Areas> {
   @override
   void initState() {
     super.initState();
-    // Fetch the areas on init state
-    Provider.of<AreaProvider>(context, listen: false).fetchAreas();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AreaProvider>().fetchAreas();
+    });
   }
 
   @override
