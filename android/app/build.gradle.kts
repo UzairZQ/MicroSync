@@ -16,6 +16,17 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+
+val googleMapsApiKey =
+    localProperties.getProperty("GOOGLE_MAPS_API_KEY")
+        ?: System.getenv("GOOGLE_MAPS_API_KEY")
+        ?: ""
+
 android {
     namespace = "com.micro_pharma"
     compileSdk = 36
@@ -40,7 +51,7 @@ android {
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        resValue("string", "google_maps_api_key", "REDACTED_GOOGLE_API_KEY")
+        resValue("string", "google_maps_api_key", googleMapsApiKey)
     }
 
     signingConfigs {

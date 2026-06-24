@@ -47,3 +47,16 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local secrets and generated service config
+.env
+*.env
+**/key.properties
+**/*.keystore
+**/*.jks
+android/local.properties
+
+# Keep Firebase client config out of future accidental commits when regenerated.
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
