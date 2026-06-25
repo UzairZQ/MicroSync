@@ -17,8 +17,8 @@ class OrderModel {
       required this.products,
       required this.customerName,
       required this.area,
-      required this.total,
-      required this.subTotal});
+      this.total,
+      this.subTotal});
 
   factory OrderModel.fromMap(Map<String, dynamic> json) {
     return OrderModel(
@@ -43,8 +43,6 @@ class OrderModel {
       'products': products.map((product) => product.toMap()).toList(),
       'customerName': customerName,
       'area': area,
-      'total': total,
-      'subTotal': subTotal,
     };
   }
 

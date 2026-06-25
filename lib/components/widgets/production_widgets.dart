@@ -7,28 +7,39 @@ class DashboardHeader extends StatelessWidget {
     required this.subtitle,
     required this.icon,
     this.trailing,
+    this.edgeToEdgeTop = false,
   });
 
   final String title;
   final String subtitle;
   final IconData icon;
   final Widget? trailing;
+  final bool edgeToEdgeTop;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
+    final topInset = MediaQuery.paddingOf(context).top;
+
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: EdgeInsets.fromLTRB(
+        20,
+        edgeToEdgeTop ? topInset + 18 : 18,
+        20,
+        edgeToEdgeTop ? 24 : 18,
+      ),
       decoration: BoxDecoration(
         color: scheme.primary,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: edgeToEdgeTop
+            ? const BorderRadius.vertical(bottom: Radius.circular(34))
+            : BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: scheme.primary.withOpacity(0.2),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+            color: scheme.primary.withOpacity(edgeToEdgeTop ? 0.24 : 0.2),
+            blurRadius: edgeToEdgeTop ? 24 : 18,
+            offset: Offset(0, edgeToEdgeTop ? 12 : 8),
           ),
         ],
       ),

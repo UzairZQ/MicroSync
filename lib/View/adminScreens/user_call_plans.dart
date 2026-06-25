@@ -34,9 +34,11 @@ class CallPlansForAdminState extends State<CallPlansForAdmin> {
     final dayPlans = Provider.of<DayPlanProvider>(context).dayPlans;
     dayPlans.sort((a, b) => b.date.compareTo(a.date));
 
-    // Create a list of unique areas for filtering
-    final List<String> areas =
-        dayPlans.map((dayPlan) => dayPlan.area).toSet().toList();
+    final areas = dayPlans.map((dayPlan) => dayPlan.area).toSet().toList()
+      ..sort();
+    final filteredPlans = selectedFilter == null
+        ? dayPlans
+        : dayPlans.where((plan) => plan.area == selectedFilter).toList();
     return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
             icon: const Icon(Icons.calendar_view_day_outlined),
@@ -52,106 +54,135 @@ class CallPlansForAdminState extends State<CallPlansForAdmin> {
         ),
         body: RefreshIndicator(
           onRefresh: () => _refreshDayPlans(context),
-          child: Column(
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
             children: [
-              DropdownButton<String>(
+              DropdownButtonFormField<String?>(
                 value: selectedFilter,
-                items: areas.map((area) {
-                  return DropdownMenuItem<String>(
-                    value: area,
-                    child: MyTextwidget(text: area),
-                  );
-                }).toList(),
+                decoration: const InputDecoration(
+                  labelText: 'Filter by area',
+                  prefixIcon: Icon(Icons.filter_alt_outlined),
+                ),
+                items: [
+                  const DropdownMenuItem<String?>(
+                    value: null,
+                    child: Text('All areas'),
+                  ),
+                  ...areas.map((area) {
+                    return DropdownMenuItem<String?>(
+                      value: area,
+                      child: Text(area),
+                    );
+                  }),
+                ],
                 onChanged: (String? newValue) {
-                  setState(() {
-                    selectedFilter = newValue;
-                  });
+                  setState(() => selectedFilter = newValue);
                 },
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: dayPlans.length,
-                  itemBuilder: (context, index) {
-                    final dayPlan = dayPlans[index];
+              const SizedBox(height: 14),
+              if (filteredPlans.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(top: 80),
+                  child: Center(child: Text('No call plans for this area.')),
+                )
+              else
+                ...filteredPlans.map((dayPlan) {
+                  String dayPlanTime() {
+                    DateFormat dateFormat = DateFormat('EEEE dd/MM/yyyy');
+                    return dateFormat.format(dayPlan.date);
+                  }
 
-                    String dayPlanTime() {
-                      DateFormat dateFormat =
-                          DateFormat('EEEE dd/MM/yyyy'); // create date format
-                      String formattedDate = dateFormat
-                          .format(dayPlan.date); // format current date
-                      return formattedDate;
-                    }
-
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          color: Colors.blue.shade100,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
-                                child: MyTextwidget(
-                                  fontSize: 15,
-                                  text: ' Submitted by: ${dayPlan.userName}',
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 8.0),
-                              Row(
-                                children: [
-                                  const Icon(Icons.date_range),
-                                  MyTextwidget(
-                                    text: 'Date : ${dayPlanTime()}',
-                                    fontSize: 14,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8.0),
-                              Row(
-                                children: [
-                                  const Icon(Icons.place),
-                                  MyTextwidget(
-                                    text: 'Area: ${dayPlan.area}',
-                                    fontSize: 14,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8.0),
-                              Row(
-                                children: [
-                                  const Icon(Icons.person_pin_rounded),
-                                  Flexible(
-                                    child: MyTextwidget(
-                                      text:
-                                          'Doctors: ${dayPlan.doctors.join(' , ')}',
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8.0),
-                              Row(
-                                children: [
-                                  const Icon(Icons.event_outlined),
-                                  MyTextwidget(
-                                    text: 'Shift: ${dayPlan.shift}',
-                                    fontSize: 14,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                  return Card(
+                    elevation: 2,
+                    shadowColor:
+                        Theme.of(context).colorScheme.shadow.withOpacity(0.12),
+                    margin: const EdgeInsets.only(bottom: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        gradient: LinearGradient(
+                          colors: [
+                            kappbarColor.withOpacity(0.12),
+                            const Color(0xFF0D9488).withOpacity(0.08),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
                       ),
-                    );
-                  },
-                ),
-              ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor:
+                                      kappbarColor.withOpacity(0.14),
+                                  child: Icon(Icons.route_outlined,
+                                      color: kappbarColor),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      MyTextwidget(
+                                        fontSize: 15,
+                                        text: dayPlan.userName,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      Text(
+                                        '${dayPlan.area} • ${dayPlan.shift}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 14.0),
+                            Row(
+                              children: [
+                                Icon(Icons.date_range, color: kappbarColor),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: MyTextwidget(
+                                    text: dayPlanTime(),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8.0),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(Icons.medical_services_outlined,
+                                    color: kappbarColor),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: MyTextwidget(
+                                    text:
+                                        '${dayPlan.doctors.length} doctors: ${dayPlan.doctors.join(', ')}',
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
             ],
           ),
         ));

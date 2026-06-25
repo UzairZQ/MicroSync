@@ -10,7 +10,6 @@ import 'package:micro_pharma/components/widgets/production_widgets.dart';
 import 'package:micro_pharma/components/widgets/my_container.dart';
 import 'package:micro_pharma/components/widgets/container_row.dart';
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/services/database_service.dart';
 import 'package:micro_pharma/viewModel/user_data_provider.dart';
 import 'package:micro_pharma/View/LoginPage/login_page.dart';
 import 'package:provider/provider.dart';
@@ -82,6 +81,7 @@ class _AdminPageState extends State<AdminPage> {
         ],
       ),
       body: SafeArea(
+        top: false,
         child: LayoutBuilder(
           builder: (context, constraints) {
             final horizontalPadding = constraints.maxWidth < 380 ? 14.0 : 18.0;
@@ -95,8 +95,7 @@ class _AdminPageState extends State<AdminPage> {
               },
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.fromLTRB(
-                    horizontalPadding, 12, horizontalPadding, 24),
+                padding: const EdgeInsets.only(bottom: 24),
                 children: [
                   Consumer<UserDataProvider>(
                     builder: (context, dataProvider, child) {
@@ -108,115 +107,83 @@ class _AdminPageState extends State<AdminPage> {
                             : 'Welcome, ${userData.displayName}',
                         subtitle:
                             'Track representatives, field reports, orders, doctors, medicines, and assignments.',
+                        edgeToEdgeTop: true,
                       );
                     },
                   ),
-                  const SizedBox(height: 16),
-                  StreamBuilder(
-                    stream: DatabaseService.streamUser(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      final employeeCount = snapshot.data?.docs.length ?? 0;
-                      final activeCount = snapshot.data?.docs
-                              .where((doc) =>
-                                  (doc.data() as Map<String, dynamic>)
-                                      .containsKey('update'))
-                              .length ??
-                          0;
-
-                      return LayoutBuilder(
-                        builder: (context, metricConstraints) {
-                          final isWide = metricConstraints.maxWidth > 620;
-                          final tiles = [
-                            MetricTile(
-                              label: 'Field employees',
-                              value: '$employeeCount',
-                              icon: Icons.groups_2_outlined,
-                              accent: const Color(0xFF2563EB),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      horizontalPadding,
+                      16,
+                      horizontalPadding,
+                      0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SectionTitle(title: 'Command Center'),
+                        const SizedBox(height: 12),
+                        ActionTile(
+                          title: 'Live Tracking',
+                          subtitle:
+                              'View latest representative locations on maps.',
+                          icon: Icons.map_outlined,
+                          accent: const Color(0xFF0F766E),
+                          onTap: () =>
+                              Navigator.pushNamed(context, LocationScreen.id),
+                        ),
+                        const SizedBox(height: 10),
+                        ActionTile(
+                          title: 'Daily Call Reports',
+                          subtitle:
+                              'Review submitted doctor visits and field notes.',
+                          icon: Icons.assignment_turned_in_outlined,
+                          accent: const Color(0xFF7C3AED),
+                          onTap: () =>
+                              Navigator.pushNamed(context, ViewDCRScreen.id),
+                        ),
+                        const SizedBox(height: 10),
+                        ActionTile(
+                          title: 'Orders',
+                          subtitle: 'Check submitted medicine order units.',
+                          icon: Icons.receipt_long_outlined,
+                          accent: const Color(0xFFEA580C),
+                          onTap: () =>
+                              Navigator.pushNamed(context, SubmittedOrders.id),
+                        ),
+                        const SizedBox(height: 10),
+                        ActionTile(
+                          title: 'Call Plans',
+                          subtitle: 'Monitor planned routes and visits.',
+                          icon: Icons.route_outlined,
+                          accent: const Color(0xFF0891B2),
+                          onTap: () => Navigator.pushNamed(
+                              context, CallPlansForAdmin.id),
+                        ),
+                        const SizedBox(height: 22),
+                        const SectionTitle(title: 'Administration'),
+                        const SizedBox(height: 12),
+                        ContainerRow(
+                          children: [
+                            MyContainer(
+                              containerclr: const Color(0xFFC8EDE6),
+                              containerIcon:
+                                  Icons.settings_applications_outlined,
+                              containerText: 'Admin Panel',
+                              onTap: () =>
+                                  Navigator.pushNamed(context, AdminPanel.id),
                             ),
-                            MetricTile(
-                              label: 'Location updates',
-                              value: '$activeCount',
-                              icon: Icons.location_on_outlined,
-                              accent: const Color(0xFF059669),
+                            MyContainer(
+                              containerclr: const Color(0xFFFFD8B5),
+                              containerIcon: Icons.person_add_alt_1_outlined,
+                              containerText: 'Employees',
+                              onTap: () =>
+                                  Navigator.pushNamed(context, AddEmployees.id),
                             ),
-                          ];
-                          if (isWide) {
-                            return Row(
-                              children: [
-                                Expanded(child: tiles[0]),
-                                const SizedBox(width: 12),
-                                Expanded(child: tiles[1]),
-                              ],
-                            );
-                          }
-                          return Column(
-                            children: [
-                              tiles[0],
-                              const SizedBox(height: 12),
-                              tiles[1],
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 22),
-                  const SectionTitle(title: 'Command Center'),
-                  const SizedBox(height: 12),
-                  ActionTile(
-                    title: 'Live Tracking',
-                    subtitle: 'View latest representative locations on maps.',
-                    icon: Icons.map_outlined,
-                    accent: const Color(0xFF0F766E),
-                    onTap: () =>
-                        Navigator.pushNamed(context, LocationScreen.id),
-                  ),
-                  const SizedBox(height: 10),
-                  ActionTile(
-                    title: 'Daily Call Reports',
-                    subtitle: 'Review submitted doctor visits and field notes.',
-                    icon: Icons.assignment_turned_in_outlined,
-                    accent: const Color(0xFF7C3AED),
-                    onTap: () => Navigator.pushNamed(context, ViewDCRScreen.id),
-                  ),
-                  const SizedBox(height: 10),
-                  ActionTile(
-                    title: 'Orders',
-                    subtitle: 'Check submitted medicine orders and totals.',
-                    icon: Icons.receipt_long_outlined,
-                    accent: const Color(0xFFEA580C),
-                    onTap: () =>
-                        Navigator.pushNamed(context, SubmittedOrders.id),
-                  ),
-                  const SizedBox(height: 10),
-                  ActionTile(
-                    title: 'Call Plans',
-                    subtitle: 'Monitor planned routes and visits.',
-                    icon: Icons.route_outlined,
-                    accent: const Color(0xFF0891B2),
-                    onTap: () =>
-                        Navigator.pushNamed(context, CallPlansForAdmin.id),
-                  ),
-                  const SizedBox(height: 22),
-                  const SectionTitle(title: 'Administration'),
-                  const SizedBox(height: 12),
-                  ContainerRow(
-                    children: [
-                      MyContainer(
-                        containerclr: const Color(0xFFE0F2FE),
-                        containerIcon: Icons.settings_applications_outlined,
-                        containerText: 'Admin Panel',
-                        onTap: () =>
-                            Navigator.pushNamed(context, AdminPanel.id),
-                      ),
-                      MyContainer(
-                        containerclr: const Color(0xFFFFEDD5),
-                        containerIcon: Icons.person_add_alt_1_outlined,
-                        containerText: 'Employees',
-                        onTap: () =>
-                            Navigator.pushNamed(context, AddEmployees.id),
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

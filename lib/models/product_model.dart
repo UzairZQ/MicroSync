@@ -1,37 +1,34 @@
 class OrderSelectedProduct extends ProductModel {
   String quantity;
   String? bonus;
-  String? discount;
 
   OrderSelectedProduct(
       {required super.name,
-      required super.tradePrice,
-      required super.retailPrice,
       super.packing,
       required this.quantity,
       this.bonus,
-      this.discount,
-      required super.code});
+      required super.code})
+      : super(retailPrice: 0, tradePrice: 0);
 
   factory OrderSelectedProduct.fromMap(Map<String, dynamic> json) {
     return OrderSelectedProduct(
-      code: json['code'] as int,
-      name: json['name'] as String,
-      retailPrice: (json['mrp'] as num).toDouble(),
-      tradePrice: (json['trp'] as num).toDouble(),
+      code: json['code'] as int? ?? 0,
+      name: json['name'] as String? ?? 'Unknown product',
       packing: json['packing'] as dynamic,
-      quantity: json['quantity'] as String,
+      quantity: json['quantity']?.toString() ?? '0',
       bonus: json['bonus'] as String?,
-      discount: json['discount'] as String?,
     );
   }
 
   @override
   Map<String, dynamic> toMap() {
-    final Map<String, dynamic> data = super.toMap();
+    final Map<String, dynamic> data = <String, dynamic>{
+      'code': code,
+      'name': name,
+      'packing': packing,
+    };
     data['quantity'] = quantity;
     data['bonus'] = bonus;
-    data['discount'] = discount;
     return data;
   }
 }
@@ -46,17 +43,17 @@ class ProductModel {
   ProductModel({
     required this.code,
     required this.name,
-    required this.retailPrice,
-    required this.tradePrice,
+    this.retailPrice = 0,
+    this.tradePrice = 0,
     required this.packing,
   });
 
   factory ProductModel.fromMap(Map<String, dynamic> json) {
     return ProductModel(
-      code: json['code'] as int,
-      name: json['name'] as String,
-      retailPrice: (json['mrp'] as num).toDouble(),
-      tradePrice: (json['trp'] as num).toDouble(),
+      code: json['code'] as int? ?? 0,
+      name: json['name'] as String? ?? 'Unnamed product',
+      retailPrice: (json['mrp'] as num?)?.toDouble() ?? 0,
+      tradePrice: (json['trp'] as num?)?.toDouble() ?? 0,
       packing: json['packing'],
     );
   }
@@ -65,8 +62,6 @@ class ProductModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['code'] = code;
     data['name'] = name;
-    data['mrp'] = retailPrice;
-    data['trp'] = tradePrice;
     data['packing'] = packing;
     return data;
   }

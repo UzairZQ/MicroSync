@@ -74,7 +74,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     subtitle: Padding(
                       padding: const EdgeInsets.only(top: 6),
                       child: Text(
-                        'Code ${product.code} • ${product.packing}\nRetail ${product.retailPrice.toStringAsFixed(2)} • Trade ${product.tradePrice.toStringAsFixed(2)}',
+                        'Code ${product.code} • ${product.packing}',
                       ),
                     ),
                     trailing: Wrap(
@@ -83,7 +83,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                         IconButton(
                           tooltip: 'Edit medicine',
                           icon: const Icon(Icons.edit_outlined),
-                          color: Colors.green,
+                          color: kappbarColor,
                           onPressed: () {
                             showModalBottomSheet(
                               isScrollControlled: true,
@@ -174,8 +174,6 @@ class EditProductBottomSheet extends StatefulWidget {
 class _EditProductBottomSheetState extends State<EditProductBottomSheet> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _packingController = TextEditingController();
-  final TextEditingController _retailPriceController = TextEditingController();
-  final TextEditingController _tradePriceController = TextEditingController();
 
   @override
   void initState() {
@@ -183,29 +181,22 @@ class _EditProductBottomSheetState extends State<EditProductBottomSheet> {
     // Initialize the text controllers with the product details
     _nameController.text = widget.product.name;
     _packingController.text = widget.product.packing;
-    _retailPriceController.text = widget.product.retailPrice.toString();
-    _tradePriceController.text = widget.product.tradePrice.toString();
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _packingController.dispose();
-    _retailPriceController.dispose();
-    _tradePriceController.dispose();
     super.dispose();
   }
 
   Future<void> saveChanges() async {
-    final retailPrice = double.tryParse(_retailPriceController.text.trim());
-    final tradePrice = double.tryParse(_tradePriceController.text.trim());
     if (_nameController.text.trim().isEmpty ||
-        _packingController.text.trim().isEmpty ||
-        retailPrice == null ||
-        tradePrice == null) {
+        _packingController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Enter valid medicine details and prices')),
+          content: Text('Enter valid medicine details'),
+        ),
       );
       return;
     }
@@ -215,8 +206,6 @@ class _EditProductBottomSheetState extends State<EditProductBottomSheet> {
       code: widget.product.code,
       name: _nameController.text.trim(),
       packing: _packingController.text.trim(),
-      retailPrice: retailPrice,
-      tradePrice: tradePrice,
     );
 
     // Call the editProduct method to update the product in Firestore
@@ -254,20 +243,6 @@ class _EditProductBottomSheetState extends State<EditProductBottomSheet> {
             decoration: const InputDecoration(
               labelText: 'Packing',
             ),
-          ),
-          TextField(
-            controller: _retailPriceController,
-            decoration: const InputDecoration(
-              labelText: 'Retail Price',
-            ),
-            keyboardType: TextInputType.number,
-          ),
-          TextField(
-            controller: _tradePriceController,
-            decoration: const InputDecoration(
-              labelText: 'Trade Price',
-            ),
-            keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 16.0),
           ElevatedButton(

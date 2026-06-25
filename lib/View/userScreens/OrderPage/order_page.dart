@@ -22,8 +22,6 @@ class OrderScreenState extends State<OrderScreen> {
   late String currentUserId;
   List<AreaModel> areas = [];
   List<OrderSelectedProduct> selectedProducts = [];
-  double total = 0.0;
-  double discount = 0.0;
   AreaModel? selectedArea;
 
   ProductModel? selectedProduct;
@@ -34,7 +32,6 @@ class OrderScreenState extends State<OrderScreen> {
   final TextEditingController _productQuantityController =
       TextEditingController();
   final TextEditingController _bonusController = TextEditingController();
-  final TextEditingController _discountController = TextEditingController();
 
   @override
   void initState() {
@@ -58,7 +55,6 @@ class OrderScreenState extends State<OrderScreen> {
     _bonusController.dispose();
     _customerNameController.dispose();
     _productQuantityController.dispose();
-    _discountController.dispose();
     super.dispose();
   }
 
@@ -69,11 +65,6 @@ class OrderScreenState extends State<OrderScreen> {
     areas = Provider.of<AreaProvider>(context).getAreas;
     final userData =
         Provider.of<UserDataProvider>(context, listen: false).getUserData;
-
-    final discountedTotal = selectedProducts.fold<double>(
-      0,
-      (sum, product) => sum + _lineTotal(product),
-    );
 
     return Scaffold(
       appBar: const MyAppBar(appBartxt: 'Order Screen'),
@@ -221,36 +212,9 @@ class OrderScreenState extends State<OrderScreen> {
                   ],
                 ),
                 const SizedBox(height: 16.0),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _discountController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.percent),
-                          labelText: 'Discount',
-                          border: OutlineInputBorder(),
-                        ),
-                        onSaved: (value) {
-                          _discountController.text = value ?? '';
-                        },
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return null;
-                          }
-                          final discount = double.tryParse(value.trim());
-                          if (discount == null ||
-                              discount < 0 ||
-                              discount > 100) {
-                            return 'Use 0 to 100';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    addProductToList(),
-                  ],
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: addProductToList(),
                 ),
                 const SizedBox(height: 16.0),
                 ListView.builder(
@@ -258,33 +222,20 @@ class OrderScreenState extends State<OrderScreen> {
                   itemCount: selectedProducts.length,
                   itemBuilder: (context, index) {
                     final product = selectedProducts[index];
-                    final totalPrice = _lineTotal(product);
-                    return selectedProductsList(product, totalPrice, index);
+                    return selectedProductsList(product, index);
                   },
-                ),
-                const SizedBox(height: 16.0),
-                MyTextwidget(
-                  fontWeight: FontWeight.bold,
-                  text: 'Total: $total',
-                ),
-                const SizedBox(height: 8.0),
-                MyTextwidget(
-                  fontWeight: FontWeight.bold,
-                  text:
-                      'Sub Total: $discountedTotal', // Display the discounted total
                 ),
               ],
             ),
           ),
         ),
       ),
-      floatingActionButton:
-          submitOrderActionButton(userData, discountedTotal, context),
+      floatingActionButton: submitOrderActionButton(userData, context),
     );
   }
 
   FloatingActionButton submitOrderActionButton(
-      UserModel userData, double discountedTotal, BuildContext context) {
+      UserModel userData, BuildContext context) {
     return FloatingActionButton.extended(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -311,9 +262,7 @@ class OrderScreenState extends State<OrderScreen> {
                 date: DateTime.now(),
                 products: selectedProducts,
                 customerName: _customerNameController.text,
-                area: selectedArea?.areaName ?? '',
-                total: total,
-                subTotal: discountedTotal);
+                area: selectedArea?.areaName ?? '');
             await Provider.of<OrderDataProvider>(context, listen: false)
                 .addOrder(orderModel);
             showCustomDialog(
@@ -326,8 +275,6 @@ class OrderScreenState extends State<OrderScreen> {
             setState(() {
               selectedProducts.clear();
               selectedArea = null;
-              total = 0;
-              discount = 0;
             });
           }
         },
@@ -337,110 +284,68 @@ class OrderScreenState extends State<OrderScreen> {
         icon: const Icon(Icons.shopping_cart_checkout));
   }
 
-  Expanded addProductToList() {
-    return Expanded(
-      child: TextButton(
-        child: const MyTextwidget(text: 'Add to List'),
-        onPressed: () {
-          final quantity = int.tryParse(_productQuantityController.text.trim());
-          final bonus = _bonusController.text.trim().isEmpty
-              ? 0
-              : int.tryParse(_bonusController.text.trim());
-          final productDiscount = _discountController.text.trim().isEmpty
-              ? 0.0
-              : double.tryParse(_discountController.text.trim());
+  Widget addProductToList() {
+    return TextButton.icon(
+      icon: const Icon(Icons.add_shopping_cart_outlined),
+      label: const MyTextwidget(text: 'Add to List'),
+      onPressed: () {
+        final quantity = int.tryParse(_productQuantityController.text.trim());
+        final bonus = _bonusController.text.trim().isEmpty
+            ? 0
+            : int.tryParse(_bonusController.text.trim());
 
-          if (selectedProduct == null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Select a product first.')),
-            );
-            return;
-          }
-
-          if (quantity == null || quantity <= 0) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Enter a valid quantity.')),
-            );
-            return;
-          }
-
-          if (bonus == null || bonus < 0) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Enter a valid bonus quantity.')),
-            );
-            return;
-          }
-
-          if (productDiscount == null ||
-              productDiscount < 0 ||
-              productDiscount > 100) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text('Discount must be between 0 and 100.')),
-            );
-            return;
-          }
-
-          final product = selectedProduct!;
-          final orderSelectedProduct = OrderSelectedProduct(
-            code: product.code,
-            packing: product.packing,
-            retailPrice: product.retailPrice,
-            name: product.name,
-            tradePrice: product.tradePrice,
-            quantity: quantity.toString(),
-            bonus: bonus.toString(),
-            discount: productDiscount.toString(),
+        if (selectedProduct == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Select a product first.')),
           );
+          return;
+        }
 
-          setState(() {
-            selectedProducts.add(orderSelectedProduct);
-            _recalculateTotals();
-            _productQuantityController.clear();
-            _bonusController.clear();
-            _discountController.clear();
-          });
-        },
-      ),
+        if (quantity == null || quantity <= 0) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Enter a valid quantity.')),
+          );
+          return;
+        }
+
+        if (bonus == null || bonus < 0) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Enter a valid bonus quantity.')),
+          );
+          return;
+        }
+
+        final product = selectedProduct!;
+        final orderSelectedProduct = OrderSelectedProduct(
+          code: product.code,
+          packing: product.packing,
+          name: product.name,
+          quantity: quantity.toString(),
+          bonus: bonus.toString(),
+        );
+
+        setState(() {
+          selectedProducts.add(orderSelectedProduct);
+          _productQuantityController.clear();
+          _bonusController.clear();
+        });
+      },
     );
   }
 
-  double _lineTotal(OrderSelectedProduct product) {
-    final productDiscount = double.tryParse(product.discount ?? '') ?? 0.0;
-    final gross = _lineGross(product);
-    return gross - (gross * (productDiscount / 100));
-  }
-
-  double _lineGross(OrderSelectedProduct product) {
-    final quantity = int.tryParse(product.quantity) ?? 0;
-    return product.tradePrice * quantity;
-  }
-
-  void _recalculateTotals() {
-    total = selectedProducts.fold<double>(
-      0,
-      (sum, product) => sum + _lineGross(product),
-    );
-    discount = selectedProducts.fold<double>(
-      0,
-      (sum, product) => sum + (double.tryParse(product.discount ?? '') ?? 0),
-    );
-  }
-
-  Card selectedProductsList(
-      OrderSelectedProduct product, double totalPrice, int index) {
+  Card selectedProductsList(OrderSelectedProduct product, int index) {
     return Card(
       color: Colors.amber[100],
       child: ListTile(
         title: Text(product.name),
         subtitle: Text(
-            'Quantity: ${product.quantity}, Bonus: ${product.bonus}, Discount: ${product.discount}% \n Value: $totalPrice'),
+          'Order units: ${product.quantity}, Bonus units: ${product.bonus ?? '0'}',
+        ),
         trailing: IconButton(
           icon: const Icon(Icons.delete),
           onPressed: () {
             setState(() {
               selectedProducts.removeAt(index);
-              _recalculateTotals();
             });
           },
         ),

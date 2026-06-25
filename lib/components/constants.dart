@@ -12,7 +12,7 @@ class MyButton extends StatelessWidget {
       this.width,
       required this.text,
       required this.onPressed});
-  Color? color = const Color(0xFFFFB800);
+  Color? color = kappbarColor;
   final double? width;
   final String text;
   final Function() onPressed;

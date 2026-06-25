@@ -12,20 +12,16 @@ class AddProduct extends StatefulWidget {
 class AddProductState extends State<AddProduct> {
   final _productController = TextEditingController();
   final _codeController = TextEditingController();
-  final _tradePriceController = TextEditingController();
-  final _retailPriceController = TextEditingController();
   final _packingController = TextEditingController();
 
   void _submitProduct() async {
     if (!formKey.currentState!.validate()) {
       return;
     }
-    final tradePrice = double.tryParse(_tradePriceController.text.trim());
-    final retailPrice = double.tryParse(_retailPriceController.text.trim());
     final code = int.tryParse(_codeController.text.trim());
-    if (tradePrice == null || retailPrice == null || code == null) {
+    if (code == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter valid code and price values')),
+        const SnackBar(content: Text('Enter a valid product code')),
       );
       return;
     }
@@ -33,8 +29,6 @@ class AddProductState extends State<AddProduct> {
     final added = await ProductDataProvider.addProduct(
       name: _productController.text.trim(),
       code: code,
-      trp: tradePrice,
-      mrp: retailPrice,
       packing: _packingController.text.trim(),
     );
     if (!added) {
@@ -43,30 +37,12 @@ class AddProductState extends State<AddProduct> {
     _codeController.clear();
     _productController.clear();
     _packingController.clear();
-    _retailPriceController.clear();
-    _tradePriceController.clear();
-  }
-
-  void _updateTradePrice(String value) {
-    if (value.isNotEmpty) {
-      final retailPrice = double.tryParse(value);
-      if (retailPrice == null) {
-        _tradePriceController.text = '';
-        return;
-      }
-      double tradePrice = retailPrice * 0.85;
-      _tradePriceController.text = tradePrice.toStringAsFixed(2);
-    } else {
-      _tradePriceController.text = '';
-    }
   }
 
   @override
   void dispose() {
     _productController.dispose();
     _codeController.dispose();
-    _retailPriceController.dispose();
-    _tradePriceController.dispose();
     _packingController.dispose();
 
     super.dispose();
@@ -123,33 +99,6 @@ class AddProductState extends State<AddProduct> {
                   },
                 ),
                 const SizedBox(height: 10),
-                TextFormField(
-                  controller: _retailPriceController,
-                  onChanged: _updateTradePrice,
-                  decoration: const InputDecoration(labelText: 'Retail Price'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Pleas enter retail price';
-                    }
-                    if (double.tryParse(value) == null) {
-                      return 'Please enter a valid retail price';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: _tradePriceController,
-                  enabled: false,
-                  decoration: const InputDecoration(labelText: ' Trade Price'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter trade price';
-                    }
-                    return null;
-                  },
-                ),
                 const SizedBox(height: 30),
                 Align(
                     alignment: Alignment.bottomCenter,

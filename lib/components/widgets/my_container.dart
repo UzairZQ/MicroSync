@@ -24,6 +24,8 @@ class MyContainer extends StatelessWidget {
 
     return Material(
       color: Colors.transparent,
+      clipBehavior: Clip.antiAlias,
+      borderRadius: BorderRadius.circular(24),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
@@ -34,15 +36,15 @@ class MyContainer extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.shadow.withOpacity(0.16),
+                  color: colorScheme.shadow.withOpacity(0.2),
                   spreadRadius: 1,
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
+                  blurRadius: 26,
+                  offset: const Offset(0, 14),
                 ),
                 BoxShadow(
                   color: highlightColor,
-                  blurRadius: 12,
-                  offset: const Offset(-3, -3),
+                  blurRadius: 10,
+                  offset: const Offset(-2, -2),
                 ),
               ],
               color: containerclr,

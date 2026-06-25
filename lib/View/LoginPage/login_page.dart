@@ -23,120 +23,115 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    super.dispose();
     emailController.dispose();
     passwordController.dispose();
+    changePassController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage(
-                'assets/images/login.png',
-              ),
+      extendBody: true,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage(
+              'assets/images/login.png',
             ),
           ),
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const Flexible(
-                child: Hero(
-                  tag: 'micro-logo',
-                  child: Image(
-                    alignment: Alignment.center,
-                    height: 170.0,
-                    image: AssetImage('assets/images/micro_trans.png'),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Flexible(
+                  child: Hero(
+                    tag: 'micro-logo',
+                    child: Image(
+                      alignment: Alignment.center,
+                      height: 170.0,
+                      image: AssetImage('assets/images/micro_trans.png'),
+                    ),
                   ),
                 ),
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.email_outlined,
-                          size: 35.0,
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(
+                            Icons.email_outlined,
+                            size: 35.0,
+                          ),
+                          filled: true,
+                          fillColor: Colors.blue[100]!.withOpacity(0.5),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          hintText: 'Enter Email',
                         ),
-                        filled: true,
-                        fillColor: Colors.blue[100]!.withOpacity(0.5),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                          borderSide: BorderSide.none,
-                        ),
-                        hintText: 'Enter Email',
+                        textAlign: TextAlign.center,
+                        onSaved: (value) {
+                          emailController.text = value?.trim() ?? '';
+                        },
+                        validator: validateEmail,
                       ),
-                      textAlign: TextAlign.center,
-                      onSaved: (value) {
-                        emailController.text = value!;
-                      },
-                      // validator: (value) {
-                      //   if (value == null || value.isEmpty) {
-                      //     return 'Enter Something';
-                      //   }
-                      //   return null;
-                      // },
-                      validator: validateEmail,
-                    ),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.lock_outline, size: 35.0),
-                        filled: true,
-                        fillColor: Colors.blue[100]!.withOpacity(0.5),
-                        hintText: 'Enter Password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                          borderSide: BorderSide.none,
-                        ),
+                      const SizedBox(
+                        height: 10.0,
                       ),
-                      textAlign: TextAlign.center,
-                      obscureText: true,
-                      onSaved: (value) {
-                        passwordController.text = value!;
-                      },
-                      // validator: (value) {
-                      //   if (value == null || value.isEmpty) {
-                      //     return 'Enter Something';
-                      //   }
-                      //   return null;
-                      // },
-                      validator: validatePassword,
-                    ),
-                  ],
+                      TextFormField(
+                        decoration: InputDecoration(
+                          prefixIcon:
+                              const Icon(Icons.lock_outline, size: 35.0),
+                          filled: true,
+                          fillColor: Colors.blue[100]!.withOpacity(0.5),
+                          hintText: 'Enter Password',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                        textAlign: TextAlign.center,
+                        obscureText: true,
+                        onSaved: (value) {
+                          passwordController.text = value ?? '';
+                        },
+                        validator: validatePassword,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 15.0),
-              MyButton(
-                  color: const Color(0xFFFFB800),
-                  text: 'LOGIN',
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                const SizedBox(height: 15.0),
+                MyButton(
+                    color: const Color(0xFFFFB800),
+                    text: 'LOGIN',
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
 
-                      AuthService().signIn(
-                        emailController.text,
-                        passwordController.text,
-                      );
-                    }
-                  }),
-              const SizedBox(height: 10.0),
-              ForgotPasswordBottomSheet(
-                  changePassController: changePassController,
-                  formKey: _formKey,
-                  auth: _auth)
-            ],
+                        AuthService().signIn(
+                          emailController.text,
+                          passwordController.text,
+                        );
+                      }
+                    }),
+                const SizedBox(height: 10.0),
+                ForgotPasswordBottomSheet(
+                    changePassController: changePassController,
+                    formKey: _formKey,
+                    auth: _auth)
+              ],
+            ),
           ),
         ),
       ),

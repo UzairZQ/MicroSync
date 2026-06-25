@@ -254,7 +254,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                     final dayPlanDoctors = currentDayPlan!.doctors;
 
                     return Card(
-                      color: Colors.teal[100],
+                      color: kappbarColor.withOpacity(0.14),
                       child: ListTile(
                         title: MyTextwidget(
                           text: dayPlanDoctors[index],

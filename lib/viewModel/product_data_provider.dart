@@ -38,8 +38,6 @@ class ProductDataProvider with ChangeNotifier {
   static Future<bool> addProduct({
     required String name,
     required int code,
-    required double mrp,
-    required double trp,
     required String packing,
   }) async {
     if (formKey.currentState!.validate()) {
@@ -55,8 +53,6 @@ class ProductDataProvider with ChangeNotifier {
         await _firestore.collection('products').add({
           'name': name,
           'code': code,
-          'mrp': mrp,
-          'trp': trp,
           'packing': packing,
         });
         Navigator.pop(navigatorKey.currentContext!);
@@ -95,8 +91,6 @@ class ProductDataProvider with ChangeNotifier {
         final updatedProduct = existingProduct.copyWith(
           name: newProduct?.name ?? existingProduct.name,
           packing: newProduct?.packing ?? existingProduct.packing,
-          retailPrice: newProduct?.retailPrice ?? existingProduct.retailPrice,
-          tradePrice: newProduct?.tradePrice ?? existingProduct.tradePrice,
         );
 
         await productDoc.reference.update(updatedProduct.toMap());

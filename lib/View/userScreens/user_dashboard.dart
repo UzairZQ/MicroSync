@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:micro_pharma/components/constants.dart';
 import 'package:micro_pharma/models/day_plan_model.dart';
@@ -8,6 +9,7 @@ import 'package:micro_pharma/viewModel/daily_call_report_provider.dart';
 import 'package:micro_pharma/viewModel/day_plans_provider.dart';
 import 'package:micro_pharma/viewModel/doctor_provider.dart';
 import 'package:micro_pharma/viewModel/order_data_provider.dart';
+import 'package:micro_pharma/viewModel/user_data_provider.dart';
 import 'package:provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
@@ -32,15 +34,21 @@ class _DashboardState extends State<Dashboard> {
     final dcrProvider = context.read<DailyCallReportProvider>();
     final orderProvider = context.read<OrderDataProvider>();
     final dayPlanProvider = context.read<DayPlanProvider>();
+    final userProvider = context.read<UserDataProvider>();
+    final user = FirebaseAuth.instance.currentUser;
 
     setState(() => _isLoading = true);
 
-    await Future.wait([
+    final futures = <Future<void>>[
       doctorProvider.fetchDoctors(),
       dcrProvider.fetchReports(),
       orderProvider.fetchOrders(),
       dayPlanProvider.fetchDayPlans(),
-    ]);
+    ];
+    if (user != null) {
+      futures.add(userProvider.fetchUserData(user.uid));
+    }
+    await Future.wait(futures);
 
     if (mounted) {
       setState(() => _isLoading = false);
@@ -60,6 +68,8 @@ class _DashboardState extends State<Dashboard> {
             OrderDataProvider, DayPlanProvider>(
           builder: (context, doctorProvider, dcrProvider, orderProvider,
               dayPlanProvider, child) {
+            final currentRepName =
+                context.watch<UserDataProvider>().getUserData.displayName;
             final doctors = doctorProvider.getDoctorList;
             final reports = dcrProvider.getAllReports();
             final orders = orderProvider.getOrders;
@@ -69,6 +79,7 @@ class _DashboardState extends State<Dashboard> {
               reports: reports,
               orders: orders,
               todayPlan: todayPlan,
+              currentRepName: currentRepName,
             );
 
             return LayoutBuilder(
@@ -106,7 +117,7 @@ class _DashboardState extends State<Dashboard> {
                           value: metrics.todayVisits.toString(),
                           subtitle: metrics.todayPlanLine,
                           icon: Icons.medical_services_outlined,
-                          accent: const Color(0xFF22C55E),
+                          accent: const Color(0xFF0F766E),
                         ),
                         _MetricCard(
                           width: isCompact
@@ -117,7 +128,8 @@ class _DashboardState extends State<Dashboard> {
                                   2),
                           title: 'Orders this month',
                           value: metrics.monthOrders.toString(),
-                          subtitle: '${metrics.monthOrderUnits} units booked',
+                          subtitle:
+                              '${metrics.monthOrderUnits} ordered • ${metrics.monthBonusUnits} bonus',
                           icon: Icons.inventory_2_outlined,
                           accent: const Color(0xFFF97316),
                         ),
@@ -134,7 +146,7 @@ class _DashboardState extends State<Dashboard> {
                           subtitle:
                               '${metrics.uniqueDoctorsVisited}/${metrics.totalDoctors} doctors reached',
                           icon: Icons.track_changes_outlined,
-                          accent: const Color(0xFF14B8A6),
+                          accent: const Color(0xFF0D9488),
                         ),
                         _MetricCard(
                           width: isCompact
@@ -191,7 +203,7 @@ class _DashboardState extends State<Dashboard> {
                               value: metrics.coveragePercent / 100,
                               trailing:
                                   '${metrics.uniqueDoctorsVisited}/${metrics.totalDoctors}',
-                              color: const Color(0xFF14B8A6),
+                              color: const Color(0xFF0F766E),
                             ),
                             const SizedBox(height: 14),
                             _ProgressRow(
@@ -243,7 +255,7 @@ class _DashboardHero extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF0F766E), Color(0xFF155E75), Color(0xFF1D4ED8)],
+          colors: [Color(0xFF0F766E), Color(0xFF0D9488), Color(0xFF14B8A6)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -494,8 +506,19 @@ class _InsightCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             _InfoTile(
-              title: 'Best booked area',
-              value: metrics.topOrderArea,
+              title: 'Top product this month',
+              value: metrics.topMonthProduct,
+            ),
+            const SizedBox(height: 12),
+            _InfoTile(
+              title: 'This week product units',
+              value:
+                  '${metrics.weekOrderUnits} ordered • ${metrics.weekBonusUnits} bonus',
+            ),
+            const SizedBox(height: 12),
+            _InfoTile(
+              title: 'Top product this week',
+              value: metrics.topWeekProduct,
             ),
             const SizedBox(height: 12),
             _InfoTile(
@@ -643,6 +666,11 @@ class _DashboardMetrics {
     required this.dcrCompletionPercent,
     required this.monthOrders,
     required this.monthOrderUnits,
+    required this.monthBonusUnits,
+    required this.weekOrderUnits,
+    required this.weekBonusUnits,
+    required this.topMonthProduct,
+    required this.topWeekProduct,
     required this.topOrderArea,
     required this.bestWeekday,
     required this.todaySubmitted,
@@ -668,6 +696,11 @@ class _DashboardMetrics {
   final double dcrCompletionPercent;
   final int monthOrders;
   final int monthOrderUnits;
+  final int monthBonusUnits;
+  final int weekOrderUnits;
+  final int weekBonusUnits;
+  final String topMonthProduct;
+  final String topWeekProduct;
   final String topOrderArea;
   final String bestWeekday;
   final bool todaySubmitted;
@@ -686,24 +719,46 @@ class _DashboardMetrics {
     required List<DailyCallReportModel> reports,
     required List<OrderModel> orders,
     required DayPlanModel? todayPlan,
+    required String? currentRepName,
   }) {
     final now = DateTime.now();
     final startOfMonth = DateTime(now.year, now.month, 1);
-    final endOfMonth = DateTime(now.year, now.month + 1, 0);
-    final monthReports = reports
+    final startOfNextMonth = DateTime(now.year, now.month + 1, 1);
+    final startOfWeek = DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: now.weekday - DateTime.monday));
+    final startOfNextWeek = startOfWeek.add(const Duration(days: 7));
+    final repName = currentRepName?.trim().toLowerCase();
+    final scopedReports = repName == null || repName.isEmpty
+        ? reports
+        : reports
+            .where(
+                (report) => report.submittedBy.trim().toLowerCase() == repName)
+            .toList();
+    final scopedOrders = repName == null || repName.isEmpty
+        ? orders
+        : orders
+            .where((order) => order.userName.trim().toLowerCase() == repName)
+            .toList();
+
+    final monthReports = scopedReports
         .where((report) =>
             !report.date.isBefore(startOfMonth) &&
-            !report.date.isAfter(endOfMonth))
+            report.date.isBefore(startOfNextMonth))
         .toList();
-    final monthOrdersData = orders
+    final monthOrdersData = scopedOrders
         .where((order) =>
             !order.date.isBefore(startOfMonth) &&
-            !order.date.isAfter(endOfMonth))
+            order.date.isBefore(startOfNextMonth))
         .toList();
 
     final uniqueVisited = <String>{};
     int todayVisits = 0;
     int monthOrderUnits = 0;
+    int monthBonusUnits = 0;
+    int weekOrderUnits = 0;
+    int weekBonusUnits = 0;
+    final monthProductCounts = <String, int>{};
+    final weekProductCounts = <String, int>{};
     final areaBookingCounts = <String, int>{};
     final weekdayCounts = <int, int>{};
 
@@ -727,10 +782,28 @@ class _DashboardMetrics {
     }
 
     for (final order in monthOrdersData) {
-      monthOrderUnits += order.products.fold<int>(
-        0,
-        (sum, product) => sum + (int.tryParse(product.quantity) ?? 0),
-      );
+      final isThisWeek = !order.date.isBefore(startOfWeek) &&
+          order.date.isBefore(startOfNextWeek);
+      for (final product in order.products) {
+        final orderedUnits = int.tryParse(product.quantity) ?? 0;
+        final bonusUnits = int.tryParse(product.bonus ?? '') ?? 0;
+        monthOrderUnits += orderedUnits;
+        monthBonusUnits += bonusUnits;
+        monthProductCounts.update(
+          product.name,
+          (count) => count + orderedUnits,
+          ifAbsent: () => orderedUnits,
+        );
+        if (isThisWeek) {
+          weekOrderUnits += orderedUnits;
+          weekBonusUnits += bonusUnits;
+          weekProductCounts.update(
+            product.name,
+            (count) => count + orderedUnits,
+            ifAbsent: () => orderedUnits,
+          );
+        }
+      }
       areaBookingCounts.update(
         order.area.trim().isEmpty ? 'Unassigned' : order.area,
         (count) => count + 1,
@@ -767,6 +840,8 @@ class _DashboardMetrics {
               ..sort((a, b) => b.value.compareTo(a.value)))
             .first
             .key;
+    final topMonthProduct = _topProductLabel(monthProductCounts);
+    final topWeekProduct = _topProductLabel(weekProductCounts);
     const weekdayNames = <int, String>{
       DateTime.monday: 'Monday',
       DateTime.tuesday: 'Tuesday',
@@ -805,6 +880,11 @@ class _DashboardMetrics {
       dcrCompletionPercent: dcrCompletionPercent,
       monthOrders: monthOrdersData.length,
       monthOrderUnits: monthOrderUnits,
+      monthBonusUnits: monthBonusUnits,
+      weekOrderUnits: weekOrderUnits,
+      weekBonusUnits: weekBonusUnits,
+      topMonthProduct: topMonthProduct,
+      topWeekProduct: topWeekProduct,
       topOrderArea: topOrderArea,
       bestWeekday: bestWeekday,
       todaySubmitted: todaySubmitted,
@@ -824,5 +904,15 @@ class _DashboardMetrics {
     return first.year == second.year &&
         first.month == second.month &&
         first.day == second.day;
+  }
+
+  static String _topProductLabel(Map<String, int> productCounts) {
+    if (productCounts.isEmpty) {
+      return 'No product units yet';
+    }
+    final topEntry = (productCounts.entries.toList()
+          ..sort((a, b) => b.value.compareTo(a.value)))
+        .first;
+    return '${topEntry.key} (${topEntry.value})';
   }
 }

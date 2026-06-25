@@ -4,7 +4,6 @@ import 'package:micro_pharma/View/userScreens/User%20Profile%20Page/user_assigne
 import '../../../components/constants.dart';
 import '../../../models/user_model.dart';
 
-
 class UserInfo extends StatelessWidget {
   const UserInfo({
     super.key,
@@ -23,7 +22,7 @@ class UserInfo extends StatelessWidget {
           children: [
             const SizedBox(height: 20),
             Card(
-              color: Colors.teal[100],
+              color: kappbarColor.withOpacity(0.14),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: MyTextwidget(
