@@ -74,7 +74,7 @@ class AdminPanel extends StatelessWidget {
                   crossAxisCount: crossAxisCount,
                   crossAxisSpacing: 14,
                   mainAxisSpacing: 14,
-                  childAspectRatio: constraints.maxWidth < 380 ? 0.92 : 1.08,
+                  childAspectRatio: constraints.maxWidth < 380 ? 0.90 : 1.0,
                 ),
                 itemBuilder: (context, index) {
                   final tile = tiles[index];
@@ -147,7 +147,7 @@ class _AdminPanelTile extends StatelessWidget {
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -160,8 +160,8 @@ class _AdminPanelTile extends StatelessWidget {
                   ),
                   child: Icon(data.icon, color: data.color),
                 ),
-                const Spacer(),
-                Flexible(
+                const SizedBox(height: 8),
+                Expanded(
                   child: Text(
                     data.title,
                     maxLines: 2,
@@ -171,8 +171,8 @@ class _AdminPanelTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 4),
-                Flexible(
+                const SizedBox(height: 2),
+                Expanded(
                   child: Text(
                     data.subtitle,
                     maxLines: 2,

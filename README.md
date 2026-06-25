@@ -66,33 +66,114 @@ MicroSync is not limited to one company only. It is designed as a reusable pharm
 
 For questions or issues, contact: uzairqureshi9@gmail.com
 
-<img src="screenshots/login_screen.png" alt="Login page for user and admin" width="400"/>
-<img src="screenshots/user_homescreen.png" alt="User Homescreen" width="400"/>
-<img src="screenshots/user_dashboard.png" alt="User Performance Dashboard (static)" width="400"/>
-<img src="screenshots/call_planner.png" alt="Call Planner for user" width="400"/>
-<img src="screenshots/call_plans.png" alt="List of added Call Plans" width="400"/>
-<img src="screenshots/daily_call_report.png" alt="Daily Call Report Screen" width="400"/>
-<img src="screenshots/add_doctor_info_dcr.png" alt="Add visit details for DCR" width="400"/>
-<img src="screenshots/add_doctorinfo_dcr.png" alt="Add details for doctor visits" width="400"/>
-<img src="screenshots/dcr_submitted.png" alt="Submission of DCR" width="400"/>
-<img src="screenshots/dcr_submitted2.png" alt="DCR Submitted" width="400"/>
-<img src="screenshots/submit_orders.png" alt="Send product orders to admin" width="400"/>
-<img src="screenshots/order_submitted.png" alt="Order submitted" width="400"/>
-<img src="screenshots/user_profile.png" alt="User Profile Page" width="400"/>
-<img src="screenshots/user_changepassword.png" alt="User Changepassword" width="400"/>
-<img src="screenshots/admin_homescreen.png" alt="Admin Homescreen" width="400"/>
-<img src="screenshots/location_screen.png" alt="Location of Users" width="400"/>
-<img src="screenshots/user_location.png" alt="User Location on Google Maps" width="400"/>
-<img src="screenshots/admin_panel.png" alt="Admin Panel" width="400"/>
-<img src="screenshots/doctors.png" alt="Add/Delete Doctors" width="400"/>
-<img src="screenshots/products.png" alt="Add/Delete/Edit Products" width="400"/>
-<img src="screenshots/areas.png" alt="Add/Delete Areas" width="400"/>
-<img src="screenshots/assign_work.png" alt="Assign Products & Areas To Employees" width="400"/>
-<img src="screenshots/remove_assigned.png" alt="View/Remove assigned Areas/Products" width="400"/>
-<img src="screenshots/booked_orders.png" alt="Booked Order View" width="400"/>
-<img src="screenshots/order_details.png" alt="Order Details" width="400"/>
-<img src="screenshots/add_employee.png" alt="Add new Employee to the system" width="400"/>
-<img src="screenshots/remove_employee.png" alt="Remove Employee from the system" width="400"/>
+<p align="center">
+  <em>Screenshots captured on a 6.2-inch display</em>
+</p>
+
+### Authentication & Profile
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/login_screen.png" width="200" alt="Login Screen"/><br/><em>Login Screen</em></td>
+    <td align="center"><img src="screenshots/user_changepassword.png" width="200" alt="Change Password"/><br/><em>Change Password</em></td>
+    <td align="center"><img src="screenshots/user_profile.png" width="200" alt="User Profile"/><br/><em>User Profile</em></td>
+  </tr>
+</table>
+
+### User Dashboard
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/user_homescreen.png" width="200" alt="User Home"/><br/><em>User Home Screen</em></td>
+    <td align="center"><img src="screenshots/user_dashboard.png" width="200" alt="User Dashboard"/><br/><em>Performance Dashboard</em></td>
+    <td></td>
+  </tr>
+</table>
+
+### Call Planning
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/call_planner.png" width="200" alt="Call Planner"/><br/><em>Call Planner</em></td>
+    <td align="center"><img src="screenshots/call_plans.png" width="200" alt="Call Plans"/><br/><em>Call Plans List</em></td>
+    <td align="center"><img src="screenshots/call_plans2.png" width="200" alt="Call Plans Alt"/><br/><em>Call Plans (alt)</em></td>
+  </tr>
+</table>
+
+### Daily Call Reports
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/daily_call_report.png" width="200" alt="Daily Call Report"/><br/><em>DCR Form</em></td>
+    <td align="center"><img src="screenshots/add_doctorinfo_dcr.png" width="200" alt="Add Doctor to DCR"/><br/><em>Add Doctor Visit</em></td>
+    <td align="center"><img src="screenshots/add_doctor_info_dcr.png" width="200" alt="Add Doctor Info"/><br/><em>Doctor Visit Details</em></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/dcr_submitted.png" width="200" alt="DCR Submitted"/><br/><em>DCR Submitted</em></td>
+    <td align="center"><img src="screenshots/dcr_submitted2.png" width="200" alt="DCR Submitted Alt"/><br/><em>DCR Submitted (alt)</em></td>
+    <td></td>
+  </tr>
+</table>
+
+### Orders
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/submit_orders.png" width="200" alt="Submit Orders"/><br/><em>Submit Order</em></td>
+    <td align="center"><img src="screenshots/order_submitted.png" width="200" alt="Order Submitted"/><br/><em>Order Submitted</em></td>
+    <td align="center"><img src="screenshots/order_details.png" width="200" alt="Order Details"/><br/><em>Order Details</em></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/booked_orders.png" width="200" alt="Booked Orders"/><br/><em>Booked Orders</em></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+### Employee Location & Tracking
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/location_screen.png" width="200" alt="Location Screen"/><br/><em>Employee Locations</em></td>
+    <td align="center"><img src="screenshots/user_location.png" width="200" alt="User Location Map"/><br/><em>Live Location on Map</em></td>
+    <td></td>
+  </tr>
+</table>
+
+### Admin Panel
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/admin_homescreen.png" width="200" alt="Admin Home"/><br/><em>Admin Home Screen</em></td>
+    <td align="center"><img src="screenshots/admin_panel.png" width="200" alt="Admin Panel"/><br/><em>Admin Panel</em></td>
+    <td></td>
+  </tr>
+</table>
+
+### Employee Management
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/add_employee.png" width="200" alt="Add Employee"/><br/><em>Add Employee</em></td>
+    <td align="center"><img src="screenshots/remove_employee.png" width="200" alt="Remove Employee"/><br/><em>Remove Employee</em></td>
+    <td></td>
+  </tr>
+</table>
+
+### Data Management
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/doctors.png" width="200" alt="Doctors"/><br/><em>Doctors</em></td>
+    <td align="center"><img src="screenshots/add_doctor.png" width="200" alt="Add Doctor"/><br/><em>Add Doctor</em></td>
+    <td align="center"><img src="screenshots/products.png" width="200" alt="Products"/><br/><em>Products</em></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/areas.png" width="200" alt="Areas"/><br/><em>Areas</em></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+### Work Assignments
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/assign_work.png" width="200" alt="Assign Work"/><br/><em>Assign Areas & Products</em></td>
+    <td align="center"><img src="screenshots/remove_assigned.png" width="200" alt="Remove Assigned"/><br/><em>View / Remove Assignments</em></td>
+    <td></td>
+  </tr>
+</table>
 
 ---
 
