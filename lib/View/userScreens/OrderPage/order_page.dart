@@ -121,29 +121,6 @@ class OrderScreenState extends State<OrderScreen> {
                   },
                 ),
                 const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _discountController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.percent),
-                    labelText: 'Discount (%)',
-                    border: OutlineInputBorder(),
-                  ),
-                  onSaved: (value) {
-                    _discountController.text = value ?? '0';
-                  },
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return null;
-                    }
-                    final discount = double.tryParse(value.trim());
-                    if (discount == null || discount < 0 || discount > 100) {
-                      return 'Enter a valid discount percentage (0-100)';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16.0),
                 Autocomplete<ProductModel>(
                   optionsBuilder: (TextEditingValue textEditingValue) {
                     if (textEditingValue.text.isEmpty) {
@@ -235,6 +212,30 @@ class OrderScreenState extends State<OrderScreen> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _discountController,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.percent),
+                    labelText: 'Discount (%)',
+                    border: OutlineInputBorder(),
+                  ),
+                  onSaved: (value) {
+                    _discountController.text = value ?? '0';
+                  },
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return null;
+                    }
+                    final discount = double.tryParse(value.trim());
+                    if (discount == null || discount < 0 || discount > 100) {
+                      return 'Enter a valid discount percentage (0-100)';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16.0),
                 Align(
