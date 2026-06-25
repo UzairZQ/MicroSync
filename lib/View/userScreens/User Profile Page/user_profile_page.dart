@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_pharma/View/userScreens/day_plans.dart';
@@ -21,9 +20,7 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class UserProfilePageState extends State<UserProfilePage> {
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _resetEmailController = TextEditingController();
-  bool _isSavingName = false;
   bool _isSendingReset = false;
 
   @override
@@ -34,7 +31,6 @@ class UserProfilePageState extends State<UserProfilePage> {
 
   @override
   void dispose() {
-    _nameController.dispose();
     _resetEmailController.dispose();
     super.dispose();
   }
@@ -51,78 +47,6 @@ class UserProfilePageState extends State<UserProfilePage> {
     ]);
   }
 
-  Future<void> _showEditNameDialog(String currentName) async {
-    _nameController.text = currentName;
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: const Text('Update Profile Name'),
-          content: TextFormField(
-            controller: _nameController,
-            textCapitalization: TextCapitalization.words,
-            decoration: const InputDecoration(
-              labelText: 'Display name',
-              prefixIcon: Icon(Icons.badge_outlined),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              onPressed: _isSavingName
-                  ? null
-                  : () async {
-                      final newName = _nameController.text.trim();
-                      final currentUser = FirebaseAuth.instance.currentUser;
-                      final uid =
-                          context.read<UserDataProvider>().getUserData.uid;
-                      if (newName.isEmpty ||
-                          currentUser == null ||
-                          uid == null) {
-                        return;
-                      }
-
-                      setState(() => _isSavingName = true);
-                      try {
-                        await FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(uid)
-                            .update({'displayName': newName});
-                        await context
-                            .read<UserDataProvider>()
-                            .fetchUserData(uid);
-                        if (dialogContext.mounted) {
-                          Navigator.pop(dialogContext);
-                        }
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Profile updated')),
-                          );
-                        }
-                      } catch (_) {
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Could not update profile name.'),
-                            ),
-                          );
-                        }
-                      } finally {
-                        if (mounted) {
-                          setState(() => _isSavingName = false);
-                        }
-                      }
-                    },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   Future<void> _sendPasswordReset(String fallbackEmail) async {
     final email = _resetEmailController.text.trim().isEmpty
@@ -196,7 +120,6 @@ class UserProfilePageState extends State<UserProfilePage> {
                           ? 'Sales Representative'
                           : displayName,
                       email: email.isEmpty ? 'Email not set' : email,
-                      onEditName: () => _showEditNameDialog(displayName),
                     ),
                     const SizedBox(height: 16),
                     _WorkStatusCard(
@@ -274,13 +197,11 @@ class _RepProfileHero extends StatelessWidget {
     required this.user,
     required this.displayName,
     required this.email,
-    required this.onEditName,
   });
 
   final UserModel user;
   final String displayName;
   final String email;
-  final VoidCallback onEditName;
 
   @override
   Widget build(BuildContext context) {
@@ -347,11 +268,6 @@ class _RepProfileHero extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-              IconButton.filledTonal(
-                tooltip: 'Edit profile name',
-                onPressed: onEditName,
-                icon: const Icon(Icons.edit_outlined),
               ),
             ],
           ),
