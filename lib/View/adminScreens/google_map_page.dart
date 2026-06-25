@@ -19,6 +19,7 @@ class GoogleMapPage extends StatefulWidget {
 class _GoogleMapPageState extends State<GoogleMapPage> {
   GoogleMapController? _controller;
   bool isSatellite = false;
+  bool showTraffic = false;
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +79,21 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                 children: [
                   GoogleMap(
                     mapType: isSatellite ? MapType.satellite : MapType.normal,
-                    myLocationButtonEnabled: false,
-                    zoomControlsEnabled: false,
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: true,
+                    zoomControlsEnabled: true,
+                    compassEnabled: true,
+                    mapToolbarEnabled: true,
+                    buildingsEnabled: true,
+                    trafficEnabled: showTraffic,
+                    rotateGesturesEnabled: true,
+                    scrollGesturesEnabled: true,
+                    tiltGesturesEnabled: true,
+                    zoomGesturesEnabled: true,
+                    padding: EdgeInsets.only(
+                      top: 140,
+                      bottom: 100,
+                    ),
                     markers: {
                       Marker(
                         markerId: MarkerId(widget.userId),
@@ -185,6 +199,19 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          FloatingActionButton.small(
+            heroTag: 'traffic',
+            tooltip: showTraffic ? 'Hide traffic' : 'Show traffic',
+            onPressed: () {
+              setState(() {
+                showTraffic = !showTraffic;
+              });
+            },
+            child: Icon(
+              showTraffic ? Icons.traffic : Icons.traffic_outlined,
+            ),
+          ),
+          const SizedBox(height: 10),
           FloatingActionButton.small(
             heroTag: 'mapType',
             tooltip: 'Change map type',
