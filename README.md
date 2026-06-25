@@ -67,37 +67,37 @@ MicroSync is not limited to one company only. It is designed as a reusable pharm
 For questions or issues, contact: uzairqureshi9@gmail.com
 
 ### Authentication
-<img src="screenshots_updated_design/login_screen.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/login_screen.jpg" width="220"/>
 
 ### User Home & Dashboard
-<img src="screenshots_updated_design/user_home.jpg" width="220"/> <img src="screenshots_updated_design/user_home2.jpg" width="220"/> <img src="screenshots_updated_design/user_dashboard.jpg" width="220"/>
-<img src="screenshots_updated_design/user_dashboard2.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/user_home.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/user_home2.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/user_dashboard.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/user_dashboard2.jpg" width="220"/>
 
 ### User Profile
-<img src="screenshots_updated_design/user_profile.jpg" width="220"/> <img src="screenshots_updated_design/user_profile2.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/user_profile.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/user_profile2.jpg" width="220"/>
 
 ### Call Planning
-<img src="screenshots_updated_design/call_planner.jpg" width="220"/> <img src="screenshots_updated_design/call_plans.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/call_planner.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/call_plans.jpg" width="220"/>
 
 ### Daily Call Reports
-<img src="screenshots_updated_design/daily_call_report.jpg" width="220"/> <img src="screenshots_updated_design/dcr_details.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/daily_call_report.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/dcr_details.jpg" width="220"/>
 
 ### Orders
-<img src="screenshots_updated_design/order_screen.jpg" width="220"/> <img src="screenshots_updated_design/orders.jpg" width="220"/> <img src="screenshots_updated_design/order_detail.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/order_screen.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/orders.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/order_detail.jpg" width="220"/>
 
 ### Location & Maps
-<img src="screenshots_updated_design/location_screen.jpg" width="220"/> <img src="screenshots_updated_design/map_screen.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/location_screen.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/map_screen.jpg" width="220"/>
 
 ### Admin Panel
-<img src="screenshots_updated_design/admin_home.jpg" width="220"/> <img src="screenshots_updated_design/admin_dashboard.jpg" width="220"/> <img src="screenshots_updated_design/admin_panel.jpeg" width="220"/>
-<img src="screenshots_updated_design/admin_profile.jpg" width="220"/> <img src="screenshots_updated_design/admin_profile2.jpg" width="220"/> <img src="screenshots_updated_design/monthly_targets.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/admin_home.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/admin_dashboard.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/admin_panel.jpeg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/admin_profile.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/admin_profile2.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/monthly_targets.jpg" width="220"/>
 
 ### Data Management
-<img src="screenshots_updated_design/doctors.jpg" width="220"/> <img src="screenshots_updated_design/products.jpg" width="220"/> <img src="screenshots_updated_design/areas.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/doctors.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/products.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/areas.jpg" width="220"/>
 
 ### Work Assignments
-<img src="screenshots_updated_design/assign_products_areas.jpg" width="220"/> <img src="screenshots_updated_design/view_assigned.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/assign_products_areas.jpg" width="220"/> <img style="margin:4px" src="screenshots_updated_design/view_assigned.jpg" width="220"/>
 
 ### Dark Theme
-<img src="screenshots_updated_design/black_theme.jpg" width="220"/>
+<img style="margin:4px" src="screenshots_updated_design/black_theme.jpg" width="220"/>
 
