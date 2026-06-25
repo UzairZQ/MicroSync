@@ -66,118 +66,40 @@ MicroSync is not limited to one company only. It is designed as a reusable pharm
 
 For questions or issues, contact: uzairqureshi9@gmail.com
 
-<p align="center">
-  <em>Screenshots captured on a 6.2-inch display</em>
-</p>
-
 ### Authentication
-<table>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/login_screen.jpg" width="200" alt="Login Screen"/><br/><em>Login Screen</em></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
+<img src="screenshots_updated_design/login_screen.jpg" width="200"/>
 
 ### User Home & Dashboard
-<table>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/user_home.jpg" width="200" alt="User Home"/><br/><em>User Home</em></td>
-    <td align="center"><img src="screenshots_updated_design/user_home2.jpg" width="200" alt="User Home Alt"/><br/><em>User Home (alt)</em></td>
-    <td align="center"><img src="screenshots_updated_design/user_dashboard.jpg" width="200" alt="User Dashboard"/><br/><em>User Dashboard</em></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/user_dashboard2.jpg" width="200" alt="User Dashboard Alt"/><br/><em>User Dashboard (alt)</em></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
+<img src="screenshots_updated_design/user_home.jpg" width="200"/> <img src="screenshots_updated_design/user_home2.jpg" width="200"/> <img src="screenshots_updated_design/user_dashboard.jpg" width="200"/>
+<img src="screenshots_updated_design/user_dashboard2.jpg" width="200"/>
 
 ### User Profile
-<table>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/user_profile.jpg" width="200" alt="User Profile"/><br/><em>User Profile</em></td>
-    <td align="center"><img src="screenshots_updated_design/user_profile2.jpg" width="200" alt="User Profile Alt"/><br/><em>User Profile (alt)</em></td>
-    <td></td>
-  </tr>
-</table>
+<img src="screenshots_updated_design/user_profile.jpg" width="200"/> <img src="screenshots_updated_design/user_profile2.jpg" width="200"/>
 
 ### Call Planning
-<table>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/call_planner.jpg" width="200" alt="Call Planner"/><br/><em>Call Planner</em></td>
-    <td align="center"><img src="screenshots_updated_design/call_plans.jpg" width="200" alt="Call Plans"/><br/><em>Call Plans</em></td>
-    <td></td>
-  </tr>
-</table>
+<img src="screenshots_updated_design/call_planner.jpg" width="200"/> <img src="screenshots_updated_design/call_plans.jpg" width="200"/>
 
 ### Daily Call Reports
-<table>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/daily_call_report.jpg" width="200" alt="Daily Call Report"/><br/><em>Daily Call Report</em></td>
-    <td align="center"><img src="screenshots_updated_design/dcr_details.jpg" width="200" alt="DCR Details"/><br/><em>DCR Details</em></td>
-    <td></td>
-  </tr>
-</table>
+<img src="screenshots_updated_design/daily_call_report.jpg" width="200"/> <img src="screenshots_updated_design/dcr_details.jpg" width="200"/>
 
 ### Orders
-<table>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/order_screen.jpg" width="200" alt="Order Screen"/><br/><em>Order Screen</em></td>
-    <td align="center"><img src="screenshots_updated_design/orders.jpg" width="200" alt="Orders List"/><br/><em>Orders List</em></td>
-    <td align="center"><img src="screenshots_updated_design/order_detail.jpg" width="200" alt="Order Detail"/><br/><em>Order Detail</em></td>
-  </tr>
-</table>
+<img src="screenshots_updated_design/order_screen.jpg" width="200"/> <img src="screenshots_updated_design/orders.jpg" width="200"/> <img src="screenshots_updated_design/order_detail.jpg" width="200"/>
 
 ### Location & Maps
-<table>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/location_screen.jpg" width="200" alt="Location Screen"/><br/><em>Employee Locations</em></td>
-    <td align="center"><img src="screenshots_updated_design/map_screen.jpg" width="200" alt="Map Screen"/><br/><em>Live Location on Map</em></td>
-    <td></td>
-  </tr>
-</table>
+<img src="screenshots_updated_design/location_screen.jpg" width="200"/> <img src="screenshots_updated_design/map_screen.jpg" width="200"/>
 
 ### Admin Panel
-<table>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/admin_home.jpg" width="200" alt="Admin Home"/><br/><em>Admin Home</em></td>
-    <td align="center"><img src="screenshots_updated_design/admin_dashboard.jpg" width="200" alt="Admin Dashboard"/><br/><em>Admin Dashboard</em></td>
-    <td align="center"><img src="screenshots_updated_design/admin_panel.jpeg" width="200" alt="Admin Panel"/><br/><em>Admin Panel</em></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/admin_profile.jpg" width="200" alt="Admin Profile"/><br/><em>Admin Profile</em></td>
-    <td align="center"><img src="screenshots_updated_design/admin_profile2.jpg" width="200" alt="Admin Profile Alt"/><br/><em>Admin Profile (alt)</em></td>
-    <td align="center"><img src="screenshots_updated_design/monthly_targets.jpg" width="200" alt="Monthly Targets"/><br/><em>Monthly Targets</em></td>
-  </tr>
-</table>
+<img src="screenshots_updated_design/admin_home.jpg" width="200"/> <img src="screenshots_updated_design/admin_dashboard.jpg" width="200"/> <img src="screenshots_updated_design/admin_panel.jpeg" width="200"/>
+<img src="screenshots_updated_design/admin_profile.jpg" width="200"/> <img src="screenshots_updated_design/admin_profile2.jpg" width="200"/> <img src="screenshots_updated_design/monthly_targets.jpg" width="200"/>
 
 ### Data Management
-<table>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/doctors.jpg" width="200" alt="Doctors"/><br/><em>Doctors</em></td>
-    <td align="center"><img src="screenshots_updated_design/products.jpg" width="200" alt="Products"/><br/><em>Products</em></td>
-    <td align="center"><img src="screenshots_updated_design/areas.jpg" width="200" alt="Areas"/><br/><em>Areas</em></td>
-  </tr>
-</table>
+<img src="screenshots_updated_design/doctors.jpg" width="200"/> <img src="screenshots_updated_design/products.jpg" width="200"/> <img src="screenshots_updated_design/areas.jpg" width="200"/>
 
 ### Work Assignments
-<table>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/assign_products_areas.jpg" width="200" alt="Assign Products & Areas"/><br/><em>Assign Products & Areas</em></td>
-    <td align="center"><img src="screenshots_updated_design/view_assigned.jpg" width="200" alt="View Assigned"/><br/><em>View / Remove Assignments</em></td>
-    <td></td>
-  </tr>
-</table>
+<img src="screenshots_updated_design/assign_products_areas.jpg" width="200"/> <img src="screenshots_updated_design/view_assigned.jpg" width="200"/>
 
 ### Dark Theme
-<table>
-  <tr>
-    <td align="center"><img src="screenshots_updated_design/black_theme.jpg" width="200" alt="Dark Theme"/><br/><em>Dark Theme</em></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
+<img src="screenshots_updated_design/black_theme.jpg" width="200"/>
 
 ---
 
