@@ -9,6 +9,7 @@ class OrderModel {
   String area;
   double? total;
   double? subTotal;
+  double? discount;
 
   OrderModel(
       {this.id,
@@ -18,7 +19,8 @@ class OrderModel {
       required this.customerName,
       required this.area,
       this.total,
-      this.subTotal});
+      this.subTotal,
+      this.discount});
 
   factory OrderModel.fromMap(Map<String, dynamic> json) {
     return OrderModel(
@@ -32,6 +34,7 @@ class OrderModel {
       area: json['area'] as String,
       total: (json['total'] as num?)?.toDouble() ?? 0.0,
       subTotal: (json['subTotal'] as num?)?.toDouble() ?? 0.0,
+      discount: (json['discount'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -43,6 +46,9 @@ class OrderModel {
       'products': products.map((product) => product.toMap()).toList(),
       'customerName': customerName,
       'area': area,
+      'total': total,
+      'subTotal': subTotal,
+      'discount': discount,
     };
   }
 
@@ -55,6 +61,7 @@ class OrderModel {
     String? area,
     double? total,
     double? subTotal,
+    double? discount,
   }) {
     return OrderModel(
         id: id ?? this.id,
@@ -64,6 +71,7 @@ class OrderModel {
         customerName: customerName ?? this.customerName,
         area: area ?? this.area,
         total: total ?? this.total,
-        subTotal: subTotal ?? this.subTotal);
+        subTotal: subTotal ?? this.subTotal,
+        discount: discount ?? this.discount);
   }
 }

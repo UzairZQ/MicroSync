@@ -143,6 +143,12 @@ class SubmittedOrders extends StatelessWidget {
                         icon: Icons.person_outline,
                         label: order.userName,
                       ),
+                      if (order.discount != null && order.discount! > 0)
+                        _OrderSummaryChip(
+                          icon: Icons.local_offer_outlined,
+                          label: '${order.discount!.toStringAsFixed(order.discount! % 1 == 0 ? 0 : 1)}% discount',
+                          color: Colors.orange,
+                        ),
                     ],
                   ),
                   const SizedBox(height: 18),
@@ -238,6 +244,12 @@ class _OrderCard extends StatelessWidget {
                           icon: Icons.redeem_outlined,
                           label: '$bonusUnits bonus',
                         ),
+                        if (order.discount != null && order.discount! > 0)
+                          _OrderSummaryChip(
+                            icon: Icons.local_offer_outlined,
+                            label: '${order.discount!.toStringAsFixed(order.discount! % 1 == 0 ? 0 : 1)}%',
+                            color: Colors.orange,
+                          ),
                       ],
                     ),
                   ],
@@ -298,27 +310,33 @@ class _OrderProductTile extends StatelessWidget {
 }
 
 class _OrderSummaryChip extends StatelessWidget {
-  const _OrderSummaryChip({required this.icon, required this.label});
+  const _OrderSummaryChip({
+    required this.icon,
+    required this.label,
+    this.color,
+  });
 
   final IconData icon;
   final String label;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
+    final chipColor = color ?? kappbarColor;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
-        color: kappbarColor.withOpacity(0.1),
+        color: chipColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: kappbarColor),
+          Icon(icon, size: 16, color: chipColor),
           const SizedBox(width: 6),
           Text(
             label,
-            style: TextStyle(color: kappbarColor, fontWeight: FontWeight.w700),
+            style: TextStyle(color: chipColor, fontWeight: FontWeight.w700),
           ),
         ],
       ),

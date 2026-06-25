@@ -32,6 +32,7 @@ class OrderScreenState extends State<OrderScreen> {
   final TextEditingController _productQuantityController =
       TextEditingController();
   final TextEditingController _bonusController = TextEditingController();
+  final TextEditingController _discountController = TextEditingController(text: '0');
 
   @override
   void initState() {
@@ -55,6 +56,7 @@ class OrderScreenState extends State<OrderScreen> {
     _bonusController.dispose();
     _customerNameController.dispose();
     _productQuantityController.dispose();
+    _discountController.dispose();
     super.dispose();
   }
 
@@ -114,6 +116,29 @@ class OrderScreenState extends State<OrderScreen> {
                   validator: (value) {
                     if (value == null) {
                       return 'Please select an area';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _discountController,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.percent),
+                    labelText: 'Discount (%)',
+                    border: OutlineInputBorder(),
+                  ),
+                  onSaved: (value) {
+                    _discountController.text = value ?? '0';
+                  },
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return null;
+                    }
+                    final discount = double.tryParse(value.trim());
+                    if (discount == null || discount < 0 || discount > 100) {
+                      return 'Enter a valid discount percentage (0-100)';
                     }
                     return null;
                   },
@@ -262,7 +287,10 @@ class OrderScreenState extends State<OrderScreen> {
                 date: DateTime.now(),
                 products: selectedProducts,
                 customerName: _customerNameController.text,
-                area: selectedArea?.areaName ?? '');
+                area: selectedArea?.areaName ?? '',
+                discount: _discountController.text.trim().isEmpty
+                    ? null
+                    : double.tryParse(_discountController.text.trim()));
             await Provider.of<OrderDataProvider>(context, listen: false)
                 .addOrder(orderModel);
             showCustomDialog(
@@ -272,6 +300,7 @@ class OrderScreenState extends State<OrderScreen> {
 
             // Clear the form fields
             _formKey.currentState!.reset();
+            _discountController.clear();
             setState(() {
               selectedProducts.clear();
               selectedArea = null;
