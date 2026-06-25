@@ -6,6 +6,7 @@ import 'package:theme_provider/theme_provider.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../../../components/constants.dart';
+import '../../../services/location_services.dart';
 import '../../../splash_page.dart';
 import '../User Profile Page/user_profile_page.dart';
 import '../../LoginPage/login_page.dart';
@@ -43,6 +44,10 @@ class HomeNavigationBar extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () async {
+                        final uid = FirebaseAuth.instance.currentUser?.uid;
+                        if (uid != null && uid.isNotEmpty) {
+                          await LocationServices().endWorkDayTracking(uid);
+                        }
                         FirebaseAuth.instance.signOut();
                         if (Platform.isAndroid) {
                           Workmanager().cancelByTag('location');

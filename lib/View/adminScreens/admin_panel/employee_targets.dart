@@ -38,8 +38,7 @@ class _EmployeeTargetsState extends State<EmployeeTargets> {
         visitTarget == null ||
         _monthController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Select employee and enter valid targets')),
+        const SnackBar(content: Text('Select rep and enter valid targets')),
       );
       return;
     }
@@ -85,7 +84,7 @@ class _EmployeeTargetsState extends State<EmployeeTargets> {
           padding: const EdgeInsets.all(16),
           children: [
             const DashboardHeader(
-              title: 'Employee Targets',
+              title: 'Rep Targets',
               subtitle: 'Set monthly order value and doctor visit goals.',
               icon: Icons.track_changes_outlined,
             ),
@@ -100,14 +99,14 @@ class _EmployeeTargetsState extends State<EmployeeTargets> {
                 return DropdownButtonFormField<String>(
                   initialValue: _selectedUserId,
                   decoration: const InputDecoration(
-                    labelText: 'Employee',
+                    labelText: 'Rep',
                     prefixIcon: Icon(Icons.person_outline),
                   ),
                   items: users.map<DropdownMenuItem<String>>((doc) {
                     final data = doc.data() as Map<String, dynamic>;
                     return DropdownMenuItem<String>(
                       value: data['uid']?.toString(),
-                      child: Text(data['displayName']?.toString() ?? 'User'),
+                      child: Text(data['displayName']?.toString() ?? 'Rep'),
                     );
                   }).toList(),
                   onChanged: (value) {
@@ -125,7 +124,7 @@ class _EmployeeTargetsState extends State<EmployeeTargets> {
                     setState(() {
                       _selectedUserId = value;
                       _selectedUserName =
-                          selectedData?['displayName']?.toString() ?? 'User';
+                          selectedData?['displayName']?.toString() ?? 'Rep';
                     });
                   },
                 );

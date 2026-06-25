@@ -38,7 +38,6 @@ Future<void> showPrivacyConsentDialog(String uid) async {
 
 void userLocation(String uid) async {
   await LocationServices().requestPermission();
-  await LocationServices().getLocation(uid);
   SharedPreferences userId = await SharedPreferences.getInstance();
   userId.setString('userId', uid);
 }

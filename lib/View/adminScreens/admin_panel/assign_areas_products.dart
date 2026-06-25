@@ -101,13 +101,12 @@ class AssignAreasProductsToEmployeesState
               showCustomDialog(
                   context: context,
                   title: 'Success',
-                  content:
-                      'Products and Areas Assigned to the selected Employee');
+                  content: 'Products and Areas Assigned to the selected Rep');
             } else {
               showCustomDialog(
                   context: context,
-                  title: 'No employee selected',
-                  content: 'Select an employee before saving assignments.');
+                  title: 'No rep selected',
+                  content: 'Select a rep before saving assignments.');
             }
           } catch (e) {
             showCustomDialog(
@@ -138,7 +137,7 @@ class AssignAreasProductsToEmployeesState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const MyTextwidget(
-                    text: 'Select Employee:',
+                    text: 'Select Rep:',
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
@@ -169,7 +168,7 @@ class AssignAreasProductsToEmployeesState
 
                       return DropdownMenuItem<int>(
                         value: index, // Use the index as the value
-                        child: Text(employee.displayName ?? 'Unnamed employee'),
+                        child: Text(employee.displayName ?? 'Unnamed rep'),
                       );
                     }).toList(),
                   ),

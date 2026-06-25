@@ -184,6 +184,14 @@ class ViewDCRScreen extends StatelessWidget {
                         icon: Icons.inventory_2_outlined,
                         label: '$sampleUnits sample units',
                       ),
+                      _SummaryChip(
+                        icon: Icons.login_outlined,
+                        label: 'Check-In: ${report.checkInTime ?? "N/A"}',
+                      ),
+                      _SummaryChip(
+                        icon: Icons.logout_outlined,
+                        label: 'Check-Out: ${report.checkOutTime ?? "N/A"}',
+                      ),
                     ],
                   ),
                   const SizedBox(height: 18),
@@ -229,6 +237,11 @@ class ViewDCRScreen extends StatelessWidget {
                       fontSize: 15,
                       fontWeight: pw.FontWeight.bold,
                     ),
+                  ),
+                  pw.SizedBox(height: 4),
+                  pw.Text(
+                    'Check-In: ${report.checkInTime ?? "N/A"} | Check-Out: ${report.checkOutTime ?? "N/A"}',
+                    style: pw.TextStyle(fontSize: 12),
                   ),
                   pw.SizedBox(height: 8),
                   for (final doctorVisit in report.doctorsVisited)
@@ -322,6 +335,16 @@ class _DcrReportCard extends StatelessWidget {
                           icon: Icons.check_circle_outline,
                           label: '$visitedCount visited',
                         ),
+                        if (report.checkInTime != null)
+                          _SummaryChip(
+                            icon: Icons.login_outlined,
+                            label: 'In: ${report.checkInTime}',
+                          ),
+                        if (report.checkOutTime != null)
+                          _SummaryChip(
+                            icon: Icons.logout_outlined,
+                            label: 'Out: ${report.checkOutTime}',
+                          ),
                       ],
                     ),
                   ],

@@ -6,6 +6,8 @@ class DailyCallReportModel {
   final String? reportId;
   final DateTime date;
   final List<DoctorVisitModel> doctorsVisited;
+  final String? checkInTime;
+  final String? checkOutTime;
 
   DailyCallReportModel({
     required this.area,
@@ -13,6 +15,8 @@ class DailyCallReportModel {
     required this.submittedBy,
     required this.date,
     List<DoctorVisitModel>? doctorVisits,
+    this.checkInTime,
+    this.checkOutTime,
   }) : doctorsVisited = doctorVisits ?? [];
 
   Map<String, dynamic> toMap() {
@@ -22,6 +26,8 @@ class DailyCallReportModel {
       'doctorsVisited': doctorsVisited.map((visit) => visit.toMap()).toList(),
       'area': area,
       'submittedBy': submittedBy,
+      'checkInTime': checkInTime,
+      'checkOutTime': checkOutTime,
     };
   }
 
@@ -39,7 +45,9 @@ class DailyCallReportModel {
       area: json['area'],
       doctorVisits:
           visits.map((visit) => DoctorVisitModel.fromMap(visit)).toList(),
-          submittedBy: json['submittedBy']
+      submittedBy: json['submittedBy'],
+      checkInTime: json['checkInTime'],
+      checkOutTime: json['checkOutTime'],
     );
   }
 
@@ -48,14 +56,18 @@ class DailyCallReportModel {
     DateTime? date,
     List<DoctorVisitModel>? doctorsVisited,
     String? area,
-    String? submittedBy
+    String? submittedBy,
+    String? checkInTime,
+    String? checkOutTime,
   }) {
     return DailyCallReportModel(
       area: area ?? this.area,
       reportId: reportId ?? this.reportId,
       date: date ?? this.date,
       doctorVisits: doctorsVisited ?? this.doctorsVisited,
-      submittedBy: submittedBy ?? this.submittedBy
+      submittedBy: submittedBy ?? this.submittedBy,
+      checkInTime: checkInTime ?? this.checkInTime,
+      checkOutTime: checkOutTime ?? this.checkOutTime,
     );
   }
 }

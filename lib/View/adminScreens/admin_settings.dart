@@ -374,7 +374,7 @@ class _OperationsSnapshot extends StatelessWidget {
 
         final tiles = [
           MetricTile(
-            label: 'Field employees',
+            label: 'Field reps',
             value: '$employeeCount',
             icon: Icons.groups_2_outlined,
             accent: kappbarColor,
@@ -518,7 +518,7 @@ class _AdminToolsCard extends StatelessWidget {
         ),
         _ToolRow(
           icon: Icons.person_add_alt_1_outlined,
-          title: 'Employee Management',
+          title: 'Rep Management',
           subtitle: 'Create reps and keep account access organized.',
           onTap: onEmployees,
         ),

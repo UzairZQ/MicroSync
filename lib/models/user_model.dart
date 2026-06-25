@@ -11,6 +11,10 @@ class UserModel {
     this.uid,
     this.phone,
     this.update,
+    this.locationAccuracy,
+    this.locationTrackingActive = false,
+    this.workDayStatus,
+    this.workSessionId,
     this.assignedAreas,
     this.assignedProducts,
   });
@@ -28,6 +32,12 @@ class UserModel {
       uid: data?['uid'],
       phone: data?['phone'],
       update: data?['update'],
+      locationAccuracy: data?['locationAccuracy'] is num
+          ? (data?['locationAccuracy'] as num).toDouble()
+          : null,
+      locationTrackingActive: data?['locationTrackingActive'] == true,
+      workDayStatus: data?['workDayStatus'],
+      workSessionId: data?['workSessionId'],
       assignedAreas: (data?['assignedAreas'] as List<dynamic>?)
           ?.map((areaData) => AreaModel.fromMap(areaData))
           .toList(),
@@ -45,6 +55,10 @@ class UserModel {
   String? uid;
   String? phone;
   String? update;
+  double? locationAccuracy;
+  bool locationTrackingActive;
+  String? workDayStatus;
+  String? workSessionId;
   List<AreaModel>? assignedAreas;
   List<ProductModel>? assignedProducts;
 
@@ -58,6 +72,10 @@ class UserModel {
       'uid': uid,
       'phone': phone,
       'update': update,
+      'locationAccuracy': locationAccuracy,
+      'locationTrackingActive': locationTrackingActive,
+      'workDayStatus': workDayStatus,
+      'workSessionId': workSessionId,
       'assignedAreas': assignedAreas?.map((area) => area.toMap()).toList(),
       'assignedProducts':
           assignedProducts?.map((product) => product.toMap()).toList(),

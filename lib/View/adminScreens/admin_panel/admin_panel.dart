@@ -45,14 +45,14 @@ class AdminPanel extends StatelessWidget {
       ),
       _AdminPanelTileData(
         title: 'Assigned Coverage',
-        subtitle: 'Review employee assignments',
+        subtitle: 'Review rep assignments',
         icon: Icons.assignment_ind_outlined,
         color: const Color(0xFF0D9488),
         page: const ShowAssignedAreasProducts(),
       ),
       _AdminPanelTileData(
         title: 'Monthly Targets',
-        subtitle: 'Plan and monitor employee targets',
+        subtitle: 'Plan and monitor rep targets',
         icon: Icons.add_chart_outlined,
         color: const Color(0xFF2563EB),
         page: const EmployeeTargets(),

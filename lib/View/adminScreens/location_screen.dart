@@ -41,11 +41,28 @@ class _LocationScreenState extends State<LocationScreen> {
                 itemBuilder: (context, index) {
                   final userData =
                       snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                  final isActive = userData['locationTrackingActive'] == true;
+                  final accuracy =
+                      (userData['locationAccuracy'] as num?)?.toDouble();
                   return Card(
                     margin: const EdgeInsets.only(bottom: 10),
                     child: ListTile(
                       contentPadding: const EdgeInsets.fromLTRB(16, 10, 8, 10),
-                      leading: const Icon(Icons.person_pin_circle_outlined),
+                      leading: CircleAvatar(
+                        backgroundColor: isActive
+                            ? const Color(0xFFE0F2F1)
+                            : Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
+                        child: Icon(
+                          isActive
+                              ? Icons.location_searching_outlined
+                              : Icons.person_pin_circle_outlined,
+                          color: isActive
+                              ? const Color(0xFF0F766E)
+                              : Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
                       title: MyTextwidget(
                         text: snapshot.data!.docs[index]['displayName']
                             .toString(),
@@ -54,8 +71,12 @@ class _LocationScreenState extends State<LocationScreen> {
                       ),
                       subtitle: MyTextwidget(
                         fontSize: 13,
-                        text:
-                            'Updated: ${userData['update'] ?? 'Not available'}',
+                        text: [
+                          isActive ? 'Tracking live' : 'Not tracking',
+                          'Updated: ${userData['update'] ?? 'Not available'}',
+                          if (accuracy != null)
+                            'Accuracy ${accuracy.toStringAsFixed(0)}m',
+                        ].join(' • '),
                       ),
                       trailing: IconButton(
                         tooltip: 'Open map',

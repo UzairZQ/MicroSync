@@ -26,6 +26,12 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>MicroSync uses your location only during an active work day to help managers verify field visits and route activity.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>MicroSync uses your location only during an active work day to help managers verify field visits and route activity.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>MicroSync uses your location while the app is in use to record work day route activity.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

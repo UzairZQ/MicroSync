@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
@@ -39,6 +40,8 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
   bool isReportSubmitted = false;
   bool _isLoadingReportData = true;
   SharedPreferences? _sharedPrefs;
+  String? checkInTime;
+  String? checkOutTime;
 
   void submitReport() async {
     setState(() {
@@ -86,6 +89,28 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
       final loadedUserData = context.read<UserDataProvider>().getUserData;
       final loadedDayPlan = dayPlanProvider.getCurrentDayPlan();
 
+      String? checkIn;
+      String? checkOut;
+      try {
+        final sessionDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUserId)
+            .collection('work_sessions')
+            .doc('${currentUserId}_${DateFormat('yyyyMMdd').format(DateTime.now())}')
+            .get();
+        if (sessionDoc.exists) {
+          final data = sessionDoc.data();
+          final Timestamp? startedAt = data?['startedAt'] as Timestamp?;
+          final Timestamp? endedAt = data?['endedAt'] as Timestamp?;
+          if (startedAt != null) {
+            checkIn = DateFormat('hh:mm a').format(startedAt.toDate());
+          }
+          if (endedAt != null) {
+            checkOut = DateFormat('hh:mm a').format(endedAt.toDate());
+          }
+        }
+      } catch (_) {}
+
       setState(() {
         currentDayPlan = loadedDayPlan;
         userData = loadedUserData;
@@ -95,6 +120,8 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
           loadedDayPlan?.doctors.length ?? 0,
         );
         isReportSubmitted = _hasSubmittedReportToday();
+        checkInTime = checkIn;
+        checkOutTime = checkOut;
         _isLoadingReportData = false;
       });
     } catch (_) {
@@ -196,6 +223,8 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
                     date: currentDayPlan!.date,
                     doctorVisits: allDoctorVisitDetails,
                     submittedBy: userData?.displayName ?? 'Unknown user',
+                    checkInTime: checkInTime,
+                    checkOutTime: checkOutTime,
                   );
 
                   Provider.of<DailyCallReportProvider>(context, listen: false)
@@ -218,7 +247,7 @@ class _DailyCallReportScreenState extends State<DailyCallReportScreen> {
               padding: const EdgeInsets.all(8.0),
               child: MyTextwidget(
                 text: currentDayPlan != null
-                    ? 'Doctors According to your today\'s Day Plan: \n ${dayPlanTime()} for ${currentDayPlan!.area} \n Shift : ${currentDayPlan!.shift}'
+                    ? 'Doctors According to your today\'s Day Plan: \n ${dayPlanTime()} for ${currentDayPlan!.area} \n Shift : ${currentDayPlan!.shift}\n Check-In: ${checkInTime ?? "Not Checked In"} | Check-Out: ${checkOutTime ?? "Not Checked Out"}'
                     : 'No Plan found!',
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

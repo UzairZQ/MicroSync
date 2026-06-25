@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 
 import 'package:micro_pharma/components/constants.dart';
-import 'package:micro_pharma/services/database_service.dart';
 
 class GoogleMapPage extends StatefulWidget {
   static const String id = 'map_page';
@@ -23,83 +22,163 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final firestore = FirebaseFirestore.instance;
+
     return Scaffold(
-      appBar: const MyAppBar(appBartxt: 'User Location'),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: DatabaseService.streamUser(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      appBar: const MyAppBar(appBartxt: 'Employee Location'),
+      body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        stream: firestore
+            .collection('employee_locations')
+            .doc(widget.userId)
+            .snapshots(),
+        builder: (context, locationSnapshot) {
+          return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            stream:
+                firestore.collection('users').doc(widget.userId).snapshots(),
+            builder: (context, userSnapshot) {
+              if (!locationSnapshot.hasData && !userSnapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          final docs = snapshot.data!.docs
-              .where((element) => element.id == widget.userId)
-              .toList();
-          if (docs.isEmpty) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text('This employee could not be found.'),
-              ),
-            );
-          }
+              final userData = userSnapshot.data?.data() ?? {};
+              final locationData = locationSnapshot.data?.data() ?? {};
+              final data = <String, dynamic>{...userData, ...locationData};
+              final latitude = (data['latitude'] as num?)?.toDouble();
+              final longitude = (data['longitude'] as num?)?.toDouble();
 
-          final data = docs.first.data() as Map<String, dynamic>;
-          final latitude = (data['latitude'] as num?)?.toDouble();
-          final longitude = (data['longitude'] as num?)?.toDouble();
-          if (latitude == null || longitude == null) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text('No location has been recorded for this employee.'),
-              ),
-            );
-          }
-
-          final location = LatLng(latitude, longitude);
-          final name = data['displayName']?.toString() ?? 'Employee';
-          final updated = data['update']?.toString() ?? 'No update time';
-
-          return Stack(
-            children: [
-              GoogleMap(
-                mapType: isSatellite ? MapType.satellite : MapType.normal,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: false,
-                markers: {
-                  Marker(
-                    markerId: MarkerId(widget.userId),
-                    icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueAzure,
-                    ),
-                    position: location,
-                    infoWindow: InfoWindow(
-                      title: name,
-                      snippet: 'Updated $updated',
+              if (latitude == null || longitude == null) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Text(
+                      'No location has been recorded for this employee yet.',
                     ),
                   ),
-                },
-                initialCameraPosition: CameraPosition(
-                  target: location,
-                  zoom: 15,
-                ),
-                onMapCreated: (GoogleMapController controller) {
-                  _controller = controller;
-                },
-              ),
-              Positioned(
-                left: 16,
-                right: 16,
-                top: 16,
-                child: Card(
-                  child: ListTile(
-                    leading: const Icon(Icons.person_pin_circle_outlined),
-                    title: Text(name),
-                    subtitle: Text('Location updated $updated'),
+                );
+              }
+
+              final location = LatLng(latitude, longitude);
+              final name = data['displayName']?.toString() ??
+                  userData['displayName']?.toString() ??
+                  'Employee';
+              final updatedAt = _readTimestamp(data['updatedAt']);
+              final updated = data['update']?.toString() ??
+                  (updatedAt == null
+                      ? 'No update time'
+                      : DateFormat('hh:mma dd/MM/yyyy').format(updatedAt));
+              final isActive = data['isTrackingActive'] == true ||
+                  data['locationTrackingActive'] == true;
+              final isStale = updatedAt == null
+                  ? !isActive
+                  : DateTime.now().difference(updatedAt).inMinutes > 5;
+              final accuracy = (data['accuracy'] as num?)?.toDouble() ??
+                  (data['locationAccuracy'] as num?)?.toDouble();
+
+              return Stack(
+                children: [
+                  GoogleMap(
+                    mapType: isSatellite ? MapType.satellite : MapType.normal,
+                    myLocationButtonEnabled: false,
+                    zoomControlsEnabled: false,
+                    markers: {
+                      Marker(
+                        markerId: MarkerId(widget.userId),
+                        icon: BitmapDescriptor.defaultMarkerWithHue(
+                          isActive && !isStale
+                              ? BitmapDescriptor.hueAzure
+                              : BitmapDescriptor.hueOrange,
+                        ),
+                        position: location,
+                        infoWindow: InfoWindow(
+                          title: name,
+                          snippet: 'Updated $updated',
+                        ),
+                      ),
+                    },
+                    initialCameraPosition: CameraPosition(
+                      target: location,
+                      zoom: 15,
+                    ),
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller = controller;
+                    },
                   ),
-                ),
-              ),
-            ],
+                  Positioned(
+                    left: 16,
+                    right: 16,
+                    top: 16,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(14),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: isActive && !isStale
+                                      ? const Color(0xFFE0F2F1)
+                                      : const Color(0xFFFFF7ED),
+                                  child: Icon(
+                                    isActive
+                                        ? Icons.location_searching_outlined
+                                        : Icons.location_off_outlined,
+                                    color: isActive && !isStale
+                                        ? const Color(0xFF0F766E)
+                                        : const Color(0xFFC2410C),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        isActive
+                                            ? isStale
+                                                ? 'Tracking active, update is stale'
+                                                : 'Tracking live'
+                                            : 'Day ended / not tracking',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                _MapInfoChip(
+                                  icon: Icons.schedule_outlined,
+                                  label: updated,
+                                ),
+                                if (accuracy != null)
+                                  _MapInfoChip(
+                                    icon: Icons.gps_fixed_outlined,
+                                    label:
+                                        'Accuracy ${accuracy.toStringAsFixed(0)}m',
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),
@@ -125,14 +204,18 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
               if (controller == null) {
                 return;
               }
-              final snapshot = await DatabaseService.streamUser().first;
-              final docs = snapshot.docs
-                  .where((element) => element.id == widget.userId)
-                  .toList();
-              if (docs.isEmpty) {
-                return;
-              }
-              final data = docs.first.data() as Map<String, dynamic>;
+              final latest = await FirebaseFirestore.instance
+                  .collection('employee_locations')
+                  .doc(widget.userId)
+                  .get();
+              final user = await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(widget.userId)
+                  .get();
+              final data = <String, dynamic>{
+                ...(user.data() ?? {}),
+                ...(latest.data() ?? {}),
+              };
               final latitude = (data['latitude'] as num?)?.toDouble();
               final longitude = (data['longitude'] as num?)?.toDouble();
               if (latitude == null || longitude == null) {
@@ -144,6 +227,42 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
             },
             child: const Icon(Icons.my_location_outlined),
           ),
+        ],
+      ),
+    );
+  }
+
+  DateTime? _readTimestamp(Object? value) {
+    if (value is Timestamp) {
+      return value.toDate();
+    }
+    if (value is DateTime) {
+      return value;
+    }
+    return null;
+  }
+}
+
+class _MapInfoChip extends StatelessWidget {
+  const _MapInfoChip({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16),
+          const SizedBox(width: 6),
+          Text(label),
         ],
       ),
     );

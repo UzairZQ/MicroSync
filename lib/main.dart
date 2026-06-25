@@ -52,8 +52,9 @@ void callBackDispatcher() async {
       return true;
     };
 
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final String? userId = preferences.getString('userId');
+    final preferences = await SharedPreferences.getInstance();
+    final String? userId =
+        inputData?['uid']?.toString() ?? preferences.getString('userId');
     if (userId != null && userId.isNotEmpty) {
       await LocationServices().getBackgroundLocation(userId);
     }
@@ -88,7 +89,10 @@ Future<void> main() async {
         create: (_) => DailyCallReportProvider(),
       ),
       ChangeNotifierProvider<OrderDataProvider>(
-          create: (_) => OrderDataProvider())
+          create: (_) => OrderDataProvider()),
+      ChangeNotifierProvider<LocationServices>(
+        create: (_) => LocationServices(),
+      ),
     ],
     child: const MicroPharma(),
   ));

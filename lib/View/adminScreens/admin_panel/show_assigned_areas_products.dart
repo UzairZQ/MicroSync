@@ -57,7 +57,7 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
                     final employeesList = userDataProvider.getUsers;
                     if (employeesList.isEmpty) {
                       return const MyTextwidget(
-                        text: 'No employees found.',
+                        text: 'No reps found.',
                         fontSize: 16,
                       );
                     }
@@ -69,7 +69,7 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
                     assignedProducts ??= selectedEmployee?.assignedProducts;
                     return Center(
                       child: DropdownButton<int>(
-                        hint: const MyTextwidget(text: 'Select Employee'),
+                        hint: const MyTextwidget(text: 'Select Rep'),
                         value: safeEmployeeIndex,
                         onChanged: (selectedIndex) {
                           if (selectedIndex == null) {
@@ -96,8 +96,7 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
 
                           return DropdownMenuItem<int>(
                             value: index,
-                            child: Text(
-                                employee.displayName ?? 'Unnamed employee'),
+                            child: Text(employee.displayName ?? 'Unnamed rep'),
                           );
                         }).toList(),
                       ),
@@ -106,15 +105,15 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
                 },
               ),
 
-              // Display assigned products and areas based on selected user
+              // Display assigned products and areas based on selected rep
               if (assignedProducts == null || assignedProducts!.isEmpty)
                 MyTextwidget(
                     text:
-                        'No Products Assigned ${selectedEmployee?.displayName}')
+                        'No products assigned to ${selectedEmployee?.displayName}')
               else
                 MyTextwidget(
                   text:
-                      'Assigned Products To ${selectedEmployee?.displayName}: ',
+                      'Assigned Products To Rep ${selectedEmployee?.displayName}: ',
                   fontSize: 17,
                 ),
               const SizedBox(
@@ -196,10 +195,11 @@ class _ShowAssignedAreasProductsState extends State<ShowAssignedAreasProducts> {
               if (assignedAreas == null || assignedAreas!.isEmpty)
                 MyTextwidget(
                     text:
-                        'No Areas Assigned to ${selectedEmployee?.displayName}')
+                        'No areas assigned to ${selectedEmployee?.displayName}')
               else
                 MyTextwidget(
-                  text: 'Assigned Areas To ${selectedEmployee?.displayName}:',
+                  text:
+                      'Assigned Areas To Rep ${selectedEmployee?.displayName}:',
                   fontSize: 17,
                 ),
               const SizedBox(
