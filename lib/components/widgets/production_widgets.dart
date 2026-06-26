@@ -26,9 +26,9 @@ class DashboardHeader extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(
         20,
-        edgeToEdgeTop ? topInset + 18 : 18,
+        edgeToEdgeTop ? topInset + 24 : 18,
         20,
-        edgeToEdgeTop ? 24 : 18,
+        edgeToEdgeTop ? 32 : 18,
       ),
       decoration: BoxDecoration(
         color: scheme.primary,
@@ -46,8 +46,8 @@ class DashboardHeader extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            height: 48,
-            width: 48,
+            height: edgeToEdgeTop ? 56 : 48,
+            width: edgeToEdgeTop ? 56 : 48,
             decoration: BoxDecoration(
               color: scheme.onPrimary.withOpacity(0.14),
               borderRadius: BorderRadius.circular(14),
@@ -61,7 +61,7 @@ class DashboardHeader extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  maxLines: 2,
+                  maxLines: edgeToEdgeTop ? 3 : 2,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: scheme.onPrimary,
@@ -71,7 +71,7 @@ class DashboardHeader extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  maxLines: 4,
+                  maxLines: edgeToEdgeTop ? 5 : 4,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: scheme.onPrimary.withOpacity(0.82),
